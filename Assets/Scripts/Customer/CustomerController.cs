@@ -1,0 +1,457 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using DG.Tweening;
+using UnityEditor.Tilemaps;
+
+public class CustomerController : MonoBehaviour
+{
+    public float customerPatience = 30.0f;  //seconds 
+
+    [HideInInspector] public int mySeat;
+    [HideInInspector] public Vector3 destination;
+    [HideInInspector] public Vector3 leavePoint;
+    [HideInInspector] public bool isCloseEnoughToDelivery;
+
+    [SerializeField] private float customerSpeed = 3.0f;
+    [SerializeField] private GameObject HudPos;
+    [SerializeField] private GameObject BubblePos;
+    [SerializeField] private Sprite[] customerMoods;
+    [SerializeField] private GameObject[] allIngredients;
+    [SerializeField] private GameObject[] baseIngredients;
+    [SerializeField] private GameObject[] flavorIngredients;
+    [SerializeField] private GameObject[] toppingIngredients;
+
+    [HideInInspector] public int[] productIngredientsCodes;
+
+    private string customerName; //random name
+    private int maxOrderSize = 6;
+    private int moodIndex;
+    private bool isOnSeat;
+    private bool isLeaving;
+    private bool isFacingRight;
+    private bool isDeliveryPlateColliding;
+    private bool isMousePositionColliding;
+
+    private Vector2 mousePosition;
+    private GameObject deliveryPlate;
+    private GameObject levelManagerObj;
+    private Collider2D deliveryPlateCol;
+    private LevelManager levelManager;
+    // private OrderManager orderManager;
+    private IngredientHolder ingredientHolder;
+    private PatienceBarController patienceBarController;
+
+    private SpriteRenderer spriteRenderer;
+    private Collider2D customerCol;
+
+    void Awake()
+    {
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        customerCol = GetComponent<Collider2D>();
+
+        levelManagerObj = FindObjectOfType<LevelManager>().gameObject;
+        levelManager = levelManagerObj.GetComponent<LevelManager>();
+
+        // orderManager = FindObjectOfType<OrderManager>();
+
+        deliveryPlate = FindObjectOfType<IngredientHolder>().gameObject;
+        ingredientHolder = deliveryPlate.GetComponent<IngredientHolder>();
+        deliveryPlateCol = deliveryPlate.GetComponent<Collider2D>();
+
+        patienceBarController = GetComponent<PatienceBarController>();
+
+        isCloseEnoughToDelivery = false;
+        isOnSeat = false;
+        isLeaving = false;
+        isFacingRight = true;
+
+        moodIndex = 0;
+        maxOrderSize = ingredientHolder.maxSlotIngredient;
+    }
+
+    private void OnEnable()
+    {
+        EventHandler.ChaseCustomer += ChaseCustomer;
+    }
+
+    private void OnDisable()
+    {
+        EventHandler.ChaseCustomer -= ChaseCustomer;
+    }
+
+    private void Start()
+    {
+        Init();
+    }
+
+    private void LateUpdate()
+    {
+        //check if this customer is close enough to delivery, in order to receive it.
+        if (ingredientHolder.canDeliverOrder)
+        {
+            CheckDistanceToDelivery();
+        }
+    }
+
+    private void Init()
+    {
+        // give name
+        customerName = "Customer_" + Random.Range(100, 10000);
+        gameObject.name = customerName;
+
+        // orderManager.OrderRandomProduct();
+        OrderRandomProduct();
+
+        DisplayOrder();
+
+        HudPos.SetActive(false);
+
+        StartCoroutine(GoToSeat());
+    }
+
+    // Main method to add ingredients to the order
+    public void OrderRandomProduct()
+    {
+        int randomMaxOrder = Random.Range(2, maxOrderSize);
+        productIngredientsCodes = new int[randomMaxOrder];
+
+        Debug.Log(randomMaxOrder);
+
+        // Add base ingredient
+        AddBaseIngredient();
+
+        // Add flavor and topping ingredients based on order size
+        for (int i = 1; i < randomMaxOrder; i++)
+        {
+            if (randomMaxOrder == 2 && i == 1) // Only 2 elements, add flavor
+            {
+                AddFlavorIngredient(i);
+            }
+            else if (randomMaxOrder > 2 && i < randomMaxOrder - 1) // More than 2 elements, add flavors
+            {
+                AddFlavorIngredient(i);
+            }
+            else if (i == randomMaxOrder - 1) // Last element
+            {
+                int unlockedToppingsCount = GameManager.Instance.GetToppingUnlock();
+                if (unlockedToppingsCount > 0)
+                {
+                    AddToppingIngredient(i);
+                }
+                else
+                {
+                    AddFlavorIngredient(i);
+                }
+            }
+        }
+    }
+
+    // Method to add a base ingredient to the order
+    private void AddBaseIngredient()
+    {
+        Ingredient baseIngredient = GetRandomIngredientFromArray(baseIngredients, GameManager.Instance.GetBaseUnlock());
+        productIngredientsCodes[0] = baseIngredient.IngredientCode;
+        Debug.Log(productIngredientsCodes[0]);
+    }
+
+    // Method to add a flavor ingredient to the order
+    private void AddFlavorIngredient(int index)
+    {
+        Ingredient flavorIngredient = GetRandomIngredientFromArray(flavorIngredients, GameManager.Instance.GetFlavorUnlock());
+        productIngredientsCodes[index] = flavorIngredient.IngredientCode;
+        Debug.Log(productIngredientsCodes[index]);
+    }
+
+    // Method to add a topping ingredient to the order
+    private void AddToppingIngredient(int index)
+    {
+        Ingredient toppingIngredient = GetRandomIngredientFromArray(toppingIngredients, GameManager.Instance.GetToppingUnlock());
+        productIngredientsCodes[index] = toppingIngredient.IngredientCode;
+        Debug.Log(productIngredientsCodes[index]);
+    }
+
+    // Method to get a random ingredient from a specific array
+    private Ingredient GetRandomIngredientFromArray(GameObject[] ingredientArray, int unlockedCount)
+    {
+        int randomIndex = Random.Range(0, Mathf.Min(unlockedCount, ingredientArray.Length));
+        return ingredientArray[randomIndex].GetComponent<Ingredient>();
+    }
+
+    private void DisplayOrder()
+    {
+        // Create a dictionary for quick lookup of ingredients by code
+        Dictionary<int, GameObject> ingredientLookup = new Dictionary<int, GameObject>();
+        foreach (GameObject ingredientObject in allIngredients)
+        {
+            Ingredient ingredient = ingredientObject.GetComponent<Ingredient>();
+            ingredientLookup[ingredient.IngredientCode] = ingredientObject;
+        }
+
+        GameObject lastTmpIngredient = null; // Initialize to null to avoid uninitialized usage
+        int flavorSortingOrder = 0;
+        bool isLastIngredientFlavor = false;
+        foreach (int ingredientCode in productIngredientsCodes)
+        {
+            if (!ingredientLookup.TryGetValue(ingredientCode, out GameObject tmpIngredient))
+            {
+                Debug.LogError($"Ingredient code {ingredientCode} not found.");
+                continue;
+            }
+
+            Ingredient ingredient = tmpIngredient.GetComponent<Ingredient>();
+            IngredientType ingredientType = ingredient.IngredientType;
+
+            Vector3 spawnPosition = BubblePos.transform.position;
+            Transform parentTransform = BubblePos.transform;
+
+            if (lastTmpIngredient != null)
+            {
+                Transform pointTransform = lastTmpIngredient.transform.GetChild(lastTmpIngredient.transform.childCount - 1); // Assuming the point transform is the second child
+                spawnPosition = pointTransform.position;
+
+                if (ingredientType == IngredientType.Topping)
+                {
+                    spawnPosition = lastTmpIngredient.transform.position;
+                }
+
+                // Adjust the sorting order if the last ingredient was a flavor
+                Transform childTransform = lastTmpIngredient.transform.GetChild(0);
+                SpriteRenderer childSpriteRenderer = childTransform.GetComponent<SpriteRenderer>();
+                if (childSpriteRenderer != null && childSpriteRenderer.sortingLayerName == IngredientType.Flavor.ToString())
+                {
+                    flavorSortingOrder++;
+                    isLastIngredientFlavor = true;
+                }
+                else
+                {
+                    isLastIngredientFlavor = false;
+                }
+            }
+
+            // Instantiate the ingredient
+            lastTmpIngredient = Instantiate(tmpIngredient, spawnPosition, Quaternion.identity, parentTransform);
+
+            // Adjust the sorting order if the last and current ingredient is flavor
+            Transform childlastTmpIngredientTransform = lastTmpIngredient.transform.GetChild(0);
+            SpriteRenderer childlastTmpIngredientSpriteRenderer = childlastTmpIngredientTransform.GetComponent<SpriteRenderer>();
+
+            childlastTmpIngredientSpriteRenderer.sortingLayerName = ingredient.IngredientType.ToString();
+
+            if (isLastIngredientFlavor && childlastTmpIngredientSpriteRenderer.sortingLayerName == IngredientType.Flavor.ToString())
+            {
+                childlastTmpIngredientSpriteRenderer.sortingOrder += flavorSortingOrder;
+            }
+        }
+    }
+
+
+    private IEnumerator GoToSeat()
+    {
+        if (transform.position.x > destination.x && isFacingRight)
+        {
+            Flip();
+        }
+        else if (transform.position.x < destination.x && !isFacingRight)
+        {
+            Flip();
+        }
+
+        Vector3 targetPosition;
+        Tween yoyoTween = transform.DOLocalMoveY(destination.y + 0.35f, 0.35f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.Linear);
+
+        while ((transform.position - new Vector3(destination.x, transform.position.y, destination.z)).sqrMagnitude > 0.01f)
+        {
+            // Create a target position with the current Y value to keep Y-axis unchanged
+            targetPosition = new Vector3(destination.x, transform.position.y, destination.z);
+
+            // Move smoothly towards the target position
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, customerSpeed * Time.deltaTime);
+
+            // Wait for the next frame before continuing the loop
+            yield return null;
+        }
+
+        // Kill the specific Y-axis movement tween
+        yoyoTween.Kill();
+
+        yield return new WaitForEndOfFrame();
+
+        // Ensure the final position is exactly the target position, with the final Y value
+        transform.DOMove(destination, 0.3f).SetEase(Ease.Linear).OnComplete(() =>
+        {
+            isOnSeat = true;
+            HudPos.SetActive(true);
+
+            patienceBarController.StartDecreasingPatience(); // Start the patience bar
+        });
+    }
+
+    private void Flip()
+    {
+        isFacingRight = !isFacingRight;
+        spriteRenderer.transform.Rotate(0, 180, 0);
+    }
+
+    private void CheckDistanceToDelivery()
+    {
+        if (customerCol == null || deliveryPlateCol == null || !isOnSeat || isLeaving)
+        {
+            isCloseEnoughToDelivery = false;
+            return;
+        }
+
+        // Get the mouse position in world coordinates
+        mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        // Check if the delivery plate bounds intersect with the trash bin bounds
+        isDeliveryPlateColliding = customerCol.bounds.Intersects(deliveryPlateCol.bounds);
+
+        // Check if the mouse position is within the bounds of the trash bin collider
+        isMousePositionColliding = customerCol.bounds.Contains(mousePosition);
+
+        // Set the flag if both conditions are 
+        if (isDeliveryPlateColliding && isMousePositionColliding)
+        {
+            isCloseEnoughToDelivery = true;
+
+            // add other method like change the tint of customer
+        }
+        else
+        {
+            isCloseEnoughToDelivery = false;
+        }
+    }
+
+    public void UpdateCustomerMood(int moodIndex)
+    {
+        // spriteRenderer.sprite = customerMoods[moodIndex];
+    }
+
+    private void OrderIsCorrect()
+    {
+        Debug.Log("Order is correct.");
+
+        moodIndex = 2;  //make him/her happy :>
+
+        // TODO: trigger progression (number of successful order, etc)
+
+        patienceBarController.StopDecreasingPatience();
+        StartCoroutine(Leave());
+    }
+
+    private void OrderIsIncorrect()
+    {
+        Debug.Log("Order is not correct.");
+
+        moodIndex = 3; //make him/her angry :<
+
+        // TODO: decrease health
+
+        patienceBarController.StopDecreasingPatience();
+        StartCoroutine(Leave());
+    }
+
+    public IEnumerator Leave()
+    {
+        //prevent double animation
+        if (isLeaving)
+        {
+            yield break;
+        }
+
+        //set the leave flag to prevent multiple calls to this function
+        isLeaving = true;
+
+        levelManager.availableSeatForCustomers[mySeat] = true;
+
+        //animate (close) patienceBar
+        //animate (close) request bubble
+        HudPos.SetActive(false);
+
+        if (transform.position.x > leavePoint.x && isFacingRight)
+        {
+            Flip();
+        }
+        else if (transform.position.x < leavePoint.x && !isFacingRight)
+        {
+            Flip();
+        }
+
+        //wait for seconds
+        yield return new WaitForSeconds(0.15f);
+
+        Vector3 targetPosition;
+        Tween yoyoTween = transform.DOLocalMoveY(destination.y + 0.35f, 0.35f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.Linear);
+
+        while ((transform.position - new Vector3(leavePoint.x, transform.position.y, leavePoint.z)).sqrMagnitude > 0.01f)
+        {
+            // Create a target position with the current Y value to keep Y-axis unchanged
+            targetPosition = new Vector3(leavePoint.x, transform.position.y, leavePoint.z);
+
+            // Move smoothly towards the target position
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, customerSpeed * Time.deltaTime);
+
+            // Wait for the next frame before continuing the loop
+            yield return null;
+        }
+
+        // Kill the specific Y-axis movement tween
+        yoyoTween.Kill();
+
+        // Ensure the final position is exactly the target position, with the final Y value
+        transform.DOMove(leavePoint, 0.3f).SetEase(Ease.Linear).OnComplete(() =>
+        {
+            Destroy(gameObject);
+        });
+    }
+
+    public void ReceiveOrder(List<int> myReceivedOrder)
+    {
+        //check the received order with the original one (customer's wish).
+        // int[] myOriginalOrder = productIngredientsCodes;
+        int[] myOriginalOrder = productIngredientsCodes;
+
+        //check if the two array are the same, meaning that we received what we were looking for.
+        //print(myOriginalOrder + " - " + myReceivedOrder);
+
+        //1.check the length of two arrays
+        if (myOriginalOrder.Length == myReceivedOrder.Count)
+        {
+            //2.compare two arrays
+            bool detectInequality = false;
+            for (int i = 0; i < myOriginalOrder.Length; i++)
+            {
+                Debug.Log("Original Order: " + myOriginalOrder[i] + " vs Received Order: " + myReceivedOrder[i]);
+                if (myOriginalOrder[i] != myReceivedOrder[i])
+                {
+                    detectInequality = true;
+                }
+            }
+
+            if (!detectInequality)
+            {
+                OrderIsCorrect();
+
+                EventHandler.CallCorrectOrderEvent();
+            }
+            else
+            {
+                OrderIsIncorrect(); //different array items
+
+                EventHandler.CallIncorrectOrderEvent();
+            }
+        }
+        else
+        {
+            OrderIsIncorrect(); //different array length
+
+            EventHandler.CallIncorrectOrderEvent();
+        }
+    }
+
+    private void ChaseCustomer()
+    {
+        StartCoroutine(Leave());
+    }
+}

@@ -3,7 +3,14 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Base
+  - Flavor
+  - Topping
+  - Plate
+  - Ingredient Holder
+  - Customer
+  - Flavor Point
   layers:
   - Default
   - TransparentFX
@@ -40,4 +47,19 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Customer HUD
+    uniqueID: 3110732397
+    locked: 0
+  - name: Base
+    uniqueID: 1146972731
+    locked: 0
+  - name: Flavor
+    uniqueID: 2505744643
+    locked: 0
+  - name: Topping
+    uniqueID: 1202475757
+    locked: 0
+  - name: RenderOnTop
+    uniqueID: 1881718769
     locked: 0
