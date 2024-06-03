@@ -156,10 +156,12 @@ public class IngredientHolder : MonoBehaviour
     private void ResetPosition()
     {
         //just incase user wants to move this to trashbin, check it here first
-        // if (trashbin.isCloseEnoughToTrashbin)
-        // {
-        //     ResetMainQueue();
-        // }
+        if (trashbin.isCloseEnoughToTrashbin)
+        {
+            EventHandler.CallCloseTrashBinEvent();
+            EventHandler.CallSquishTrashBinEvent();
+            ResetMainQueue();
+        }
 
         //take the plate back to it's initial position
         transform.position = initialPosition;

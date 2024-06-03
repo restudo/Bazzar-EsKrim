@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class Ingredient : MonoBehaviour
 {
@@ -7,7 +8,8 @@ public class Ingredient : MonoBehaviour
     public int IngredientCode { get { return _ingredientCode; } set { _ingredientCode = value; } }
     [SerializeField] private IngredientType _ingredientType;
     public IngredientType IngredientType { get { return _ingredientType; } set { _ingredientType = value; } }
-    [SerializeField] private GameObject[] allIngredients;
+    // [SerializeField] private GameObject[] allIngredients;
+    [SerializeField] private SO_IngredientObject allIngredients;
 
     private void Awake()
     {
@@ -16,20 +18,20 @@ public class Ingredient : MonoBehaviour
 
     private void Start()
     {
-        if(IngredientCode != 0)
+        if (IngredientCode != 0)
         {
-            Init(IngredientCode);    
+            Init(IngredientCode);
         }
     }
 
     public void Init(int ingredientCodeParam)
     {
-        foreach (GameObject item in allIngredients)
+        foreach (GameObject item in allIngredients.ingredientObjects)
         {
-            if(item.GetComponent<Ingredient>().IngredientCode == ingredientCodeParam)
+            if (item.GetComponent<Ingredient>().IngredientCode == ingredientCodeParam)
             {
                 transform.GetChild(transform.childCount - 1).localPosition = item.transform.GetChild(item.transform.childCount - 1).localPosition;
             }
         }
-    }
+    }  
 }

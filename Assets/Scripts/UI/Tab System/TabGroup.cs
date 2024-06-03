@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 public class TabGroup : MonoBehaviour
 {
+    [SerializeField] private Sprite selectSprite;
+    [SerializeField] private Sprite deselectSprite;
+
     [SerializeField] private List<GameObject> pages;
     [SerializeField] private List<TabButton> tabButtons;
     private TabButton selectedTab;
@@ -43,12 +46,14 @@ public class TabGroup : MonoBehaviour
     public void OnTabSelected(TabButton button)
     {
         selectedTab = button;
+        selectedTab.SelectTabButton(selectSprite);
 
         ResetTab();
         EventHandler.CallCloseTrashBinEvent();
 
         // do something
-        int index = button.transform.GetSiblingIndex();
+        int index = button.transform.parent.GetSiblingIndex();
+        Debug.Log(index);
         for (int i = 0; i < pages.Count; i++)
         {
             if (i == index)
@@ -90,6 +95,7 @@ public class TabGroup : MonoBehaviour
             }
 
             // do something
+            button.DeselectTabButton(deselectSprite);
         }
 
         foreach (GameObject page in pages)

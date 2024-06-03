@@ -163,18 +163,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _ingredientCode: 0
   _ingredientType: 0
-  allIngredients:
-  - {fileID: 4490608070577228165, guid: 6ea2681fb2b843e48b6bbf188cee3c4f, type: 3}
-  - {fileID: 4751486614503780870, guid: 01c84a42efffafe4f8591881a46f24c3, type: 3}
-  - {fileID: 2029962543987200788, guid: 7b7b6d85d9c60224e891c06a6fc93352, type: 3}
-  - {fileID: 2601959823378253461, guid: b0855d3db4b5fc84faf8dd6ef118e5ca, type: 3}
-  - {fileID: 1863834276860216166, guid: 3a931339008ab4c44b5dc378ff425ea0, type: 3}
-  - {fileID: 7997084109942074750, guid: 57f92a7950a4c9c4c9242b37087a9b6f, type: 3}
-  - {fileID: 1373446276805020312, guid: 67d6c193eda96ab45b81276c285fe902, type: 3}
-  - {fileID: 2410784576102587841, guid: ad5eeeb3be7faac45ae48ea238f3a14b, type: 3}
-  - {fileID: 7121553868107116004, guid: 7b79d6776f183784ba244a75bd2e1ce6, type: 3}
-  - {fileID: 4896376130436473372, guid: c0575825b4b5fe547a89bb7f3c52db51, type: 3}
-  - {fileID: 8549438121066212268, guid: a239a3d1b95a50748b9d6d5b70578b75, type: 3}
-  - {fileID: 5361973822199798862, guid: a27ccb7e887ee284f8c36ca233f9ce54, type: 3}
-  - {fileID: 3524721812216406092, guid: c09838f800754ac469d538aa823cc171, type: 3}
-  - {fileID: 1217307045316620405, guid: 4254eab66530cfa4caaaf63dd99b1333, type: 3}
+  allIngredients: {fileID: 11400000, guid: 3b5b2ad427679a04398145806911d62e, type: 2}

@@ -78,7 +78,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7299200579780514882, guid: 957c30f42a526cd4781e9d2f7d4317c5, type: 3}
       propertyPath: customerPatience
-      value: 35
+      value: 50
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

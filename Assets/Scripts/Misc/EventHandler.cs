@@ -32,6 +32,13 @@ public static class EventHandler
             CloseTrashBin();
     }
     
+    public static event Action SquishTrashBin;
+    public static void CallSquishTrashBinEvent()
+    {
+        if (SquishTrashBin != null)
+            SquishTrashBin();
+    }
+    
     public static event Action ResetMainQueue;
     public static void CallResetMainQueueEvent()
     {
@@ -65,5 +72,12 @@ public static class EventHandler
     {
         if (ChaseCustomer != null)
             ChaseCustomer();
+    }
+    
+    public static event Action<Vector3> SetMoneyPosToCustomerPos;
+    public static void CallSetMoneyPosToCustomerPosEvent(Vector3 customerPos)
+    {
+        if (SetMoneyPosToCustomerPos != null)
+            SetMoneyPosToCustomerPos(customerPos);
     }
 }

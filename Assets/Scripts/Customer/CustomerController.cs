@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-using UnityEditor.Tilemaps;
+using UnityEngine.Pool;
 
 public class CustomerController : MonoBehaviour
 {
@@ -17,10 +17,14 @@ public class CustomerController : MonoBehaviour
     [SerializeField] private GameObject HudPos;
     [SerializeField] private GameObject BubblePos;
     [SerializeField] private Sprite[] customerMoods;
-    [SerializeField] private GameObject[] allIngredients;
-    [SerializeField] private GameObject[] baseIngredients;
-    [SerializeField] private GameObject[] flavorIngredients;
-    [SerializeField] private GameObject[] toppingIngredients;
+    // [SerializeField] private GameObject[] allIngredients;
+    [SerializeField] private SO_IngredientObject allIngredients;
+    [SerializeField] private SO_IngredientObject baseIngredients;
+    [SerializeField] private SO_IngredientObject flavorIngredients;
+    [SerializeField] private SO_IngredientObject toppingIngredients;
+    // [SerializeField] private GameObject[] baseIngredients;
+    // [SerializeField] private GameObject[] flavorIngredients;
+    // [SerializeField] private GameObject[] toppingIngredients;
 
     [HideInInspector] public int[] productIngredientsCodes;
 
@@ -41,6 +45,7 @@ public class CustomerController : MonoBehaviour
     // private OrderManager orderManager;
     private IngredientHolder ingredientHolder;
     private PatienceBarController patienceBarController;
+    private MoneySpawner moneySpawner;
 
     private SpriteRenderer spriteRenderer;
     private Collider2D customerCol;
@@ -60,6 +65,8 @@ public class CustomerController : MonoBehaviour
         deliveryPlateCol = deliveryPlate.GetComponent<Collider2D>();
 
         patienceBarController = GetComponent<PatienceBarController>();
+
+        moneySpawner = FindObjectOfType<MoneySpawner>();
 
         isCloseEnoughToDelivery = false;
         isOnSeat = false;
@@ -150,25 +157,22 @@ public class CustomerController : MonoBehaviour
     // Method to add a base ingredient to the order
     private void AddBaseIngredient()
     {
-        Ingredient baseIngredient = GetRandomIngredientFromArray(baseIngredients, GameManager.Instance.GetBaseUnlock());
+        Ingredient baseIngredient = GetRandomIngredientFromArray(baseIngredients.ingredientObjects, GameManager.Instance.GetBaseUnlock());
         productIngredientsCodes[0] = baseIngredient.IngredientCode;
-        Debug.Log(productIngredientsCodes[0]);
     }
 
     // Method to add a flavor ingredient to the order
     private void AddFlavorIngredient(int index)
     {
-        Ingredient flavorIngredient = GetRandomIngredientFromArray(flavorIngredients, GameManager.Instance.GetFlavorUnlock());
+        Ingredient flavorIngredient = GetRandomIngredientFromArray(flavorIngredients.ingredientObjects, GameManager.Instance.GetFlavorUnlock());
         productIngredientsCodes[index] = flavorIngredient.IngredientCode;
-        Debug.Log(productIngredientsCodes[index]);
     }
 
     // Method to add a topping ingredient to the order
     private void AddToppingIngredient(int index)
     {
-        Ingredient toppingIngredient = GetRandomIngredientFromArray(toppingIngredients, GameManager.Instance.GetToppingUnlock());
+        Ingredient toppingIngredient = GetRandomIngredientFromArray(toppingIngredients.ingredientObjects, GameManager.Instance.GetToppingUnlock());
         productIngredientsCodes[index] = toppingIngredient.IngredientCode;
-        Debug.Log(productIngredientsCodes[index]);
     }
 
     // Method to get a random ingredient from a specific array
@@ -182,15 +186,14 @@ public class CustomerController : MonoBehaviour
     {
         // Create a dictionary for quick lookup of ingredients by code
         Dictionary<int, GameObject> ingredientLookup = new Dictionary<int, GameObject>();
-        foreach (GameObject ingredientObject in allIngredients)
+        foreach (GameObject ingredientObject in allIngredients.ingredientObjects)
         {
             Ingredient ingredient = ingredientObject.GetComponent<Ingredient>();
             ingredientLookup[ingredient.IngredientCode] = ingredientObject;
         }
 
         GameObject lastTmpIngredient = null; // Initialize to null to avoid uninitialized usage
-        int flavorSortingOrder = 0;
-        bool isLastIngredientFlavor = false;
+        int tempSortingOrder = 1;
         foreach (int ingredientCode in productIngredientsCodes)
         {
             if (!ingredientLookup.TryGetValue(ingredientCode, out GameObject tmpIngredient))
@@ -215,32 +218,25 @@ public class CustomerController : MonoBehaviour
                     spawnPosition = lastTmpIngredient.transform.position;
                 }
 
-                // Adjust the sorting order if the last ingredient was a flavor
-                Transform childTransform = lastTmpIngredient.transform.GetChild(0);
-                SpriteRenderer childSpriteRenderer = childTransform.GetComponent<SpriteRenderer>();
-                if (childSpriteRenderer != null && childSpriteRenderer.sortingLayerName == IngredientType.Flavor.ToString())
-                {
-                    flavorSortingOrder++;
-                    isLastIngredientFlavor = true;
-                }
-                else
-                {
-                    isLastIngredientFlavor = false;
-                }
+                tempSortingOrder++;
             }
 
             // Instantiate the ingredient
             lastTmpIngredient = Instantiate(tmpIngredient, spawnPosition, Quaternion.identity, parentTransform);
 
-            // Adjust the sorting order if the last and current ingredient is flavor
+            // Set the sorting layer
             Transform childlastTmpIngredientTransform = lastTmpIngredient.transform.GetChild(0);
             SpriteRenderer childlastTmpIngredientSpriteRenderer = childlastTmpIngredientTransform.GetComponent<SpriteRenderer>();
 
-            childlastTmpIngredientSpriteRenderer.sortingLayerName = ingredient.IngredientType.ToString();
+            childlastTmpIngredientSpriteRenderer.sortingLayerName = "Customer HUD";
 
-            if (isLastIngredientFlavor && childlastTmpIngredientSpriteRenderer.sortingLayerName == IngredientType.Flavor.ToString())
+            if (lastTmpIngredient != null)
             {
-                childlastTmpIngredientSpriteRenderer.sortingOrder += flavorSortingOrder;
+                childlastTmpIngredientSpriteRenderer.sortingOrder = tempSortingOrder;
+            }
+            else
+            {
+                tempSortingOrder = childlastTmpIngredientSpriteRenderer.sortingOrder;
             }
         }
     }
@@ -335,6 +331,9 @@ public class CustomerController : MonoBehaviour
         moodIndex = 2;  //make him/her happy :>
 
         // TODO: trigger progression (number of successful order, etc)
+
+        EventHandler.CallSetMoneyPosToCustomerPosEvent(transform.position);
+        moneySpawner.moneyPool.Get();
 
         patienceBarController.StopDecreasingPatience();
         StartCoroutine(Leave());

@@ -2,13 +2,15 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler, IPointerUpHandler
 {
     private Camera mainCamera;
     private Transform parentIngredient;
     private IngredientHolder ingredientHolder;
     private LevelManager levelManager;
     private GameObject draggedIngredient;
+    private bool isDragging;
+    private bool isPointerDown;
 
     [SerializeField] private GameObject ingredientPrefab = null;
     public Image inventorySlotImage;
@@ -18,6 +20,9 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     private void Start()
     {
+        isDragging = false;
+        isPointerDown = false;
+
         mainCamera = Camera.main;
         parentIngredient = GameObject.FindGameObjectWithTag("Ingredient Holder").transform;
 
@@ -34,6 +39,8 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             return;
         }
 
+        isDragging = true; // Mark that a drag has started
+
         EventHandler.CallCloseTrashBinEvent();
 
         // Check if the input is from a touch device or mouse
@@ -49,7 +56,7 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             if (draggedCanvas.renderMode == RenderMode.ScreenSpaceCamera)
             {
                 draggedCanvas.worldCamera = mainCamera;
-                draggedCanvas.sortingLayerName = "RenderOnTop";
+                draggedCanvas.sortingLayerName = "Render On Top";
             }
 
             // Get the ingredient image
@@ -87,11 +94,50 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             }
 
             ingredientHolder.canDeliverOrder = true;
+
             // else
             // {
             //     levelManager.deliveryQueueIsFull = false;
             // }
         }
+
+        isDragging = false; // Reset the drag flag
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        if (ingredientDetails == null || !GameManager.Instance.isGameActive)
+        {
+            return;
+        }
+
+        isPointerDown = true; // Mark that a pointer is down
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        if (ingredientDetails == null || !GameManager.Instance.isGameActive || isDragging)
+        {
+            return;
+        }
+
+        if (isPointerDown)
+        {
+            bool isSingleFingerTouch = Input.touchCount == 1 && eventData.pointerId >= 0;
+            bool isLeftMouseClick = eventData.pointerId == -1;
+
+            if (isSingleFingerTouch || isLeftMouseClick)
+            {
+                if (levelManager.deliveryQueueIngredient < ingredientHolder.maxSlotIngredient)
+                {
+                    AddIngredientDirectlyToHolder(parentIngredient.gameObject, levelManager);
+                }
+
+                ingredientHolder.canDeliverOrder = true;
+            }
+        }
+
+        isPointerDown = false; // Reset the pointer down flag
     }
 
     private void HandleIngredientDrop(GameObject ingredientHolderObj, LevelManager levelManager)
@@ -114,6 +160,14 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         Vector3 mousePos = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -mainCamera.transform.position.z));
         return collider.bounds.Contains(mousePos);
+    }
+
+    private void AddIngredientDirectlyToHolder(GameObject ingredientHolderObj, LevelManager levelManager)
+    {
+        if (ingredientHolderObj != null && levelManager != null)
+        {
+            TryAddIngredientToPlate(ingredientHolderObj, levelManager);
+        }
     }
 
     private void TryAddIngredientToPlate(GameObject ingredientHolderObj, LevelManager levelManager)
@@ -204,7 +258,8 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             spriteRenderer.sprite = ingredientDetails.dressIngredientSprite;
         }
 
-        spriteRenderer.sortingLayerName = ingredientDetails.ingredientType.ToString();
+        spriteRenderer.sortingLayerName = "Ingredient Holder";
+        spriteRenderer.sortingOrder = 1;
 
         if (lastIngredient != null)
         {
@@ -214,7 +269,6 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             {
                 int temp = lastIngredientSprite.sortingOrder + 1;
                 spriteRenderer.sortingOrder = temp;
-                Debug.LogWarning(lastIngredientSprite.sortingOrder + " YESSS " + spriteRenderer.sortingOrder);
             }
         }
 

@@ -51,15 +51,9 @@ TagManager:
   - name: Customer HUD
     uniqueID: 3110732397
     locked: 0
-  - name: Base
-    uniqueID: 1146972731
+  - name: Ingredient Holder
+    uniqueID: 580221523
     locked: 0
-  - name: Flavor
-    uniqueID: 2505744643
-    locked: 0
-  - name: Topping
-    uniqueID: 1202475757
-    locked: 0
-  - name: RenderOnTop
-    uniqueID: 1881718769
+  - name: Render On Top
+    uniqueID: 3657873751
     locked: 0

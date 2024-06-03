@@ -22,6 +22,7 @@ public class TrashBinController : MonoBehaviour
     private int currentClick;
     private bool isDeliveryPlateColliding;
     private bool isMousePositionColliding;
+    private bool isAnimate;
     private Vector2 mousePosition;
     private Camera mainCamera;
 
@@ -38,7 +39,9 @@ public class TrashBinController : MonoBehaviour
             ingredientHolder = deliveryPlate.GetComponent<IngredientHolder>();
             deliveryPlateCol = deliveryPlate.GetComponent<Collider2D>();
         }
+
         isCloseEnoughToTrashbin = false;
+        isAnimate = false;
         // spriteRenderer.sprite = state[0];
 
         mainCamera = Camera.main;
@@ -55,54 +58,74 @@ public class TrashBinController : MonoBehaviour
     private void OnEnable()
     {
         EventHandler.CloseTrashBin += CloseTrashBin;
+        EventHandler.SquishTrashBin += Squish;
     }
 
     private void OnDisable()
     {
         EventHandler.CloseTrashBin -= CloseTrashBin;
+        EventHandler.SquishTrashBin -= Squish;
     }
 
-    // void LateUpdate()
-    // {
-    //     //check if player wants to move the order to trash bin
-    //     if (ingredientHolder.canDeliverOrder)
-    //     {
-    //         CheckDistanceToDelivery();
-    //     }
-    // }
+    void LateUpdate()
+    {
+        //check if player wants to move the order to trash bin
+        if (ingredientHolder.canDeliverOrder)
+        {
+            CheckDistanceToDelivery();
+        }
+    }
 
-    // void CheckDistanceToDelivery()
-    // {
-    //     if (trashBinCol == null || deliveryPlateCol == null)
-    //     {
-    //         isCloseEnoughToTrashbin = false;
-    //         return;
-    //     }
+    void CheckDistanceToDelivery()
+    {
+        if (trashBinCol == null || deliveryPlateCol == null)
+        {
+            isCloseEnoughToTrashbin = false;
+            return;
+        }
 
-    //     // Get the mouse position in world coordinates
-    //     mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        // Get the mouse position in world coordinates
+        mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
 
-    //     // Check if the delivery plate bounds intersect with the trash bin bounds
-    //     isDeliveryPlateColliding = trashBinCol.bounds.Intersects(deliveryPlateCol.bounds);
+        // Check if the delivery plate bounds intersect with the trash bin bounds
+        isDeliveryPlateColliding = trashBinCol.bounds.Intersects(deliveryPlateCol.bounds);
 
-    //     // Check if the mouse position is within the bounds of the trash bin collider
-    //     isMousePositionColliding = trashBinCol.bounds.Contains(mousePosition);
+        // Check if the mouse position is within the bounds of the trash bin collider
+        isMousePositionColliding = trashBinCol.bounds.Contains(mousePosition);
 
-    //     // Set the flag if both conditions are true
-    //     // Optionally change the texture based on the flag
-    //     if(isDeliveryPlateColliding && isMousePositionColliding)
-    //     {
-    //         isCloseEnoughToTrashbin = true;
+        // Set the flag if both conditions are true
+        // Optionally change the texture based on the flag
+        if (isDeliveryPlateColliding && isMousePositionColliding)
+        {
+            isCloseEnoughToTrashbin = true;
 
-    //         // spriteRenderer.sprite = state[1];
-    //     }
-    //     else
-    //     {
-    //         isCloseEnoughToTrashbin = false;
+            if (!isAnimate)
+            {
+                OpenTrashBin();
 
-    //         // spriteRenderer.sprite = state[0];
-    //     }
-    // }
+                isAnimate = true;
+            }
+
+            // spriteRenderer.sprite = state[1];
+        }
+        else
+        {
+            isCloseEnoughToTrashbin = false;
+
+            if (isAnimate)
+            {
+                // CloseTrashBin();
+
+                // Squish();
+
+                // Debug.Log("Squish and close");
+
+                isAnimate = false;
+            }
+
+            // spriteRenderer.sprite = state[0];
+        }
+    }
 
     private void OnMouseDown()
     {
@@ -110,14 +133,12 @@ public class TrashBinController : MonoBehaviour
         {
             return;
         }
-        
+
         currentClick++;
-        Debug.Log(currentClick);
 
         if (currentClick == 1)
         {
-            topSprite.DOLocalRotate(new Vector3(0, 0, -29), 0.3f).SetEase(Ease.OutExpo);
-            topSprite.DOLocalMove(new Vector3(0.242f, 1.776f, 0), 0.3f).SetEase(Ease.OutExpo);
+            OpenTrashBin();
         }
 
         if (currentClick == 2)
@@ -127,15 +148,25 @@ public class TrashBinController : MonoBehaviour
 
             CloseTrashBin();
 
-            // squish
-            transform.DOScaleY(0.6f, 0.1f).SetEase(Ease.OutExpo);
-            transform.DOMoveY(-3.5616f, 0.1f).SetEase(Ease.OutExpo).OnComplete(() =>
-            {
-                transform.DOScaleY(bodyScale.y, 0.1f).SetEase(Ease.OutExpo);
-                transform.DOMoveY(bodyPosition.y, 0.1f).SetEase(Ease.OutExpo);
-            });
+            Squish();
         }
+    }
 
+    private void OpenTrashBin()
+    {
+        topSprite.DOLocalRotate(new Vector3(0, 0, -29), 0.3f).SetEase(Ease.OutExpo);
+        topSprite.DOLocalMove(new Vector3(0.242f, 1.776f, 0), 0.3f).SetEase(Ease.OutExpo);
+    }
+
+    private void Squish()
+    {
+        // squish
+        transform.DOScaleY(0.6f, 0.1f).SetEase(Ease.OutExpo);
+        transform.DOMoveY(-3.5616f, 0.1f).SetEase(Ease.OutExpo).OnComplete(() =>
+        {
+            transform.DOScaleY(bodyScale.y, 0.1f).SetEase(Ease.OutExpo);
+            transform.DOMoveY(bodyPosition.y, 0.1f).SetEase(Ease.OutExpo);
+        });
     }
 
     private void CloseTrashBin()

@@ -36,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0.0000071526, y: -0.0000061989}
-  m_SizeDelta: {x: 126.992, y: 142.593}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7694710074054121238
 CanvasRenderer:
@@ -147,3 +147,4 @@ MonoBehaviour:
     ingredientType: 0
     basketIngredientSprite: {fileID: 0}
     dressIngredientSprite: {fileID: 0}
+    plateIngredientSprite: {fileID: 0}
