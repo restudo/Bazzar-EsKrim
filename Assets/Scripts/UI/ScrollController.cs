@@ -8,6 +8,7 @@ public class ScrollController : MonoBehaviour
     [SerializeField] private Button rightButton;
     [SerializeField] private float scrollStep = 1f; // Amount to scroll per button press
     [SerializeField] private float scrollDuration = 0.167f; // Duration of the smooth scroll
+    [SerializeField] private int maxContentForButtonShow = 4; // Duration of the smooth scroll
     private ScrollRect scrollRect;
 
     public bool isScrollActive;
@@ -18,8 +19,17 @@ public class ScrollController : MonoBehaviour
 
         if (scrollRect != null)
         {
-            leftButton.onClick.AddListener(ScrollLeft);
-            rightButton.onClick.AddListener(ScrollRight);
+            if (scrollRect.content.childCount > maxContentForButtonShow)
+            {
+                leftButton.onClick.AddListener(ScrollLeft);
+                rightButton.onClick.AddListener(ScrollRight);
+
+            }
+            else
+            {
+                leftButton.gameObject.SetActive(false);
+                rightButton.gameObject.SetActive(false);
+            }
 
             isScrollActive = false;
         }
