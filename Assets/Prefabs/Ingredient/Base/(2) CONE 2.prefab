@@ -55,7 +55,7 @@ PrefabInstance:
     - target: {fileID: 3224140681895905443, guid: 5f5f95725a85c524897ab9a5b282140c, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 53318e0e99ce227488814b8f41cf5fce, type: 3}
+      objectReference: {fileID: 21300000, guid: 54e349d7acbb63c4eb78c6c170cd6004, type: 3}
     - target: {fileID: 6495018262924332237, guid: 5f5f95725a85c524897ab9a5b282140c, type: 3}
       propertyPath: m_Name
       value: (2) CONE 2

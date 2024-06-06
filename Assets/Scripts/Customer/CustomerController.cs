@@ -461,4 +461,9 @@ public class CustomerController : MonoBehaviour
     {
         StartCoroutine(Leave());
     }
+
+    public void BaseOnlyServed()
+    {
+        OrderIsIncorrect();
+    }
 }

@@ -18,7 +18,7 @@ public class IngredientHolder : MonoBehaviour
 
     void Awake()
     {
-        transform.position = GameObject.FindGameObjectWithTag("Plate").transform.position;
+        // transform.position = GameObject.FindGameObjectWithTag("Plate").transform.position;
 
         plateCollider = GetComponent<Collider2D>();
 
@@ -108,6 +108,8 @@ public class IngredientHolder : MonoBehaviour
                         else
                         {
                             delivered = false;
+
+                            theCustomer.GetComponent<CustomerController>().BaseOnlyServed();
 
                             //TODO: make customer angry
                             Debug.Log("Customer Angry");

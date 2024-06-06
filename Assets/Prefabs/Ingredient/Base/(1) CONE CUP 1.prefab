@@ -55,7 +55,7 @@ PrefabInstance:
     - target: {fileID: 3224140681895905443, guid: 5f5f95725a85c524897ab9a5b282140c, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: dfbf5b3e719cb6a4889136ea8309bc2a, type: 3}
+      objectReference: {fileID: 21300000, guid: 0a2da4358f4478f44ae21c503c5912f0, type: 3}
     - target: {fileID: 6495018262924332237, guid: 5f5f95725a85c524897ab9a5b282140c, type: 3}
       propertyPath: m_Name
       value: (1) CONE CUP 1

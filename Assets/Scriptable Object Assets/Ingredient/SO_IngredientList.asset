@@ -17,13 +17,13 @@ MonoBehaviour:
     ingredientName: 1 Cone Cup
     ingredientType: 0
     basketIngredientSprite: {fileID: 21300000, guid: dfbf5b3e719cb6a4889136ea8309bc2a, type: 3}
-    dressIngredientSprite: {fileID: 21300000, guid: dfbf5b3e719cb6a4889136ea8309bc2a, type: 3}
+    dressIngredientSprite: {fileID: 21300000, guid: 0a2da4358f4478f44ae21c503c5912f0, type: 3}
     plateIngredientSprite: {fileID: 0}
   - ingredientCode: 1002
     ingredientName: 2 Cone
     ingredientType: 0
     basketIngredientSprite: {fileID: 21300000, guid: 53318e0e99ce227488814b8f41cf5fce, type: 3}
-    dressIngredientSprite: {fileID: 21300000, guid: 53318e0e99ce227488814b8f41cf5fce, type: 3}
+    dressIngredientSprite: {fileID: 21300000, guid: 54e349d7acbb63c4eb78c6c170cd6004, type: 3}
     plateIngredientSprite: {fileID: 0}
   - ingredientCode: 1003
     ingredientName: 1 Chocolate
