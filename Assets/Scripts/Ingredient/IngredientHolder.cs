@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using DG.Tweening;
 
 public class IngredientHolder : MonoBehaviour
 {
@@ -99,7 +100,18 @@ public class IngredientHolder : MonoBehaviour
                     {
                         //we know that just 1 customer is always nearest to the delivery. so "theCustomer" is unique.
                         theCustomer = availableCustomers[i];
-                        delivered = true;
+
+                        if (levelManager.deliveryQueueIngredient > 1)
+                        {
+                            delivered = true;
+                        }
+                        else
+                        {
+                            delivered = false;
+
+                            //TODO: make customer angry
+                            Debug.Log("Customer Angry");
+                        }
                     }
                 }
 
@@ -113,14 +125,16 @@ public class IngredientHolder : MonoBehaviour
                     }
 
                     //let the customers know what he got.
-                    theCustomer.GetComponent<CustomerController>().ReceiveOrder(levelManager.deliveryQueueIngredientsContent);
+                    bool isOrderCorrect = theCustomer.GetComponent<CustomerController>().ReceiveOrder(levelManager.deliveryQueueIngredientsContent);
 
-                    // reset and destroy serving plate contents
-                    ResetMainQueue();
+                    if (isOrderCorrect)
+                    {
+                        // reset and destroy serving plate contents
+                        ResetMainQueue();
+                    }
 
                     //take the plate back to it's initial position
                     ResetPosition();
-
                 }
                 else
                 {
@@ -163,8 +177,8 @@ public class IngredientHolder : MonoBehaviour
             ResetMainQueue();
         }
 
-        //take the plate back to it's initial position
-        transform.position = initialPosition;
+        //jump to initial trasnform
+        transform.DOMove(initialPosition, 0.15f).SetEase(Ease.OutExpo);
         canDeliverOrder = false;
         StartCoroutine(Reactivate());
     }

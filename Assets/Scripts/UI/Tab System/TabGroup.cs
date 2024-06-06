@@ -53,35 +53,39 @@ public class TabGroup : MonoBehaviour
 
         // do something
         int index = button.transform.parent.GetSiblingIndex();
-        Debug.Log(index);
-        for (int i = 0; i < pages.Count; i++)
-        {
-            if (i == index)
-            {
-                pages[i].SetActive(true);
-            }
-            else
-            {
-                pages[i].SetActive(false);
-            }
-        }
+        // for (int i = 0; i < pages.Count; i++)
+        // {
+        //     if (i == index)
+        //     {
+        //         pages[i].SetActive(true);
+        //     }
+        //     else
+        //     {
+        //         pages[i].SetActive(false);
+        //     }
+        // }
 
-        InventoryLocation inventoryLocation = InventoryLocation.Base;
-        int ingredientUnlockedInLocation = GameManager.Instance.GetBaseUnlock();
-        if (button.transform.CompareTag(InventoryLocation.Flavor.ToString()))
-        {
-            inventoryLocation = InventoryLocation.Flavor;
-            ingredientUnlockedInLocation = GameManager.Instance.GetFlavorUnlock();
-        }
-        else if (button.transform.CompareTag(InventoryLocation.Topping.ToString()))
-        {
-            inventoryLocation = InventoryLocation.Topping;
-            ingredientUnlockedInLocation = GameManager.Instance.GetToppingUnlock();
-        }
+        // InventoryLocation inventoryLocation = InventoryLocation.Base;
+        // int ingredientUnlockedInLocation = GameManager.Instance.GetBaseUnlock();
+        // if (button.transform.CompareTag(InventoryLocation.Flavor.ToString()))
+        // {
+        //     inventoryLocation = InventoryLocation.Flavor;
+        //     ingredientUnlockedInLocation = GameManager.Instance.GetFlavorUnlock();
+        // }
+        // else if (button.transform.CompareTag(InventoryLocation.Topping.ToString()))
+        // {
+        //     inventoryLocation = InventoryLocation.Topping;
+        //     ingredientUnlockedInLocation = GameManager.Instance.GetToppingUnlock();
+        // }
 
-        List<InventoryIngredient> inventoryList = InventoryManager.Instance.inventoryLists[(int)inventoryLocation];
-        EventHandler.CallInventoryUpdatedEvent(inventoryLocation, inventoryList, ingredientUnlockedInLocation);
-        // Debug.Log(inventoryLocation);
+        // List<InventoryIngredient> inventoryList = InventoryManager.Instance.inventoryLists[(int)inventoryLocation];
+        // EventHandler.CallInventoryUpdatedEvent(inventoryLocation, inventoryList, ingredientUnlockedInLocation);
+
+        // EventHandler.CallInventoryUpdatedEvent(InventoryLocation.Base, InventoryManager.Instance.inventoryLists[(int)InventoryLocation.Base], GameManager.Instance.GetBaseUnlock());
+
+        // EventHandler.CallInventoryUpdatedEvent(InventoryLocation.Flavor, InventoryManager.Instance.inventoryLists[(int)InventoryLocation.Flavor], GameManager.Instance.GetFlavorUnlock());
+        
+        // EventHandler.CallInventoryUpdatedEvent(InventoryLocation.Topping, InventoryManager.Instance.inventoryLists[(int)InventoryLocation.Topping], GameManager.Instance.GetToppingUnlock());
     }
 
     // reset every selected tab
@@ -98,10 +102,10 @@ public class TabGroup : MonoBehaviour
             button.DeselectTabButton(deselectSprite);
         }
 
-        foreach (GameObject page in pages)
-        {
-            page.SetActive(false);
-        }
+        // foreach (GameObject page in pages)
+        // {
+        //     page.SetActive(false);
+        // }
     }
 
     private void EnableTabButton(int index)

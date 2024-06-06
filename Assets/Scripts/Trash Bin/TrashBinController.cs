@@ -114,7 +114,7 @@ public class TrashBinController : MonoBehaviour
 
             if (isAnimate)
             {
-                // CloseTrashBin();
+                CloseTrashBin();
 
                 // Squish();
 

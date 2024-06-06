@@ -13,6 +13,7 @@ public class CustomerController : MonoBehaviour
     [HideInInspector] public Vector3 leavePoint;
     [HideInInspector] public bool isCloseEnoughToDelivery;
 
+    [Range(0.1f, 1f)][SerializeField] private float decreasePatiencePercentage = 0.25f;
     [SerializeField] private float customerSpeed = 3.0f;
     [SerializeField] private GameObject HudPos;
     [SerializeField] private GameObject BubblePos;
@@ -345,10 +346,11 @@ public class CustomerController : MonoBehaviour
 
         moodIndex = 3; //make him/her angry :<
 
-        // TODO: decrease health
+        // patienceBarController.StopDecreasingPatience();
+        // StartCoroutine(Leave());
 
-        patienceBarController.StopDecreasingPatience();
-        StartCoroutine(Leave());
+        float decreaseValue = customerPatience * decreasePatiencePercentage;
+        patienceBarController.DecreaseWithValue(decreaseValue);
     }
 
     public IEnumerator Leave()
@@ -405,7 +407,7 @@ public class CustomerController : MonoBehaviour
         });
     }
 
-    public void ReceiveOrder(List<int> myReceivedOrder)
+    public bool ReceiveOrder(List<int> myReceivedOrder)
     {
         //check the received order with the original one (customer's wish).
         // int[] myOriginalOrder = productIngredientsCodes;
@@ -433,12 +435,16 @@ public class CustomerController : MonoBehaviour
                 OrderIsCorrect();
 
                 EventHandler.CallCorrectOrderEvent();
+
+                return true;
             }
             else
             {
                 OrderIsIncorrect(); //different array items
 
                 EventHandler.CallIncorrectOrderEvent();
+
+                return false;
             }
         }
         else
@@ -446,6 +452,8 @@ public class CustomerController : MonoBehaviour
             OrderIsIncorrect(); //different array length
 
             EventHandler.CallIncorrectOrderEvent();
+
+            return false;
         }
     }
 

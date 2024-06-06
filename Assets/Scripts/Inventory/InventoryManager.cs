@@ -38,19 +38,19 @@ public class InventoryManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            foreach (InventoryLocation location in InventoryLocation.GetValues(typeof(InventoryLocation)))
-            {
-                if (location != InventoryLocation.count)
-                {
-                    foreach (InventoryIngredient inventoryIngredient in inventoryLists[(int)location])
-                    {
-                        Debug.Log("Location: " + location.ToString() + "    --    Name: " + GetIngredientDetails(inventoryIngredient.ingredientCode).ingredientName);
-                    }
-                }
-            }
-        }
+        // if (Input.GetKeyDown(KeyCode.T))
+        // {
+        //     foreach (InventoryLocation location in InventoryLocation.GetValues(typeof(InventoryLocation)))
+        //     {
+        //         if (location != InventoryLocation.count)
+        //         {
+        //             foreach (InventoryIngredient inventoryIngredient in inventoryLists[(int)location])
+        //             {
+        //                 Debug.Log("Location: " + location.ToString() + "    --    Name: " + GetIngredientDetails(inventoryIngredient.ingredientCode).ingredientName);
+        //             }
+        //         }
+        //     }
+        // }
     }
 
     private void CreateInventoryLists()

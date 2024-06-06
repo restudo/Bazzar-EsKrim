@@ -1,16 +1,17 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
+using DG.Tweening;
 
 public class PatienceBarController : MonoBehaviour
 {
-    [SerializeField] private GameObject fillObj; // The fill GameObject
+    [SerializeField] private Slider patienceSlider; // slider
+    [SerializeField] private float blinkDuration;
+    [SerializeField] private int blinkCount = 2;
+    [SerializeField] private Color _blinkColor;
 
-    private float decreaseDuration; // Duration over which patience decreases to zero
-    private float maxPatience; // The maximum patience value
+    private float patienceDuration; // The maximum patience value
     private float currentPatience;
-    private Vector3 initialFillScale;
-    private Vector3 initialFillPosition;
-
     private Coroutine decreaseCoroutine;
     private CustomerController customerController;
 
@@ -18,64 +19,50 @@ public class PatienceBarController : MonoBehaviour
     {
         customerController = GetComponent<CustomerController>();
 
-        maxPatience = customerController.customerPatience;
+        patienceDuration = customerController.customerPatience;
+        currentPatience = patienceDuration;
 
-        initialFillScale = fillObj.transform.localScale;
-        initialFillPosition = fillObj.transform.localPosition;
-
-        decreaseDuration = maxPatience;
-        currentPatience = maxPatience;
+        // Initialize the slider
+        if (patienceSlider != null)
+        {
+            patienceSlider.maxValue = patienceDuration;
+            patienceSlider.value = patienceDuration;
+        }
     }
 
     public void StartDecreasingPatience()
     {
         // Start the coroutine to decrease patience over time
         decreaseCoroutine = StartCoroutine(DecreasePatienceOverTime());
-
-        Debug.Log("Starting");
     }
 
     private IEnumerator DecreasePatienceOverTime()
     {
-        float elapsedTime = 0f;
-
-        while (elapsedTime < decreaseDuration)
+        while (currentPatience > 0)
         {
-            // Calculate the new patience value
-            currentPatience = Mathf.Lerp(maxPatience, 0, elapsedTime / decreaseDuration);
+            currentPatience -= Time.deltaTime;
 
             //if customer has waited for half of his/her patience, make him/her bored.
-            if (currentPatience <= maxPatience / 2)
+            if (currentPatience <= patienceDuration / 2)
             {
                 customerController.UpdateCustomerMood(1); //1 is bored index
             }
 
-            // Update the fill scale
-            UpdateFill();
+            if (patienceSlider != null)
+            {
+                patienceSlider.value = currentPatience;
+            }
 
-            // Increment elapsed time by the time of the last frame
-            elapsedTime += Time.deltaTime;
-
-            // Wait for the next frame
             yield return null;
         }
 
-        // Ensure the patience is set to zero at the end
-        currentPatience = 0;
-        UpdateFill();
-        StartCoroutine(customerController.Leave());
+        // Handle when patience runs out
+        HandlePatienceDepleted();
     }
 
-    private void UpdateFill()
+    private void HandlePatienceDepleted()
     {
-        // Calculate the fill scale based on the current patience
-       float fillScaleY = currentPatience / maxPatience;
-
-        // Set the fill GameObject's local scale
-        fillObj.transform.localScale = new Vector3(initialFillScale.x, fillScaleY * initialFillScale.y, initialFillScale.z);
-
-        // Adjust the fill position to keep the top anchored
-        fillObj.transform.localPosition = new Vector3(initialFillPosition.x, initialFillPosition.y - (1 - fillScaleY) * initialFillScale.y * 0.5f, initialFillPosition.z);
+        StartCoroutine(customerController.Leave());
     }
 
     // Optional: To stop decreasing patience at any point
@@ -85,5 +72,49 @@ public class PatienceBarController : MonoBehaviour
         {
             StopCoroutine(decreaseCoroutine);
         }
+    }
+
+    public void DecreaseWithValue(float value)
+    {
+        float newPatience = Mathf.Clamp(currentPatience - value, 0, patienceDuration);
+
+        // Get the fill image of the slider
+        Image fillImage = patienceSlider.fillRect.GetComponent<Image>();
+        if (fillImage == null) return;
+
+        // Store the original color
+        Color originalColor = fillImage.color;
+        Color blinkColor = _blinkColor;
+
+        // Blink animation: Change color to red and back to the original color
+        Sequence blinkSequence = DOTween.Sequence();
+        // Use a loop to blink
+        for (int i = 0; i < blinkCount; i++)
+        {
+            blinkSequence.Append(fillImage.DOColor(blinkColor, blinkDuration));
+            blinkSequence.Append(fillImage.DOColor(originalColor, blinkDuration));
+        }
+
+        // After blinking, update the slider value
+        blinkSequence.Append(patienceSlider.DOValue(newPatience, 0.15f).OnUpdate(() => currentPatience = patienceSlider.value));
+
+        // Check and update customer mood after the slider value update
+        blinkSequence.OnComplete(() =>
+        {
+            // If customer has waited for half of his/her patience, make him/her bored.
+            if (newPatience <= patienceDuration / 2 && currentPatience > patienceDuration / 2)
+            {
+                customerController.UpdateCustomerMood(1); // 1 is bored index
+            }
+
+            // Handle when patience runs out
+            if (newPatience == 0)
+            {
+                HandlePatienceDepleted();
+            }
+        });
+
+        // Start the sequence
+        blinkSequence.Play();
     }
 }

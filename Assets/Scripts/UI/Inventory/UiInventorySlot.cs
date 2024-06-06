@@ -1,27 +1,35 @@
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler, IPointerUpHandler
+public class UiInventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    public Image inventorySlotImage;
+    [HideInInspector] public IngredientDetails ingredientDetails;
+
+    [SerializeField] private GameObject ingredientPrefab = null;
+    [SerializeField] private ScrollRect scrollRect;
+    
     private Camera mainCamera;
     private Transform parentIngredient;
     private IngredientHolder ingredientHolder;
     private LevelManager levelManager;
     private GameObject draggedIngredient;
+    private bool isPointerOverUI;
     private bool isDragging;
-    private bool isPointerDown;
-
-    [SerializeField] private GameObject ingredientPrefab = null;
-    public Image inventorySlotImage;
-    [HideInInspector] public IngredientDetails ingredientDetails;
-
-    Vector3 worldPosition;
+    private bool isScrolling;
+    private float pointerDownTime;
+    private const float dragThreshold = 0.2f; // Adjust this value as needed
+    private Vector2 dragStartPosition;
+    private Vector2 contentStartPosition;
+    private Vector3 worldPosition;
 
     private void Start()
     {
         isDragging = false;
-        isPointerDown = false;
+        isPointerOverUI = false;
 
         mainCamera = Camera.main;
         parentIngredient = GameObject.FindGameObjectWithTag("Ingredient Holder").transform;
@@ -32,101 +40,105 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         levelManager = FindObjectOfType<LevelManager>();
     }
 
-    public void OnBeginDrag(PointerEventData eventData)
-    {
-        if (ingredientDetails == null || !GameManager.Instance.isGameActive)
-        {
-            return;
-        }
+    // public void OnBeginDrag(PointerEventData eventData)
+    // {
+    //     if (ingredientDetails == null || !GameManager.Instance.isGameActive)
+    //     {
+    //         return;
+    //     }
 
-        isDragging = true; // Mark that a drag has started
+    //     isDragging = true; // Mark that a drag has started
 
-        EventHandler.CallCloseTrashBinEvent();
+    //     EventHandler.CallCloseTrashBinEvent();
 
-        // Check if the input is from a touch device or mouse
-        bool isSingleFingerTouch = Input.touchCount == 1 && eventData.pointerId >= 0;
-        bool isLeftMouseClick = eventData.pointerId == -1; // -1 is the pointer ID for the left mouse button
+    //     // Check if the input is from a touch device or mouse
+    //     bool isSingleFingerTouch = Input.touchCount == 1 && eventData.pointerId >= 0;
+    //     bool isLeftMouseClick = eventData.pointerId == -1; // -1 is the pointer ID for the left mouse button
 
-        if (isSingleFingerTouch || isLeftMouseClick)
-        {
-            // Instantiate the ingredient object
-            draggedIngredient = Instantiate(InventoryManager.Instance.inventoryDraggedIngredient, eventData.position, Quaternion.identity, transform.parent);
+    //     if (isSingleFingerTouch || isLeftMouseClick)
+    //     {
+    //         // Instantiate the ingredient object
+    //         draggedIngredient = Instantiate(InventoryManager.Instance.inventoryDraggedIngredient, eventData.position, Quaternion.identity, transform.parent);
 
-            Canvas draggedCanvas = draggedIngredient.GetComponent<Canvas>();
-            if (draggedCanvas.renderMode == RenderMode.ScreenSpaceCamera)
-            {
-                draggedCanvas.worldCamera = mainCamera;
-                draggedCanvas.sortingLayerName = "Render On Top";
-            }
+    //         Canvas draggedCanvas = draggedIngredient.GetComponent<Canvas>();
+    //         if (draggedCanvas.renderMode == RenderMode.ScreenSpaceCamera)
+    //         {
+    //             draggedCanvas.worldCamera = mainCamera;
+    //             draggedCanvas.sortingLayerName = "Render On Top";
+    //         }
 
-            // Get the ingredient image
-            Image draggedIngredientImage = draggedIngredient.GetComponentInChildren<Image>();
-            draggedIngredientImage.sprite = ingredientDetails.dressIngredientSprite;
-        }
-    }
+    //         // Get the ingredient image
+    //         Image draggedIngredientImage = draggedIngredient.GetComponentInChildren<Image>();
+    //         draggedIngredientImage.sprite = ingredientDetails.dressIngredientSprite;
+    //     }
+    // }
 
-    public void OnDrag(PointerEventData eventData)
-    {
-        // move the ingredient
-        if (draggedIngredient != null)
-        {
-            // Convert screen position to world position in the context of the RectTransform's parent
-            if (RectTransformUtility.ScreenPointToWorldPointInRectangle(draggedIngredient.GetComponent<RectTransform>(), eventData.position, eventData.pressEventCamera, out worldPosition))
-            {
-                draggedIngredient.GetComponent<RectTransform>().position = worldPosition;
-            }
-        }
-    }
+    // public void OnDrag(PointerEventData eventData)
+    // {
+    //     // move the ingredient
+    //     if (draggedIngredient != null)
+    //     {
+    //         // Convert screen position to world position in the context of the RectTransform's parent
+    //         if (RectTransformUtility.ScreenPointToWorldPointInRectangle(draggedIngredient.GetComponent<RectTransform>(), eventData.position, eventData.pressEventCamera, out worldPosition))
+    //         {
+    //             draggedIngredient.GetComponent<RectTransform>().position = worldPosition;
+    //         }
+    //     }
+    // }
 
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        // GameObject ingredientHolderObj = GameObject.FindGameObjectWithTag("Ingredient Holder");
-        // IngredientHolder ingredientHolder = parentIngredient.gameObject.GetComponent<IngredientHolder>();
+    // public void OnEndDrag(PointerEventData eventData)
+    // {
+    //     // GameObject ingredientHolderObj = GameObject.FindGameObjectWithTag("Ingredient Holder");
+    //     // IngredientHolder ingredientHolder = parentIngredient.gameObject.GetComponent<IngredientHolder>();
 
-        if (draggedIngredient != null)
-        {
-            Destroy(draggedIngredient);
+    //     if (draggedIngredient != null)
+    //     {
+    //         Destroy(draggedIngredient);
 
-            if (levelManager.deliveryQueueIngredient < ingredientHolder.maxSlotIngredient)
-            {
-                // levelManager.deliveryQueueIsFull = true;
-                HandleIngredientDrop(parentIngredient.gameObject, levelManager);
-            }
+    //         if (levelManager.deliveryQueueIngredient < ingredientHolder.maxSlotIngredient)
+    //         {
+    //             // levelManager.deliveryQueueIsFull = true;
+    //             HandleIngredientDrop(parentIngredient.gameObject, levelManager);
+    //         }
 
-            ingredientHolder.canDeliverOrder = true;
+    //         ingredientHolder.canDeliverOrder = true;
 
-            // else
-            // {
-            //     levelManager.deliveryQueueIsFull = false;
-            // }
-        }
+    //         // else
+    //         // {
+    //         //     levelManager.deliveryQueueIsFull = false;
+    //         // }
+    //     }
 
-        isDragging = false; // Reset the drag flag
-    }
+    //     isDragging = false; // Reset the drag flag
+    // }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (ingredientDetails == null || !GameManager.Instance.isGameActive)
+        isPointerOverUI = EventSystem.current.IsPointerOverGameObject(eventData.pointerId);
+        isDragging = false;
+        isScrolling = false;
+        pointerDownTime = Time.time;
+        dragStartPosition = eventData.position;
+        if (scrollRect != null)
         {
-            return;
+            contentStartPosition = scrollRect.content.anchoredPosition;
         }
-
-        isPointerDown = true; // Mark that a pointer is down
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        if (ingredientDetails == null || !GameManager.Instance.isGameActive || isDragging)
+        if (!isPointerOverUI || ingredientDetails == null || !GameManager.Instance.isGameActive || isDragging || isScrolling)
         {
+            isPointerOverUI = false;
             return;
         }
 
-        if (isPointerDown)
-        {
-            bool isSingleFingerTouch = Input.touchCount == 1 && eventData.pointerId >= 0;
-            bool isLeftMouseClick = eventData.pointerId == -1;
+        bool isSingleFingerTouch = Input.touchCount == 1 && eventData.pointerId >= 0;
+        bool isLeftMouseClick = eventData.pointerId == -1;
 
-            if (isSingleFingerTouch || isLeftMouseClick)
+        if (isSingleFingerTouch || isLeftMouseClick)
+        {
+            if (Time.time - pointerDownTime <= dragThreshold)
             {
                 if (levelManager.deliveryQueueIngredient < ingredientHolder.maxSlotIngredient)
                 {
@@ -137,7 +149,35 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             }
         }
 
-        isPointerDown = false; // Reset the pointer down flag
+        isPointerOverUI = false;
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        isPointerOverUI = false;
+    }
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        isDragging = true;
+        isScrolling = false;
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        if (isDragging && scrollRect != null)
+        {
+            Vector2 dragDelta = eventData.position - dragStartPosition;
+            dragDelta.y = 0; // Lock vertical movement
+            scrollRect.content.anchoredPosition = contentStartPosition + dragDelta;
+            isScrolling = true;
+        }
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        isDragging = false;
+        isScrolling = false;
     }
 
     private void HandleIngredientDrop(GameObject ingredientHolderObj, LevelManager levelManager)
