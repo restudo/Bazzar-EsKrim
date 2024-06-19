@@ -394,14 +394,14 @@ RectTransform:
   m_GameObject: {fileID: 4283731778099316191}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 40, y: 40, z: 40}
+  m_LocalScale: {x: 43, y: 43, z: 43}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3481047903664596954}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 12, y: -32.9}
+  m_AnchoredPosition: {x: 8.6, y: -45.7}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &4429132749989465350
@@ -542,8 +542,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 182, y: 77.8}
-  m_SizeDelta: {x: 211.32, y: 192.92}
+  m_AnchoredPosition: {x: 197.77, y: 76.5}
+  m_SizeDelta: {x: 242.85, y: 221.69}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3326608369325258613
 CanvasRenderer:
@@ -669,6 +669,7 @@ GameObject:
   - component: {fileID: 6136607791911595892}
   - component: {fileID: 2386094739106821277}
   - component: {fileID: 7299200579780514882}
+  - component: {fileID: 7808061270464305164}
   - component: {fileID: 4310184148618538891}
   m_Layer: 0
   m_Name: Customer
@@ -759,13 +760,27 @@ MonoBehaviour:
   decreasePatiencePercentage: 0.33333
   customerSpeed: 5
   HudPos: {fileID: 4429132749989465350}
-  BubblePos: {fileID: 4283731778099316191}
   customerMoods: []
+--- !u!114 &7808061270464305164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7280907584993538736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d39bf590a8d6d3e489bc2a9d57490ea3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  productIngredientsCodes: 
+  BubblePos: {fileID: 4283731778099316191}
   allIngredients: {fileID: 11400000, guid: bb72ee98daf82d841b835f7c7e3c726e, type: 2}
   baseIngredients: {fileID: 11400000, guid: 3b5b2ad427679a04398145806911d62e, type: 2}
   flavorIngredients: {fileID: 11400000, guid: d1a1314fc55272e46b5477f7b980fb12, type: 2}
   toppingIngredients: {fileID: 11400000, guid: da302e7759ed88e4aa1e75ef322e6abb, type: 2}
-  productIngredientsCodes: 
+  recipeList: {fileID: 11400000, guid: 5b9a662412ec7a045bb9bd257f4fafe0, type: 2}
+  levelDataIngredientCodes: {fileID: 11400000, guid: cda18b11f7d02c74d9227b34da2e05a8, type: 2}
 --- !u!114 &4310184148618538891
 MonoBehaviour:
   m_ObjectHideFlags: 0

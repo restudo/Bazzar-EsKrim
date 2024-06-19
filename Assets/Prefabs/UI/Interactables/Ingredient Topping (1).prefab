@@ -49,7 +49,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a1f704901a384b4da212f1984b2c6d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ingredientPrefab: {fileID: 6495018262924332237, guid: 5f5f95725a85c524897ab9a5b282140c, type: 3}
   inventorySlotImage: {fileID: 6172581379185969264}
   ingredientDetails:
     ingredientCode: 0
@@ -58,6 +57,8 @@ MonoBehaviour:
     basketIngredientSprite: {fileID: 0}
     dressIngredientSprite: {fileID: 0}
     plateIngredientSprite: {fileID: 0}
+  ingredientPrefab: {fileID: 6495018262924332237, guid: 5f5f95725a85c524897ab9a5b282140c, type: 3}
+  scrollRect: {fileID: 0}
 --- !u!1 &3236602478933841488
 GameObject:
   m_ObjectHideFlags: 0
@@ -86,7 +87,7 @@ RectTransform:
   m_GameObject: {fileID: 3236602478933841488}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1559850884222505342}
@@ -94,7 +95,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0.0000071526, y: -0.0000061989}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 246, y: 311}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &567488780022191155
 CanvasRenderer:

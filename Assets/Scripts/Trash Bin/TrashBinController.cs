@@ -5,7 +5,7 @@ public class TrashBinController : MonoBehaviour
 {
     public bool isCloseEnoughToTrashbin = true; //Do not modify this.
     //Textures for open/closed states
-    // public Sprite[] state;
+    public Sprite[] state;
 
     private Transform topSprite;
     private Vector3 topPosition;
@@ -25,9 +25,12 @@ public class TrashBinController : MonoBehaviour
     private bool isAnimate;
     private Vector2 mousePosition;
     private Camera mainCamera;
+    private SpriteRenderer spriteRenderer;
 
     void Awake()
     {
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
         trashBinCol = GetComponent<Collider2D>();
         topSprite = gameObject.transform.GetChild(0).transform;
 
@@ -42,7 +45,7 @@ public class TrashBinController : MonoBehaviour
 
         isCloseEnoughToTrashbin = false;
         isAnimate = false;
-        // spriteRenderer.sprite = state[0];
+        spriteRenderer.sprite = state[0];
 
         mainCamera = Camera.main;
 
@@ -105,8 +108,6 @@ public class TrashBinController : MonoBehaviour
 
                 isAnimate = true;
             }
-
-            // spriteRenderer.sprite = state[1];
         }
         else
         {
@@ -122,8 +123,6 @@ public class TrashBinController : MonoBehaviour
 
                 isAnimate = false;
             }
-
-            // spriteRenderer.sprite = state[0];
         }
     }
 
@@ -154,25 +153,29 @@ public class TrashBinController : MonoBehaviour
 
     private void OpenTrashBin()
     {
-        topSprite.DOLocalRotate(new Vector3(0, 0, -29), 0.3f).SetEase(Ease.OutExpo);
-        topSprite.DOLocalMove(new Vector3(0.242f, 1.776f, 0), 0.3f).SetEase(Ease.OutExpo);
+        spriteRenderer.sprite = state[1];
+
+        // topSprite.DOLocalRotate(new Vector3(0, 0, -29), 0.3f).SetEase(Ease.OutExpo);
+        // topSprite.DOLocalMove(new Vector3(0.242f, 1.776f, 0), 0.3f).SetEase(Ease.OutExpo);
     }
 
     private void Squish()
     {
-        // squish
-        transform.DOScaleY(0.6f, 0.1f).SetEase(Ease.OutExpo);
-        transform.DOMoveY(-3.5616f, 0.1f).SetEase(Ease.OutExpo).OnComplete(() =>
-        {
-            transform.DOScaleY(bodyScale.y, 0.1f).SetEase(Ease.OutExpo);
-            transform.DOMoveY(bodyPosition.y, 0.1f).SetEase(Ease.OutExpo);
-        });
+        // // squish
+        // transform.DOScaleY(0.6f, 0.1f).SetEase(Ease.OutExpo);
+        // transform.DOLocalMoveY(-3.5616f, 0.1f).SetEase(Ease.OutExpo).OnComplete(() =>
+        // {
+        //     transform.DOScaleY(bodyScale.y, 0.1f).SetEase(Ease.OutExpo);
+        //     transform.DOLocalMoveY(bodyPosition.y, 0.1f).SetEase(Ease.OutExpo);
+        // });
     }
 
     private void CloseTrashBin()
     {
-        topSprite.DOLocalRotate(topRotation, 0.15f).SetEase(Ease.OutExpo);
-        topSprite.DOLocalMove(topPosition, 0.15f).SetEase(Ease.OutExpo);
+        spriteRenderer.sprite = state[0];
+
+        // topSprite.DOLocalRotate(topRotation, 0.15f).SetEase(Ease.OutExpo);
+        // topSprite.DOLocalMove(topPosition, 0.15f).SetEase(Ease.OutExpo);
 
         currentClick = 0;
     }

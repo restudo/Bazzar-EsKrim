@@ -9,29 +9,30 @@ using UnityEngine.UI;
 
 public class LevelManager : MonoBehaviour
 {
-    [HideInInspector] public bool[] availableSeatForCustomers;
+    [HideInInspector] public int maxOrderHeight = 6; //maximum available slots in delivery queue (set in init)
+    [HideInInspector] public int spawnSpecialRecipeAfterXCustomer;
+    [HideInInspector] public int customerCounter;	
     [HideInInspector] public int deliveryQueueIngredient;	//number of items in delivery queue
+    [HideInInspector] public bool[] availableSeatForCustomers;
     [HideInInspector] public List<int> deliveryQueueIngredientsContent = new List<int>();   //contents of delivery queue
 
     [SerializeField] private GameObject[] customers; //list of all available customers (different patience)
     [SerializeField] private Transform[] customerEntryPos;
     [SerializeField] private Transform[] customerLeavePoint;
     [SerializeField] private Transform[] seatPositions;
-    [SerializeField] private int customerDelay; //delay between creating a new customer (smaller number leads to faster customer creation). Optimal value should be between 5 (Always crowded) and 15 (Not so crowded) seconds. 
-    [Range(0, 1)]
-    [SerializeField] private float doubleCustomerProbability;
 
     // [Header("Health")]
     // [SerializeField] private GameObject healthContainer;
     [Header("Timer")]
-    [SerializeField] private float timer;
     [SerializeField] private TextMeshProUGUI timerText;
+    private float timer;
 
     [Header("Progress")]
     // [SerializeField] private GameObject progressContainer;
-    [SerializeField] private int maxPoint;
-    [SerializeField] private int pointPerCustomer;
     [SerializeField] private TextMeshProUGUI pointText;
+    [SerializeField] private TextMeshProUGUI targetText;
+    private int pointPerCustomer;
+    private int maxPoint;
 
     [Header("GameOver Panel")]
     [SerializeField] private GameObject gameOverWinUI;
@@ -39,16 +40,27 @@ public class LevelManager : MonoBehaviour
 
     // private GameObject[] hearts;
     // private int healthCount;
-    private float currentTime;
-    private TimeSpan time;
-
     // private GameObject[] progresses;
     private int progressCount;
-
+    private int customerDelay; //delay between creating a new customer (smaller number leads to faster customer creation). Optimal value should be between 5 (Always crowded) and 15 (Not so crowded) seconds. 
+    private TimeSpan time;
+    private float currentTime;
+    private float doubleCustomerProbability;
     private bool canCreateNewCustomer;	//flag to prevent double calls to functions
 
     private void Awake()
     {
+        LevelData levelData = GameManager.Instance.levelDataList.levelDataList[GameManager.Instance.currentLevel - 1];
+        maxOrderHeight = levelData.maxOrderHeight;
+        spawnSpecialRecipeAfterXCustomer = levelData.spawnSpecialRecipeAfterXCustomer;
+        customerDelay = levelData.customerDelay;
+        doubleCustomerProbability = levelData.doubleCustomerProbability;
+        pointPerCustomer = levelData.pointPerCustomer;
+        maxPoint = levelData.maxPoint;
+        timer = levelData.timer;
+
+        customerCounter = 0;
+
         deliveryQueueIngredient = 0;
         deliveryQueueIngredientsContent.Clear();
 
@@ -97,7 +109,8 @@ public class LevelManager : MonoBehaviour
         currentTime = timer;
 
         progressCount = 0;
-        pointText.text = (progressCount * pointPerCustomer) + "/" + (maxPoint * pointPerCustomer);
+        pointText.text = progressCount.ToString();
+        targetText.text = maxPoint.ToString();
 
         time = TimeSpan.FromSeconds(currentTime);
         timerText.text = string.Format("{0:00}:{1:00}", time.Minutes, time.Seconds);
@@ -169,12 +182,17 @@ public class LevelManager : MonoBehaviour
             {
                 // Not enough available seats for double customers, create a single customer instead
                 CreateSingleCustomer(seatIndex, 0);
+
+                customerCounter++;
             }
             else
             {
                 for (int i = 0; i < 2; i++)
                 {
                     CreateSingleCustomer(selectedSeats[i], i);
+
+                    customerCounter++;
+
                     yield return new WaitForSeconds(0.1f);
                 }
             }
@@ -182,6 +200,13 @@ public class LevelManager : MonoBehaviour
         else
         {
             CreateSingleCustomer(seatIndex, 0);
+
+            customerCounter++;
+        }
+
+        if(customerCounter > spawnSpecialRecipeAfterXCustomer)
+        {
+            customerCounter = 0;
         }
 
         yield return new WaitForSeconds(customerDelay);
@@ -252,11 +277,8 @@ public class LevelManager : MonoBehaviour
         //     }
         // }
 
-        progressCount++;
-
-        int i = progressCount * pointPerCustomer;
-        int k = maxPoint * pointPerCustomer;
-        pointText.text = i + "/" + k;
+        progressCount += pointPerCustomer;
+        pointText.text = progressCount.ToString();
 
         if (progressCount >= maxPoint)
         {

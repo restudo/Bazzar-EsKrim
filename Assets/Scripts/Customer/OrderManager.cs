@@ -1,29 +1,114 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class OrderManager : MonoBehaviour
 {
-    [SerializeField] private GameObject[] baseIngredients;
-    [SerializeField] private GameObject[] flavorIngredients;
-    [SerializeField] private GameObject[] toppingIngredients;
-    [SerializeField] private int maxOrderSize = 6;
-
     [HideInInspector] public int[] productIngredientsCodes;
 
-    private void Update()
+    [SerializeField] private GameObject BubblePos;
+    [SerializeField] private SO_IngredientObject allIngredients;
+    [SerializeField] private SO_IngredientObject baseIngredients;
+    [SerializeField] private SO_IngredientObject flavorIngredients;
+    [SerializeField] private SO_IngredientObject toppingIngredients;
+    [SerializeField] private SO_RecipeList recipeList;
+    [SerializeField] private SO_LevelDataList levelDataIngredientCodes;
+
+    // Method to add a base ingredient to the order
+    private void AddBaseIngredient()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        Ingredient baseIngredient = GetRandomIngredientFromArray(baseIngredients.ingredientObjects, levelDataIngredientCodes.levelDataList[GameManager.Instance.currentLevel - 1].baseIngredientCode.Length);
+        productIngredientsCodes[0] = baseIngredient.IngredientCode;
+    }
+
+    // Method to add a flavor ingredient to the order
+    private void AddFlavorIngredient(int index)
+    {
+        Ingredient flavorIngredient = GetRandomIngredientFromArray(flavorIngredients.ingredientObjects, levelDataIngredientCodes.levelDataList[GameManager.Instance.currentLevel - 1].flavorIngredientCode.Length);
+        productIngredientsCodes[index] = flavorIngredient.IngredientCode;
+    }
+
+    // Method to add a topping ingredient to the order
+    private void AddToppingIngredient(int index)
+    {
+        Ingredient toppingIngredient = GetRandomIngredientFromArray(toppingIngredients.ingredientObjects, levelDataIngredientCodes.levelDataList[GameManager.Instance.currentLevel - 1].toppingIngredientCode.Length);
+        productIngredientsCodes[index] = toppingIngredient.IngredientCode;
+    }
+
+    // Method to get a random ingredient from a specific array
+    private Ingredient GetRandomIngredientFromArray(GameObject[] ingredientArray, int unlockedCount)
+    {
+        int randomIndex = Random.Range(0, Mathf.Min(unlockedCount, ingredientArray.Length));
+        return ingredientArray[randomIndex].GetComponent<Ingredient>();
+    }
+
+    private void DisplayOrder()
+    {
+        // Create a dictionary for quick lookup of ingredients by code
+        Dictionary<int, GameObject> ingredientLookup = new Dictionary<int, GameObject>();
+        foreach (GameObject ingredientObject in allIngredients.ingredientObjects)
         {
-            OrderRandomProduct();
+            Ingredient ingredient = ingredientObject.GetComponent<Ingredient>();
+            ingredientLookup[ingredient.IngredientCode] = ingredientObject;
+        }
+
+        GameObject lastTmpIngredient = null; // Initialize to null to avoid uninitialized usage
+        int tempSortingOrder = 1;
+        foreach (int ingredientCode in productIngredientsCodes)
+        {
+            if (!ingredientLookup.TryGetValue(ingredientCode, out GameObject tmpIngredient))
+            {
+                Debug.LogError($"Ingredient code {ingredientCode} not found.");
+                continue;
+            }
+
+            Ingredient ingredient = tmpIngredient.GetComponent<Ingredient>();
+            IngredientType ingredientType = ingredient.IngredientType;
+
+            Vector3 spawnPosition = BubblePos.transform.position;
+            Transform parentTransform = BubblePos.transform;
+
+            if (lastTmpIngredient != null)
+            {
+                Transform pointTransform = lastTmpIngredient.transform.GetChild(lastTmpIngredient.transform.childCount - 1); // Assuming the point transform is the second child
+                spawnPosition = pointTransform.position;
+
+                if (ingredientType == IngredientType.Topping)
+                {
+                    spawnPosition = lastTmpIngredient.transform.position;
+                }
+
+                tempSortingOrder++;
+            }
+
+            // Instantiate the ingredient
+            lastTmpIngredient = Instantiate(tmpIngredient, spawnPosition, Quaternion.identity, parentTransform);
+
+            // Set the sorting layer
+            Transform childlastTmpIngredientTransform = lastTmpIngredient.transform.GetChild(0);
+            SpriteRenderer childlastTmpIngredientSpriteRenderer = childlastTmpIngredientTransform.GetComponent<SpriteRenderer>();
+
+            childlastTmpIngredientSpriteRenderer.sortingLayerName = "Customer HUD";
+
+            if (lastTmpIngredient != null)
+            {
+                childlastTmpIngredientSpriteRenderer.sortingOrder = tempSortingOrder;
+            }
+            else
+            {
+                tempSortingOrder = childlastTmpIngredientSpriteRenderer.sortingOrder;
+            }
+
+            if (ingredientCode == 1023) // astor
+            {
+                childlastTmpIngredientSpriteRenderer.sortingOrder -= 2;
+            }
         }
     }
 
     // Main method to add ingredients to the order
-    public void OrderRandomProduct()
+    public void OrderRandomProduct(int randomMaxOrder)
     {
-        int randomMaxOrder = Random.Range(2, maxOrderSize);
         productIngredientsCodes = new int[randomMaxOrder];
-
-        Debug.Log(randomMaxOrder);
 
         // Add base ingredient
         AddBaseIngredient();
@@ -41,7 +126,7 @@ public class OrderManager : MonoBehaviour
             }
             else if (i == randomMaxOrder - 1) // Last element
             {
-                int unlockedToppingsCount = GameManager.Instance.GetToppingUnlock();
+                int unlockedToppingsCount = levelDataIngredientCodes.levelDataList[GameManager.Instance.currentLevel - 1].toppingIngredientCode.Length;
                 if (unlockedToppingsCount > 0)
                 {
                     AddToppingIngredient(i);
@@ -52,36 +137,27 @@ public class OrderManager : MonoBehaviour
                 }
             }
         }
+
+        DisplayOrder();
     }
 
-    // Method to add a base ingredient to the order
-    private void AddBaseIngredient()
+    public void OrderByRecipe(int recipeUnlockIndex)
     {
-        Ingredient baseIngredient = GetRandomIngredientFromArray(baseIngredients, GameManager.Instance.GetBaseUnlock());
-        productIngredientsCodes[0] = baseIngredient.IngredientCode;
-        Debug.Log(productIngredientsCodes[0]);
-    }
+        int randomRecipeIndex = Random.Range(0, recipeUnlockIndex - 1);
+        if(GameManager.Instance.currentLevel == recipeUnlockIndex + 1)
+        {
+            randomRecipeIndex = recipeUnlockIndex - 1;
+        }
 
-    // Method to add a flavor ingredient to the order
-    private void AddFlavorIngredient(int index)
-    {
-        Ingredient flavorIngredient = GetRandomIngredientFromArray(flavorIngredients, GameManager.Instance.GetFlavorUnlock());
-        productIngredientsCodes[index] = flavorIngredient.IngredientCode;
-        Debug.Log(productIngredientsCodes[index]);
-    }
+        int maxOrderByRecipe = recipeList.recipeList[randomRecipeIndex].ingredientsCodes.Length;
 
-    // Method to add a topping ingredient to the order
-    private void AddToppingIngredient(int index)
-    {
-        Ingredient toppingIngredient = GetRandomIngredientFromArray(toppingIngredients, GameManager.Instance.GetToppingUnlock());
-        productIngredientsCodes[index] = toppingIngredient.IngredientCode;
-        Debug.Log(productIngredientsCodes[index]);
-    }
+        productIngredientsCodes = new int[maxOrderByRecipe];
 
-    // Method to get a random ingredient from a specific array
-    private Ingredient GetRandomIngredientFromArray(GameObject[] ingredientArray, int unlockedCount)
-    {
-        int randomIndex = Random.Range(0, Mathf.Min(unlockedCount, ingredientArray.Length));
-        return ingredientArray[randomIndex].GetComponent<Ingredient>();
+        for (int i = 0; i < maxOrderByRecipe; i++)
+        {
+            productIngredientsCodes[i] = recipeList.recipeList[randomRecipeIndex].ingredientsCodes[i];
+        }
+
+        DisplayOrder();
     }
 }

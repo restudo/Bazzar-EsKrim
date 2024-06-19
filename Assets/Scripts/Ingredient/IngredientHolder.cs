@@ -4,7 +4,6 @@ using DG.Tweening;
 
 public class IngredientHolder : MonoBehaviour
 {
-    public int maxSlotIngredient = 6; //maximum available slots in delivery queue (set in init)
     [HideInInspector] public bool canDeliverOrder;
 
     [SerializeField] LevelManager levelManager;

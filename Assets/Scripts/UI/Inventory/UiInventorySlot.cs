@@ -4,32 +4,34 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UiInventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public Image inventorySlotImage;
     [HideInInspector] public IngredientDetails ingredientDetails;
 
     [SerializeField] private GameObject ingredientPrefab = null;
     [SerializeField] private ScrollRect scrollRect;
+    // [SerializeField] private ScrollController scrollController;
     
     private Camera mainCamera;
     private Transform parentIngredient;
     private IngredientHolder ingredientHolder;
     private LevelManager levelManager;
     private GameObject draggedIngredient;
-    private bool isPointerOverUI;
-    private bool isDragging;
-    private bool isScrolling;
-    private float pointerDownTime;
-    private const float dragThreshold = 0.2f; // Adjust this value as needed
-    private Vector2 dragStartPosition;
-    private Vector2 contentStartPosition;
     private Vector3 worldPosition;
+    // private bool isPointerOverUI;
+    // private bool isDragging;
+    // private bool isScrolling;
+    // private float pointerDownTime;
+    // private const float dragThreshold = 0.2f; // Adjust this value as needed
+    // private Vector2 dragStartPosition;
+    // private Vector2 contentStartPosition;
 
     private void Start()
     {
-        isDragging = false;
-        isPointerOverUI = false;
+        // isDragging = false;
+        // isPointerOverUI = false;
+        // isScrolling = false;
 
         mainCamera = Camera.main;
         parentIngredient = GameObject.FindGameObjectWithTag("Ingredient Holder").transform;
@@ -40,145 +42,145 @@ public class UiInventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         levelManager = FindObjectOfType<LevelManager>();
     }
 
-    // public void OnBeginDrag(PointerEventData eventData)
-    // {
-    //     if (ingredientDetails == null || !GameManager.Instance.isGameActive)
-    //     {
-    //         return;
-    //     }
-
-    //     isDragging = true; // Mark that a drag has started
-
-    //     EventHandler.CallCloseTrashBinEvent();
-
-    //     // Check if the input is from a touch device or mouse
-    //     bool isSingleFingerTouch = Input.touchCount == 1 && eventData.pointerId >= 0;
-    //     bool isLeftMouseClick = eventData.pointerId == -1; // -1 is the pointer ID for the left mouse button
-
-    //     if (isSingleFingerTouch || isLeftMouseClick)
-    //     {
-    //         // Instantiate the ingredient object
-    //         draggedIngredient = Instantiate(InventoryManager.Instance.inventoryDraggedIngredient, eventData.position, Quaternion.identity, transform.parent);
-
-    //         Canvas draggedCanvas = draggedIngredient.GetComponent<Canvas>();
-    //         if (draggedCanvas.renderMode == RenderMode.ScreenSpaceCamera)
-    //         {
-    //             draggedCanvas.worldCamera = mainCamera;
-    //             draggedCanvas.sortingLayerName = "Render On Top";
-    //         }
-
-    //         // Get the ingredient image
-    //         Image draggedIngredientImage = draggedIngredient.GetComponentInChildren<Image>();
-    //         draggedIngredientImage.sprite = ingredientDetails.dressIngredientSprite;
-    //     }
-    // }
-
-    // public void OnDrag(PointerEventData eventData)
-    // {
-    //     // move the ingredient
-    //     if (draggedIngredient != null)
-    //     {
-    //         // Convert screen position to world position in the context of the RectTransform's parent
-    //         if (RectTransformUtility.ScreenPointToWorldPointInRectangle(draggedIngredient.GetComponent<RectTransform>(), eventData.position, eventData.pressEventCamera, out worldPosition))
-    //         {
-    //             draggedIngredient.GetComponent<RectTransform>().position = worldPosition;
-    //         }
-    //     }
-    // }
-
-    // public void OnEndDrag(PointerEventData eventData)
-    // {
-    //     // GameObject ingredientHolderObj = GameObject.FindGameObjectWithTag("Ingredient Holder");
-    //     // IngredientHolder ingredientHolder = parentIngredient.gameObject.GetComponent<IngredientHolder>();
-
-    //     if (draggedIngredient != null)
-    //     {
-    //         Destroy(draggedIngredient);
-
-    //         if (levelManager.deliveryQueueIngredient < ingredientHolder.maxSlotIngredient)
-    //         {
-    //             // levelManager.deliveryQueueIsFull = true;
-    //             HandleIngredientDrop(parentIngredient.gameObject, levelManager);
-    //         }
-
-    //         ingredientHolder.canDeliverOrder = true;
-
-    //         // else
-    //         // {
-    //         //     levelManager.deliveryQueueIsFull = false;
-    //         // }
-    //     }
-
-    //     isDragging = false; // Reset the drag flag
-    // }
-
-    public void OnPointerDown(PointerEventData eventData)
+    public void OnBeginDrag(PointerEventData eventData)
     {
-        isPointerOverUI = EventSystem.current.IsPointerOverGameObject(eventData.pointerId);
-        isDragging = false;
-        isScrolling = false;
-        pointerDownTime = Time.time;
-        dragStartPosition = eventData.position;
-        if (scrollRect != null)
+        if (ingredientDetails == null || !GameManager.Instance.isGameActive)
         {
-            contentStartPosition = scrollRect.content.anchoredPosition;
-        }
-    }
-
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        if (!isPointerOverUI || ingredientDetails == null || !GameManager.Instance.isGameActive || isDragging || isScrolling)
-        {
-            isPointerOverUI = false;
             return;
         }
 
+        // isDragging = true; // Mark that a drag has started
+
+        EventHandler.CallCloseTrashBinEvent();
+
+        // Check if the input is from a touch device or mouse
         bool isSingleFingerTouch = Input.touchCount == 1 && eventData.pointerId >= 0;
-        bool isLeftMouseClick = eventData.pointerId == -1;
+        bool isLeftMouseClick = eventData.pointerId == -1; // -1 is the pointer ID for the left mouse button
 
         if (isSingleFingerTouch || isLeftMouseClick)
         {
-            if (Time.time - pointerDownTime <= dragThreshold)
+            // Instantiate the ingredient object
+            draggedIngredient = Instantiate(InventoryManager.Instance.inventoryDraggedIngredient, eventData.position, Quaternion.identity, transform.parent);
+
+            Canvas draggedCanvas = draggedIngredient.GetComponent<Canvas>();
+            if (draggedCanvas.renderMode == RenderMode.ScreenSpaceCamera)
             {
-                if (levelManager.deliveryQueueIngredient < ingredientHolder.maxSlotIngredient)
-                {
-                    AddIngredientDirectlyToHolder(parentIngredient.gameObject, levelManager);
-                }
-
-                ingredientHolder.canDeliverOrder = true;
+                draggedCanvas.worldCamera = mainCamera;
+                draggedCanvas.sortingLayerName = "Render On Top";
             }
+
+            // Get the ingredient image
+            Image draggedIngredientImage = draggedIngredient.GetComponentInChildren<Image>();
+            draggedIngredientImage.sprite = ingredientDetails.dressIngredientSprite;
         }
-
-        isPointerOverUI = false;
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        isPointerOverUI = false;
-    }
-
-    public void OnBeginDrag(PointerEventData eventData)
-    {
-        isDragging = true;
-        isScrolling = false;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (isDragging && scrollRect != null)
+        // move the ingredient
+        if (draggedIngredient != null)
         {
-            Vector2 dragDelta = eventData.position - dragStartPosition;
-            dragDelta.y = 0; // Lock vertical movement
-            scrollRect.content.anchoredPosition = contentStartPosition + dragDelta;
-            isScrolling = true;
+            // Convert screen position to world position in the context of the RectTransform's parent
+            if (RectTransformUtility.ScreenPointToWorldPointInRectangle(draggedIngredient.GetComponent<RectTransform>(), eventData.position, eventData.pressEventCamera, out worldPosition))
+            {
+                draggedIngredient.GetComponent<RectTransform>().position = worldPosition;
+            }
         }
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        isDragging = false;
-        isScrolling = false;
+        // GameObject ingredientHolderObj = GameObject.FindGameObjectWithTag("Ingredient Holder");
+        // IngredientHolder ingredientHolder = parentIngredient.gameObject.GetComponent<IngredientHolder>();
+
+        if (draggedIngredient != null)
+        {
+            Destroy(draggedIngredient);
+
+            if (levelManager.deliveryQueueIngredient < levelManager.maxOrderHeight)
+            {
+                // levelManager.deliveryQueueIsFull = true;
+                HandleIngredientDrop(parentIngredient.gameObject, levelManager);
+            }
+
+            ingredientHolder.canDeliverOrder = true;
+
+            // else
+            // {
+            //     levelManager.deliveryQueueIsFull = false;
+            // }
+        }
+
+        // isDragging = false; // Reset the drag flag
     }
+
+    // public void OnPointerDown(PointerEventData eventData)
+    // {
+    //     isPointerOverUI = EventSystem.current.IsPointerOverGameObject(eventData.pointerId);
+    //     isDragging = false;
+    //     isScrolling = false;
+    //     pointerDownTime = Time.time;
+    //     dragStartPosition = eventData.position;
+    //     if (scrollRect != null && scrollRect.enabled)
+    //     {
+    //         contentStartPosition = scrollRect.content.anchoredPosition;
+    //     }
+    // }
+
+    // public void OnPointerUp(PointerEventData eventData)
+    // {
+    //     if (!isPointerOverUI || ingredientDetails == null || !GameManager.Instance.isGameActive || isDragging || isScrolling)
+    //     {
+    //         isPointerOverUI = false;
+    //         return;
+    //     }
+
+    //     bool isSingleFingerTouch = Input.touchCount == 1 && eventData.pointerId >= 0;
+    //     bool isLeftMouseClick = eventData.pointerId == -1;
+
+    //     if (isSingleFingerTouch || isLeftMouseClick)
+    //     {
+    //         if (Time.time - pointerDownTime <= dragThreshold)
+    //         {
+    //             if (levelManager.deliveryQueueIngredient < levelManager.maxOrderHeight)
+    //             {
+    //                 AddIngredientDirectlyToHolder(parentIngredient.gameObject, levelManager);
+    //             }
+
+    //             ingredientHolder.canDeliverOrder = true;
+    //         }
+    //     }
+
+    //     isPointerOverUI = false;
+    // }
+
+    // public void OnPointerExit(PointerEventData eventData)
+    // {
+    //     isPointerOverUI = false;
+    // }
+
+    // public void OnBeginDrag(PointerEventData eventData)
+    // {
+    //     isDragging = true;
+    //     isScrolling = false;
+    // }
+
+    // public void OnDrag(PointerEventData eventData)
+    // {
+    //     if (isDragging && scrollRect != null && scrollRect.enabled)
+    //     {
+    //         Vector2 dragDelta = eventData.position - dragStartPosition;
+    //         dragDelta.y = 0; // Lock vertical movement
+    //         scrollRect.content.anchoredPosition = contentStartPosition + dragDelta;
+    //         isScrolling = true;
+    //     }
+    // }
+
+    // public void OnEndDrag(PointerEventData eventData)
+    // {
+    //     isDragging = false;
+    //     isScrolling = false;
+    // }
 
     private void HandleIngredientDrop(GameObject ingredientHolderObj, LevelManager levelManager)
     {

@@ -14,3 +14,14 @@ public enum IngredientType
     none,
     count
 }
+
+public enum Scenes
+{
+    Level1,
+    Level2,
+    Level3,
+    Level4,
+    Level5,
+    MainMenu,
+    LevelSelection
+}

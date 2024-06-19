@@ -16,18 +16,11 @@ public class CustomerController : MonoBehaviour
     [Range(0.1f, 1f)][SerializeField] private float decreasePatiencePercentage = 0.25f;
     [SerializeField] private float customerSpeed = 3.0f;
     [SerializeField] private GameObject HudPos;
-    [SerializeField] private GameObject BubblePos;
     [SerializeField] private Sprite[] customerMoods;
     // [SerializeField] private GameObject[] allIngredients;
-    [SerializeField] private SO_IngredientObject allIngredients;
-    [SerializeField] private SO_IngredientObject baseIngredients;
-    [SerializeField] private SO_IngredientObject flavorIngredients;
-    [SerializeField] private SO_IngredientObject toppingIngredients;
     // [SerializeField] private GameObject[] baseIngredients;
     // [SerializeField] private GameObject[] flavorIngredients;
     // [SerializeField] private GameObject[] toppingIngredients;
-
-    [HideInInspector] public int[] productIngredientsCodes;
 
     private string customerName; //random name
     private int maxOrderSize = 6;
@@ -43,7 +36,7 @@ public class CustomerController : MonoBehaviour
     private GameObject levelManagerObj;
     private Collider2D deliveryPlateCol;
     private LevelManager levelManager;
-    // private OrderManager orderManager;
+    private OrderManager orderManager;
     private IngredientHolder ingredientHolder;
     private PatienceBarController patienceBarController;
     private MoneySpawner moneySpawner;
@@ -59,7 +52,7 @@ public class CustomerController : MonoBehaviour
         levelManagerObj = FindObjectOfType<LevelManager>().gameObject;
         levelManager = levelManagerObj.GetComponent<LevelManager>();
 
-        // orderManager = FindObjectOfType<OrderManager>();
+        orderManager = GetComponent<OrderManager>();
 
         deliveryPlate = FindObjectOfType<IngredientHolder>().gameObject;
         ingredientHolder = deliveryPlate.GetComponent<IngredientHolder>();
@@ -75,7 +68,7 @@ public class CustomerController : MonoBehaviour
         isFacingRight = true;
 
         moodIndex = 0;
-        maxOrderSize = ingredientHolder.maxSlotIngredient;
+        maxOrderSize = levelManager.maxOrderHeight;
     }
 
     private void OnEnable()
@@ -108,140 +101,24 @@ public class CustomerController : MonoBehaviour
         customerName = "Customer_" + Random.Range(100, 10000);
         gameObject.name = customerName;
 
-        // orderManager.OrderRandomProduct();
-        OrderRandomProduct();
-
-        DisplayOrder();
+        // order
+        int recipeUnlock = GameManager.Instance.GetRecipeUnlock();
+        if (recipeUnlock > 0 && levelManager.customerCounter == levelManager.spawnSpecialRecipeAfterXCustomer)
+        {
+            orderManager.OrderByRecipe(recipeUnlock);
+            Debug.Log("By recipe");
+        }
+        else
+        {
+            int randomMaxOrder = Random.Range(2, maxOrderSize + 1);
+            orderManager.OrderRandomProduct(randomMaxOrder);
+            Debug.Log("Random");
+        }
 
         HudPos.SetActive(false);
 
         StartCoroutine(GoToSeat());
     }
-
-    // Main method to add ingredients to the order
-    public void OrderRandomProduct()
-    {
-        int randomMaxOrder = Random.Range(2, maxOrderSize);
-        productIngredientsCodes = new int[randomMaxOrder];
-
-        Debug.Log(randomMaxOrder);
-
-        // Add base ingredient
-        AddBaseIngredient();
-
-        // Add flavor and topping ingredients based on order size
-        for (int i = 1; i < randomMaxOrder; i++)
-        {
-            if (randomMaxOrder == 2 && i == 1) // Only 2 elements, add flavor
-            {
-                AddFlavorIngredient(i);
-            }
-            else if (randomMaxOrder > 2 && i < randomMaxOrder - 1) // More than 2 elements, add flavors
-            {
-                AddFlavorIngredient(i);
-            }
-            else if (i == randomMaxOrder - 1) // Last element
-            {
-                int unlockedToppingsCount = GameManager.Instance.GetToppingUnlock();
-                if (unlockedToppingsCount > 0)
-                {
-                    AddToppingIngredient(i);
-                }
-                else
-                {
-                    AddFlavorIngredient(i);
-                }
-            }
-        }
-    }
-
-    // Method to add a base ingredient to the order
-    private void AddBaseIngredient()
-    {
-        Ingredient baseIngredient = GetRandomIngredientFromArray(baseIngredients.ingredientObjects, GameManager.Instance.GetBaseUnlock());
-        productIngredientsCodes[0] = baseIngredient.IngredientCode;
-    }
-
-    // Method to add a flavor ingredient to the order
-    private void AddFlavorIngredient(int index)
-    {
-        Ingredient flavorIngredient = GetRandomIngredientFromArray(flavorIngredients.ingredientObjects, GameManager.Instance.GetFlavorUnlock());
-        productIngredientsCodes[index] = flavorIngredient.IngredientCode;
-    }
-
-    // Method to add a topping ingredient to the order
-    private void AddToppingIngredient(int index)
-    {
-        Ingredient toppingIngredient = GetRandomIngredientFromArray(toppingIngredients.ingredientObjects, GameManager.Instance.GetToppingUnlock());
-        productIngredientsCodes[index] = toppingIngredient.IngredientCode;
-    }
-
-    // Method to get a random ingredient from a specific array
-    private Ingredient GetRandomIngredientFromArray(GameObject[] ingredientArray, int unlockedCount)
-    {
-        int randomIndex = Random.Range(0, Mathf.Min(unlockedCount, ingredientArray.Length));
-        return ingredientArray[randomIndex].GetComponent<Ingredient>();
-    }
-
-    private void DisplayOrder()
-    {
-        // Create a dictionary for quick lookup of ingredients by code
-        Dictionary<int, GameObject> ingredientLookup = new Dictionary<int, GameObject>();
-        foreach (GameObject ingredientObject in allIngredients.ingredientObjects)
-        {
-            Ingredient ingredient = ingredientObject.GetComponent<Ingredient>();
-            ingredientLookup[ingredient.IngredientCode] = ingredientObject;
-        }
-
-        GameObject lastTmpIngredient = null; // Initialize to null to avoid uninitialized usage
-        int tempSortingOrder = 1;
-        foreach (int ingredientCode in productIngredientsCodes)
-        {
-            if (!ingredientLookup.TryGetValue(ingredientCode, out GameObject tmpIngredient))
-            {
-                Debug.LogError($"Ingredient code {ingredientCode} not found.");
-                continue;
-            }
-
-            Ingredient ingredient = tmpIngredient.GetComponent<Ingredient>();
-            IngredientType ingredientType = ingredient.IngredientType;
-
-            Vector3 spawnPosition = BubblePos.transform.position;
-            Transform parentTransform = BubblePos.transform;
-
-            if (lastTmpIngredient != null)
-            {
-                Transform pointTransform = lastTmpIngredient.transform.GetChild(lastTmpIngredient.transform.childCount - 1); // Assuming the point transform is the second child
-                spawnPosition = pointTransform.position;
-
-                if (ingredientType == IngredientType.Topping)
-                {
-                    spawnPosition = lastTmpIngredient.transform.position;
-                }
-
-                tempSortingOrder++;
-            }
-
-            // Instantiate the ingredient
-            lastTmpIngredient = Instantiate(tmpIngredient, spawnPosition, Quaternion.identity, parentTransform);
-
-            // Set the sorting layer
-            Transform childlastTmpIngredientTransform = lastTmpIngredient.transform.GetChild(0);
-            SpriteRenderer childlastTmpIngredientSpriteRenderer = childlastTmpIngredientTransform.GetComponent<SpriteRenderer>();
-
-            childlastTmpIngredientSpriteRenderer.sortingLayerName = "Customer HUD";
-
-            if (lastTmpIngredient != null)
-            {
-                childlastTmpIngredientSpriteRenderer.sortingOrder = tempSortingOrder;
-            }
-            else
-            {
-                tempSortingOrder = childlastTmpIngredientSpriteRenderer.sortingOrder;
-            }
-        }
-    }
-
 
     private IEnumerator GoToSeat()
     {
@@ -410,8 +287,7 @@ public class CustomerController : MonoBehaviour
     public bool ReceiveOrder(List<int> myReceivedOrder)
     {
         //check the received order with the original one (customer's wish).
-        // int[] myOriginalOrder = productIngredientsCodes;
-        int[] myOriginalOrder = productIngredientsCodes;
+        int[] myOriginalOrder = orderManager.productIngredientsCodes;
 
         //check if the two array are the same, meaning that we received what we were looking for.
         //print(myOriginalOrder + " - " + myReceivedOrder);

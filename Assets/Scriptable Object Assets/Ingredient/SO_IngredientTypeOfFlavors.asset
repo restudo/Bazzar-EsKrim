@@ -13,8 +13,13 @@ MonoBehaviour:
   m_Name: SO_IngredientTypeOfFlavors
   m_EditorClassIdentifier: 
   ingredientObjects:
-  - {fileID: 2029962543987200788, guid: 7b7b6d85d9c60224e891c06a6fc93352, type: 3}
-  - {fileID: 2601959823378253461, guid: b0855d3db4b5fc84faf8dd6ef118e5ca, type: 3}
-  - {fileID: 1863834276860216166, guid: 3a931339008ab4c44b5dc378ff425ea0, type: 3}
-  - {fileID: 7997084109942074750, guid: 57f92a7950a4c9c4c9242b37087a9b6f, type: 3}
-  - {fileID: 1373446276805020312, guid: 67d6c193eda96ab45b81276c285fe902, type: 3}
+  - {fileID: 5917839298583799844, guid: bfe0623d490c1a341a364e25efb973df, type: 3}
+  - {fileID: 176862110212984663, guid: 6dc660af233a09944a7198e3670bae00, type: 3}
+  - {fileID: 7810883990289434211, guid: f4e07d49468d3c44390c628206caabd4, type: 3}
+  - {fileID: 2171367264913551712, guid: 4ddaac46e503b574c80e80bcbd38e125, type: 3}
+  - {fileID: 3234560502099303339, guid: dd1af062698459a4d92fbdf3cc091c7c, type: 3}
+  - {fileID: 6433435653983164250, guid: 0bb5abd70a500b84d9f2a1857ea324e6, type: 3}
+  - {fileID: 2525067497372143461, guid: a8dfc42ae7650ca4db8c9389669902f7, type: 3}
+  - {fileID: 1821026697744942683, guid: 06adad24ce4cf6646a565eb63116fc1a, type: 3}
+  - {fileID: 7730055953165561811, guid: db2058441a00aa64a926108a9d853c0f, type: 3}
+  - {fileID: 1868781438283816188, guid: 73a5e19c0800fb4479313730f8de27d6, type: 3}

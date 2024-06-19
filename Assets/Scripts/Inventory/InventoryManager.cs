@@ -65,7 +65,7 @@ public class InventoryManager : MonoBehaviour
 
         inventoryListCapacityIntArray = new int[(int)InventoryLocation.count];
 
-        inventoryListCapacityIntArray[(int)InventoryLocation.Base] = 7; // max inventory
+        inventoryListCapacityIntArray[(int)InventoryLocation.Base] = 10; // max inventory
     }
 
     private void AddIngredientToInventoryList()
@@ -115,7 +115,6 @@ public class InventoryManager : MonoBehaviour
 
         AddItemAtPosition(inventoryList, ingredientCode);
     }
-
 
     private void AddItemAtPosition(List<InventoryIngredient> inventoryList, int ingredientCode)
     {

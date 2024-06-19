@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System.Collections;
 
 public class ScrollController : MonoBehaviour
 {
@@ -8,8 +9,9 @@ public class ScrollController : MonoBehaviour
     [SerializeField] private Button rightButton;
     [SerializeField] private float scrollStep = 1f; // Amount to scroll per button press
     [SerializeField] private float scrollDuration = 0.167f; // Duration of the smooth scroll
-    [SerializeField] private int maxContentForButtonShow = 4; // Duration of the smooth scroll
+    private int maxContentForButtonShow; // Duration of the smooth scroll
     private ScrollRect scrollRect;
+    private UiInventoryPage uiInventoryPage;
 
     public bool isScrollActive;
 
@@ -19,11 +21,56 @@ public class ScrollController : MonoBehaviour
 
         if (scrollRect != null)
         {
-            if (scrollRect.content.childCount > maxContentForButtonShow)
+            switch (transform.tag)
+            {
+                case nameof(IngredientType.Base):
+                    maxContentForButtonShow = GameManager.Instance.GetBaseUnlock();
+                    break;
+                case nameof(IngredientType.Flavor):
+                    maxContentForButtonShow = GameManager.Instance.GetFlavorUnlock();
+                    break;
+                case nameof(IngredientType.Topping):
+                    maxContentForButtonShow = GameManager.Instance.GetToppingUnlock();
+                    break;
+                default:
+                    Debug.LogWarning("Unknown ingredient type: " + transform.tag);
+                    maxContentForButtonShow = 0;
+                    break;
+            }
+
+            StartCoroutine(yey());
+        }
+    }
+
+    private IEnumerator yey()
+    {
+        yield return new WaitForSeconds(0.0001f);
+
+        int content = 0;
+            uiInventoryPage = scrollRect.content.GetComponent<UiInventoryPage>();
+            // foreach (UiInventorySlot uiInventorySlot in uiInventoryPage.inventorySlot)
+            // {
+            //     if(uiInventorySlot.ingredientDetails != null)
+            //     {
+            //         content++;
+            //     }
+            // }
+
+            Debug.Log(maxContentForButtonShow);
+            Debug.Log(content);
+
+            // Sprite sprite = scrollRect.content.GetComponent<UiInventoryPage>().blankSprite;
+            // foreach (Transform child in scrollRect.content.transform)
+            // {
+            //     if(child.GetComponent<UiInventorySlot>().inventorySlotImage.sprite != sprite)
+            //     {
+            //     }
+            // }
+
+            if (content > maxContentForButtonShow)
             {
                 leftButton.onClick.AddListener(ScrollLeft);
                 rightButton.onClick.AddListener(ScrollRight);
-
             }
             else
             {
@@ -32,7 +79,6 @@ public class ScrollController : MonoBehaviour
             }
 
             isScrollActive = false;
-        }
     }
 
     public void ScrollLeft()
