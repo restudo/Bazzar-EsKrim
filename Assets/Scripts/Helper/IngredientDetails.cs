@@ -3,7 +3,7 @@ using UnityEngine;
 [System.Serializable]
 public class IngredientDetails
 {
-    public int ingredientCode;
+    public IngredientName ingredientCode;
     public string ingredientName;
     public IngredientType ingredientType;
     public Sprite basketIngredientSprite;

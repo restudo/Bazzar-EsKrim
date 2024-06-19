@@ -75,13 +75,13 @@ public class InventoryManager : MonoBehaviour
             switch (ingredientDetails.ingredientType)
             {
                 case IngredientType.Base:
-                    AddItem(InventoryLocation.Base, ingredientDetails.ingredientCode);
+                    AddItem(InventoryLocation.Base, (int)ingredientDetails.ingredientCode);
                     break;
                 case IngredientType.Flavor:
-                    AddItem(InventoryLocation.Flavor, ingredientDetails.ingredientCode);
+                    AddItem(InventoryLocation.Flavor, (int)ingredientDetails.ingredientCode);
                     break;
                 case IngredientType.Topping:
-                    AddItem(InventoryLocation.Topping, ingredientDetails.ingredientCode);
+                    AddItem(InventoryLocation.Topping, (int)ingredientDetails.ingredientCode);
                     break;
                 default:
                     // Handle any other cases if needed
@@ -99,7 +99,7 @@ public class InventoryManager : MonoBehaviour
 
         foreach (IngredientDetails ingredientDetails in ingredientList.ingredientDetails)
         {
-            ingredientDetailsDictionary.Add(ingredientDetails.ingredientCode, ingredientDetails);
+            ingredientDetailsDictionary.Add((int)ingredientDetails.ingredientCode, ingredientDetails);
             // Debug.Log(ingredientDetails.ingredientCode);
         }
     }
@@ -150,7 +150,7 @@ public class InventoryManager : MonoBehaviour
     {
         foreach (InventoryIngredient inventoryIngredient in inventoryList)
         {
-            Debug.Log("Ingredient Name: " + GetIngredientDetails(inventoryIngredient.ingredientCode).ingredientName);
+            Debug.Log("Ingredient Name: " + GetIngredientDetails(inventoryIngredient.ingredientCode));
         }
     }
 }

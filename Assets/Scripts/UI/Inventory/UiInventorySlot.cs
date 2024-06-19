@@ -287,7 +287,7 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         GameObject ingredientGameobject = Instantiate(ingredientPrefab, platePosition, Quaternion.identity, parentIngredient);
 
         Ingredient ingredient = ingredientGameobject.GetComponent<Ingredient>();
-        ingredient.IngredientCode = ingredientDetails.ingredientCode;
+        ingredient.IngredientCode = (int)ingredientDetails.ingredientCode;
         ingredient.IngredientType = ingredientDetails.ingredientType;
 
         SpriteRenderer spriteRenderer = ingredientGameobject.GetComponentInChildren<SpriteRenderer>();

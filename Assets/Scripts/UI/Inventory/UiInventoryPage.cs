@@ -75,20 +75,34 @@ public class UiInventoryPage : MonoBehaviour
 
     private int[] CheckInventoryLocation()
     {
+        IngredientName[] ingredientNames;
+
         switch (_inventoryLocation)
         {
             case InventoryLocation.Base:
-                return levelDataIngredientCodes.levelDataList[GameManager.Instance.currentLevel - 1].baseIngredientCode;
+                ingredientNames = levelDataIngredientCodes.levelDataList[GameManager.Instance.currentLevel - 1].baseIngredientCode;
+                break;
             case InventoryLocation.Flavor:
-                return levelDataIngredientCodes.levelDataList[GameManager.Instance.currentLevel - 1].flavorIngredientCode;
+                ingredientNames = levelDataIngredientCodes.levelDataList[GameManager.Instance.currentLevel - 1].flavorIngredientCode;
+                break;
             case InventoryLocation.Topping:
-                return levelDataIngredientCodes.levelDataList[GameManager.Instance.currentLevel - 1].toppingIngredientCode;
+                ingredientNames = levelDataIngredientCodes.levelDataList[GameManager.Instance.currentLevel - 1].toppingIngredientCode;
+                break;
             default:
+                ingredientNames = levelDataIngredientCodes.levelDataList[GameManager.Instance.currentLevel - 1].baseIngredientCode;
                 break;
         }
 
-        return levelDataIngredientCodes.levelDataList[GameManager.Instance.currentLevel - 1].baseIngredientCode;
+        // Convert IngredientName[] to int[]
+        int[] ingredientCodes = new int[ingredientNames.Length];
+        for (int i = 0; i < ingredientNames.Length; i++)
+        {
+            ingredientCodes[i] = (int)ingredientNames[i];
+        }
+
+        return ingredientCodes;
     }
+
 
     private void InventoryUpdated(InventoryLocation inventoryLocation)
     {

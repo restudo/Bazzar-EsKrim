@@ -102,10 +102,10 @@ public class CustomerController : MonoBehaviour
         gameObject.name = customerName;
 
         // order
-        int recipeUnlock = GameManager.Instance.GetRecipeUnlock();
-        if (recipeUnlock > 0 && levelManager.customerCounter == levelManager.spawnSpecialRecipeAfterXCustomer)
+        // int recipeUnlock = GameManager.Instance.GetRecipeUnlock();
+        if (levelManager.maxSpecialRecipeInThisLevel > 0 && levelManager.customerCounter == levelManager.spawnSpecialRecipeAfterXCustomer)
         {
-            orderManager.OrderByRecipe(recipeUnlock);
+            orderManager.OrderByRecipe(levelManager.maxSpecialRecipeInThisLevel);
             Debug.Log("By recipe");
         }
         else

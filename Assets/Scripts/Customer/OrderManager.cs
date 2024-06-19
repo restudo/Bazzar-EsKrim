@@ -10,27 +10,26 @@ public class OrderManager : MonoBehaviour
     [SerializeField] private SO_IngredientObject baseIngredients;
     [SerializeField] private SO_IngredientObject flavorIngredients;
     [SerializeField] private SO_IngredientObject toppingIngredients;
-    [SerializeField] private SO_RecipeList recipeList;
-    [SerializeField] private SO_LevelDataList levelDataIngredientCodes;
+    [SerializeField] private SO_LevelDataList levelDataList;
 
     // Method to add a base ingredient to the order
     private void AddBaseIngredient()
     {
-        Ingredient baseIngredient = GetRandomIngredientFromArray(baseIngredients.ingredientObjects, levelDataIngredientCodes.levelDataList[GameManager.Instance.currentLevel - 1].baseIngredientCode.Length);
+        Ingredient baseIngredient = GetRandomIngredientFromArray(baseIngredients.ingredientObjects, levelDataList.levelDataList[GameManager.Instance.currentLevel - 1].baseIngredientCode.Length);
         productIngredientsCodes[0] = baseIngredient.IngredientCode;
     }
 
     // Method to add a flavor ingredient to the order
     private void AddFlavorIngredient(int index)
     {
-        Ingredient flavorIngredient = GetRandomIngredientFromArray(flavorIngredients.ingredientObjects, levelDataIngredientCodes.levelDataList[GameManager.Instance.currentLevel - 1].flavorIngredientCode.Length);
+        Ingredient flavorIngredient = GetRandomIngredientFromArray(flavorIngredients.ingredientObjects, levelDataList.levelDataList[GameManager.Instance.currentLevel - 1].flavorIngredientCode.Length);
         productIngredientsCodes[index] = flavorIngredient.IngredientCode;
     }
 
     // Method to add a topping ingredient to the order
     private void AddToppingIngredient(int index)
     {
-        Ingredient toppingIngredient = GetRandomIngredientFromArray(toppingIngredients.ingredientObjects, levelDataIngredientCodes.levelDataList[GameManager.Instance.currentLevel - 1].toppingIngredientCode.Length);
+        Ingredient toppingIngredient = GetRandomIngredientFromArray(toppingIngredients.ingredientObjects, levelDataList.levelDataList[GameManager.Instance.currentLevel - 1].toppingIngredientCode.Length);
         productIngredientsCodes[index] = toppingIngredient.IngredientCode;
     }
 
@@ -126,7 +125,7 @@ public class OrderManager : MonoBehaviour
             }
             else if (i == randomMaxOrder - 1) // Last element
             {
-                int unlockedToppingsCount = levelDataIngredientCodes.levelDataList[GameManager.Instance.currentLevel - 1].toppingIngredientCode.Length;
+                int unlockedToppingsCount = levelDataList.levelDataList[GameManager.Instance.currentLevel - 1].toppingIngredientCode.Length;
                 if (unlockedToppingsCount > 0)
                 {
                     AddToppingIngredient(i);
@@ -143,19 +142,15 @@ public class OrderManager : MonoBehaviour
 
     public void OrderByRecipe(int recipeUnlockIndex)
     {
-        int randomRecipeIndex = Random.Range(0, recipeUnlockIndex - 1);
-        if(GameManager.Instance.currentLevel == recipeUnlockIndex + 1)
-        {
-            randomRecipeIndex = recipeUnlockIndex - 1;
-        }
+        int randomRecipeIndex = Random.Range(0, recipeUnlockIndex);
 
-        int maxOrderByRecipe = recipeList.recipeList[randomRecipeIndex].ingredientsCodes.Length;
+        int maxOrderByRecipe = levelDataList.levelDataList[GameManager.Instance.currentLevel - 1].recipeList[randomRecipeIndex].ingredientsCodes.Length;
 
         productIngredientsCodes = new int[maxOrderByRecipe];
 
         for (int i = 0; i < maxOrderByRecipe; i++)
         {
-            productIngredientsCodes[i] = recipeList.recipeList[randomRecipeIndex].ingredientsCodes[i];
+            productIngredientsCodes[i] = (int)levelDataList.levelDataList[GameManager.Instance.currentLevel - 1].recipeList[randomRecipeIndex].ingredientsCodes[i];
         }
 
         DisplayOrder();

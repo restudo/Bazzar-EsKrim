@@ -780,7 +780,7 @@ MonoBehaviour:
   flavorIngredients: {fileID: 11400000, guid: d1a1314fc55272e46b5477f7b980fb12, type: 2}
   toppingIngredients: {fileID: 11400000, guid: da302e7759ed88e4aa1e75ef322e6abb, type: 2}
   recipeList: {fileID: 11400000, guid: 5b9a662412ec7a045bb9bd257f4fafe0, type: 2}
-  levelDataIngredientCodes: {fileID: 11400000, guid: cda18b11f7d02c74d9227b34da2e05a8, type: 2}
+  levelDataList: {fileID: 11400000, guid: cda18b11f7d02c74d9227b34da2e05a8, type: 2}
 --- !u!114 &4310184148618538891
 MonoBehaviour:
   m_ObjectHideFlags: 0

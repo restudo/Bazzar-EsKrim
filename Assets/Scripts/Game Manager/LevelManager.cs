@@ -11,6 +11,7 @@ public class LevelManager : MonoBehaviour
 {
     [HideInInspector] public int maxOrderHeight = 6; //maximum available slots in delivery queue (set in init)
     [HideInInspector] public int spawnSpecialRecipeAfterXCustomer;
+    [HideInInspector] public int maxSpecialRecipeInThisLevel;
     [HideInInspector] public int customerCounter;	
     [HideInInspector] public int deliveryQueueIngredient;	//number of items in delivery queue
     [HideInInspector] public bool[] availableSeatForCustomers;
@@ -53,6 +54,7 @@ public class LevelManager : MonoBehaviour
         LevelData levelData = GameManager.Instance.levelDataList.levelDataList[GameManager.Instance.currentLevel - 1];
         maxOrderHeight = levelData.maxOrderHeight;
         spawnSpecialRecipeAfterXCustomer = levelData.spawnSpecialRecipeAfterXCustomer;
+        maxSpecialRecipeInThisLevel = levelData.recipeList.Length;
         customerDelay = levelData.customerDelay;
         doubleCustomerProbability = levelData.doubleCustomerProbability;
         pointPerCustomer = levelData.pointPerCustomer;

@@ -30,21 +30,22 @@ public enum IngredientName
     StrawberryFlavor = 1009,
     MatchaFlavor = 1010,
     CookiesAndCreamFlavor = 1011,
-    BubblegumFlavor = 1012,
-    ChocomintFlavor = 1013,
-    MangoFlavor = 1014,
-    TaroFlavor = 1015,
+    AvocadoFlavor = 1012,
+    BubblegumFlavor = 1013,
+    ChocomintFlavor = 1014,
+    MangoFlavor = 1015,
+    TaroFlavor = 1016,
 
-    AlmondTopping = 1016,
-    MessesTopping = 1017,
-    CherryTopping = 1018,
-    BiscuitTopping = 1019,
-    ChocochipTopping = 1020,
-    MarshmallowTopping = 1021,
-    AstorTopping = 1022,
-    NutsTopping = 1023,
-    OrangeTopping = 1024,
-    StrawberryTopping = 1025
+    AlmondTopping = 1017,
+    MessesTopping = 1018,
+    CherryTopping = 1019,
+    BiscuitTopping = 1020,
+    ChocochipTopping = 1021,
+    MarshmallowTopping = 1022,
+    AstorTopping = 1023,
+    NutsTopping = 1024,
+    OrangeTopping = 1025,
+    StrawberryTopping = 1026
 }
 
 public enum Scenes
