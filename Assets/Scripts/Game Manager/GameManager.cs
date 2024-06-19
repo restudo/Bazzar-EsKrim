@@ -87,14 +87,14 @@ public class GameManager : MonoBehaviour
                 PlayerPrefs.SetInt("FlavorUnlocked", 6);
                 PlayerPrefs.SetInt("ToppingUnlocked", 6);
 
-                PlayerPrefs.SetInt("RecipeUnlocked", GetRecipeUnlock() + 1);
+                // PlayerPrefs.SetInt("RecipeUnlocked", GetRecipeUnlock() + 1);
                 break;
             case 3:
                 PlayerPrefs.SetInt("BaseUnlocked", 6);
                 PlayerPrefs.SetInt("FlavorUnlocked", 10);
                 PlayerPrefs.SetInt("ToppingUnlocked", 10);
 
-                PlayerPrefs.SetInt("RecipeUnlocked", GetRecipeUnlock() + 1);
+                // PlayerPrefs.SetInt("RecipeUnlocked", GetRecipeUnlock() + 1);
                 break;
             default:
                 break;
