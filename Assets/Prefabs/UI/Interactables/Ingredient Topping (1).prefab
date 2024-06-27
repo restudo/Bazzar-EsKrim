@@ -58,7 +58,7 @@ MonoBehaviour:
     dressIngredientSprite: {fileID: 0}
     plateIngredientSprite: {fileID: 0}
   ingredientPrefab: {fileID: 6495018262924332237, guid: 5f5f95725a85c524897ab9a5b282140c, type: 3}
-  scrollRect: {fileID: 0}
+  glowingPlate: {fileID: 0}
 --- !u!1 &3236602478933841488
 GameObject:
   m_ObjectHideFlags: 0
@@ -87,7 +87,7 @@ RectTransform:
   m_GameObject: {fileID: 3236602478933841488}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1559850884222505342}
@@ -95,7 +95,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0.0000071526, y: -0.0000061989}
-  m_SizeDelta: {x: 246, y: 311}
+  m_SizeDelta: {x: 229, y: 283}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &567488780022191155
 CanvasRenderer:

@@ -10,9 +10,10 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     [HideInInspector] public IngredientDetails ingredientDetails;
 
     [SerializeField] private GameObject ingredientPrefab = null;
-    [SerializeField] private ScrollRect scrollRect;
+    [SerializeField] private GameObject glowingPlate;
+    // [SerializeField] private ScrollRect scrollRect;
     // [SerializeField] private ScrollController scrollController;
-    
+
     private Camera mainCamera;
     private Transform parentIngredient;
     private IngredientHolder ingredientHolder;
@@ -40,6 +41,8 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         ingredientHolder.canDeliverOrder = false;
 
         levelManager = FindObjectOfType<LevelManager>();
+
+        glowingPlate.SetActive(false);
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -52,6 +55,8 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         // isDragging = true; // Mark that a drag has started
 
         EventHandler.CallCloseTrashBinEvent();
+
+        glowingPlate.SetActive(true);
 
         // Check if the input is from a touch device or mouse
         bool isSingleFingerTouch = Input.touchCount == 1 && eventData.pointerId >= 0;
@@ -104,6 +109,8 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             }
 
             ingredientHolder.canDeliverOrder = true;
+
+            glowingPlate.SetActive(false);
 
             // else
             // {
@@ -291,14 +298,14 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         ingredient.IngredientType = ingredientDetails.ingredientType;
 
         SpriteRenderer spriteRenderer = ingredientGameobject.GetComponentInChildren<SpriteRenderer>();
-        if (ingredientDetails.ingredientType == IngredientType.Topping)
-        {
-            spriteRenderer.sprite = ingredientDetails.plateIngredientSprite;
-        }
-        else
-        {
-            spriteRenderer.sprite = ingredientDetails.dressIngredientSprite;
-        }
+        spriteRenderer.sprite = ingredientDetails.dressIngredientSprite;
+        // if (ingredientDetails.ingredientType == IngredientType.Topping)
+        // {
+        //     spriteRenderer.sprite = ingredientDetails.plateIngredientSprite;
+        // }
+        // else
+        // {
+        // }
 
         spriteRenderer.sortingLayerName = "Ingredient Holder";
         spriteRenderer.sortingOrder = 1;

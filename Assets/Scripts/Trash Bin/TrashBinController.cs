@@ -104,7 +104,7 @@ public class TrashBinController : MonoBehaviour
 
             if (!isAnimate)
             {
-                OpenTrashBin();
+                // OpenTrashBin();
 
                 isAnimate = true;
             }
@@ -115,7 +115,7 @@ public class TrashBinController : MonoBehaviour
 
             if (isAnimate)
             {
-                CloseTrashBin();
+                // CloseTrashBin();
 
                 // Squish();
 
@@ -151,14 +151,6 @@ public class TrashBinController : MonoBehaviour
         }
     }
 
-    private void OpenTrashBin()
-    {
-        spriteRenderer.sprite = state[1];
-
-        // topSprite.DOLocalRotate(new Vector3(0, 0, -29), 0.3f).SetEase(Ease.OutExpo);
-        // topSprite.DOLocalMove(new Vector3(0.242f, 1.776f, 0), 0.3f).SetEase(Ease.OutExpo);
-    }
-
     private void Squish()
     {
         // // squish
@@ -170,7 +162,7 @@ public class TrashBinController : MonoBehaviour
         // });
     }
 
-    private void CloseTrashBin()
+    public void CloseTrashBin()
     {
         spriteRenderer.sprite = state[0];
 
@@ -178,5 +170,13 @@ public class TrashBinController : MonoBehaviour
         // topSprite.DOLocalMove(topPosition, 0.15f).SetEase(Ease.OutExpo);
 
         currentClick = 0;
+    }
+
+    public void OpenTrashBin()
+    {
+        spriteRenderer.sprite = state[1];
+
+        // topSprite.DOLocalRotate(new Vector3(0, 0, -29), 0.3f).SetEase(Ease.OutExpo);
+        // topSprite.DOLocalMove(new Vector3(0.242f, 1.776f, 0), 0.3f).SetEase(Ease.OutExpo);
     }
 }

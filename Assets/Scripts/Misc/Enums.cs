@@ -29,10 +29,10 @@ public enum IngredientName
     VanillaFlavor = 1008,
     StrawberryFlavor = 1009,
     MatchaFlavor = 1010,
-    CookiesAndCreamFlavor = 1011,
-    AvocadoFlavor = 1012,
+    BerryFlavor = 1011,
+    CandyFlavor = 1012,
     BubblegumFlavor = 1013,
-    ChocomintFlavor = 1014,
+    MoccaFlavor = 1014,
     MangoFlavor = 1015,
     TaroFlavor = 1016,
 

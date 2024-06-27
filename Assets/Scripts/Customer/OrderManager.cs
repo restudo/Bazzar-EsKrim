@@ -6,6 +6,7 @@ public class OrderManager : MonoBehaviour
     [HideInInspector] public int[] productIngredientsCodes;
 
     [SerializeField] private GameObject BubblePos;
+    [SerializeField] private SO_IngredientList ingredientList;
     [SerializeField] private SO_IngredientObject allIngredients;
     [SerializeField] private SO_IngredientObject baseIngredients;
     [SerializeField] private SO_IngredientObject flavorIngredients;
@@ -13,6 +14,14 @@ public class OrderManager : MonoBehaviour
     [SerializeField] private SO_LevelDataList levelDataList;
 
     // Method to add a base ingredient to the order
+    // private void AddBaseIngredient()
+    // {
+    //     int ingredientCode = 0;
+    //     int randomIndex = Random.Range(0, Mathf.Min(unlockedCount, ingredientArray.Length));
+
+    //     Ingredient baseIngredient = GetRandomIngredientFromArray(baseIngredients.ingredientObjects, levelDataList.levelDataList[GameManager.Instance.currentLevel - 1].baseIngredientCode.Length);
+    //     productIngredientsCodes[0] = baseIngredient.IngredientCode;
+    // }
     private void AddBaseIngredient()
     {
         Ingredient baseIngredient = GetRandomIngredientFromArray(baseIngredients.ingredientObjects, levelDataList.levelDataList[GameManager.Instance.currentLevel - 1].baseIngredientCode.Length);

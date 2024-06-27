@@ -177,7 +177,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 534.5349, y: -156}
+  m_AnchoredPosition: {x: 534.5349, y: -150}
   m_SizeDelta: {x: 785.43, y: 178.69}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &47786900
@@ -473,7 +473,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 534.5349, y: 4.99499}
+  m_AnchoredPosition: {x: 534.5349, y: 13.855001}
   m_SizeDelta: {x: 805.62, y: 161.02}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &259451775
@@ -668,6 +668,10 @@ PrefabInstance:
       propertyPath: scrollRect
       value: 
       objectReference: {fileID: 1279052167}
+    - target: {fileID: 8798142534471061310, guid: 5f58cd34726131541b795e8d5c0ed1d1, type: 3}
+      propertyPath: glowingPlate
+      value: 
+      objectReference: {fileID: 1943831859}
     - target: {fileID: 8798142534471061310, guid: 5f58cd34726131541b795e8d5c0ed1d1, type: 3}
       propertyPath: scrollController
       value: 
@@ -894,6 +898,7 @@ RectTransform:
   - {fileID: 1877472731}
   - {fileID: 854072396}
   - {fileID: 1279052166}
+  - {fileID: 995473381}
   m_Father: {fileID: 1396411754}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
@@ -965,6 +970,90 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 337028429}
   m_CullTransparentMesh: 1
+--- !u!1 &343144154
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 343144155}
+  - component: {fileID: 343144156}
+  m_Layer: 0
+  m_Name: Shadow
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &343144155
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 343144154}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.302055, y: 0.41363412, z: 0.302055}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 1296408961}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &343144156
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 343144154}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 3
+  m_Sprite: {fileID: 21300000, guid: ef2a838f8ba1b2244808dfb26f97e07e, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 5.34, y: 7.39}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
 --- !u!1001 &381854775
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1073,6 +1162,10 @@ PrefabInstance:
       propertyPath: scrollRect
       value: 
       objectReference: {fileID: 1279052167}
+    - target: {fileID: 8798142534471061310, guid: 5f58cd34726131541b795e8d5c0ed1d1, type: 3}
+      propertyPath: glowingPlate
+      value: 
+      objectReference: {fileID: 1943831859}
     - target: {fileID: 8798142534471061310, guid: 5f58cd34726131541b795e8d5c0ed1d1, type: 3}
       propertyPath: scrollController
       value: 
@@ -1341,10 +1434,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ingredient Flavor (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 3619617365886212028, guid: ba48931503c9afe45ab4235f1166705e, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3619617365886212028, guid: ba48931503c9afe45ab4235f1166705e, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3805363079458301109, guid: ba48931503c9afe45ab4235f1166705e, type: 3}
       propertyPath: scrollRect
       value: 
       objectReference: {fileID: 854072398}
+    - target: {fileID: 3805363079458301109, guid: ba48931503c9afe45ab4235f1166705e, type: 3}
+      propertyPath: glowingPlate
+      value: 
+      objectReference: {fileID: 1943831859}
     - target: {fileID: 3805363079458301109, guid: ba48931503c9afe45ab4235f1166705e, type: 3}
       propertyPath: scrollController
       value: 
@@ -1474,10 +1579,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ingredient Flavor (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 3619617365886212028, guid: ba48931503c9afe45ab4235f1166705e, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3619617365886212028, guid: ba48931503c9afe45ab4235f1166705e, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3805363079458301109, guid: ba48931503c9afe45ab4235f1166705e, type: 3}
       propertyPath: scrollRect
       value: 
       objectReference: {fileID: 854072398}
+    - target: {fileID: 3805363079458301109, guid: ba48931503c9afe45ab4235f1166705e, type: 3}
+      propertyPath: glowingPlate
+      value: 
+      objectReference: {fileID: 1943831859}
     - target: {fileID: 3805363079458301109, guid: ba48931503c9afe45ab4235f1166705e, type: 3}
       propertyPath: scrollController
       value: 
@@ -1687,6 +1804,10 @@ PrefabInstance:
       propertyPath: scrollRect
       value: 
       objectReference: {fileID: 1877472733}
+    - target: {fileID: 5951623604161498372, guid: e2bee6b5a64799545b62d7b66dcccf30, type: 3}
+      propertyPath: glowingPlate
+      value: 
+      objectReference: {fileID: 1943831859}
     - target: {fileID: 5951623604161498372, guid: e2bee6b5a64799545b62d7b66dcccf30, type: 3}
       propertyPath: scrollController
       value: 
@@ -2043,8 +2164,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -9.040009}
-  m_SizeDelta: {x: 280, y: 18.08}
+  m_AnchoredPosition: {x: 0, y: -35.345}
+  m_SizeDelta: {x: 97.660034, y: 70.69}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &691951023
 MonoBehaviour:
@@ -2066,7 +2187,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: a48cb4ab4670d3a48a3669d358fa4cde, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5a184fda953542f4290c5cc5cd303708, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2398,6 +2519,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxOrderHeight: 6
   spawnSpecialRecipeAfterXCustomer: 3
+  maxSpecialRecipeInThisLevel: 0
   customerCounter: 0
   deliveryQueueIngredient: 0
   availableSeatForCustomers: 00000000
@@ -2503,6 +2625,81 @@ Transform:
   - {fileID: 1110320951}
   m_Father: {fileID: 909970261}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &995473380
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 995473381}
+  - component: {fileID: 995473383}
+  - component: {fileID: 995473382}
+  m_Layer: 5
+  m_Name: Box Image
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &995473381
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 995473380}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 337028430}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 28.953}
+  m_SizeDelta: {x: 90.71, y: 488.07}
+  m_Pivot: {x: 0, y: 0.5}
+--- !u!114 &995473382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 995473380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: c4b038d762fbb1a4c8e6c39f4a4bde67, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &995473383
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 995473380}
+  m_CullTransparentMesh: 1
 --- !u!224 &1029333733 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6498339801424959312, guid: ba48931503c9afe45ab4235f1166705e, type: 3}
@@ -2551,11 +2748,12 @@ Transform:
   m_GameObject: {fileID: 1058764448}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.094, y: -3.66, z: 0}
+  m_LocalPosition: {x: 6.19, y: -4.32, z: 0}
   m_LocalScale: {x: 0.45, y: 0.45, z: 0.45}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1899757517}
+  - {fileID: 1682310911}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &1058764453
@@ -2711,10 +2909,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ingredient Flavor (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 3619617365886212028, guid: ba48931503c9afe45ab4235f1166705e, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3619617365886212028, guid: ba48931503c9afe45ab4235f1166705e, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3805363079458301109, guid: ba48931503c9afe45ab4235f1166705e, type: 3}
       propertyPath: scrollRect
       value: 
       objectReference: {fileID: 854072398}
+    - target: {fileID: 3805363079458301109, guid: ba48931503c9afe45ab4235f1166705e, type: 3}
+      propertyPath: glowingPlate
+      value: 
+      objectReference: {fileID: 1943831859}
     - target: {fileID: 3805363079458301109, guid: ba48931503c9afe45ab4235f1166705e, type: 3}
       propertyPath: scrollController
       value: 
@@ -2955,6 +3165,10 @@ PrefabInstance:
       propertyPath: scrollRect
       value: 
       objectReference: {fileID: 1877472733}
+    - target: {fileID: 5951623604161498372, guid: e2bee6b5a64799545b62d7b66dcccf30, type: 3}
+      propertyPath: glowingPlate
+      value: 
+      objectReference: {fileID: 1943831859}
     - target: {fileID: 5951623604161498372, guid: e2bee6b5a64799545b62d7b66dcccf30, type: 3}
       propertyPath: scrollController
       value: 
@@ -3509,10 +3723,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ingredient Flavor (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 3619617365886212028, guid: ba48931503c9afe45ab4235f1166705e, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3619617365886212028, guid: ba48931503c9afe45ab4235f1166705e, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3805363079458301109, guid: ba48931503c9afe45ab4235f1166705e, type: 3}
       propertyPath: scrollRect
       value: 
       objectReference: {fileID: 854072398}
+    - target: {fileID: 3805363079458301109, guid: ba48931503c9afe45ab4235f1166705e, type: 3}
+      propertyPath: glowingPlate
+      value: 
+      objectReference: {fileID: 1943831859}
     - target: {fileID: 3805363079458301109, guid: ba48931503c9afe45ab4235f1166705e, type: 3}
       propertyPath: scrollController
       value: 
@@ -3850,6 +4076,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1877472733}
     - target: {fileID: 5951623604161498372, guid: e2bee6b5a64799545b62d7b66dcccf30, type: 3}
+      propertyPath: glowingPlate
+      value: 
+      objectReference: {fileID: 1943831859}
+    - target: {fileID: 5951623604161498372, guid: e2bee6b5a64799545b62d7b66dcccf30, type: 3}
       propertyPath: scrollController
       value: 
       objectReference: {fileID: 1877472732}
@@ -4056,11 +4286,13 @@ Transform:
   m_GameObject: {fileID: 1296408959}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.2, y: -2.19, z: 0}
+  m_LocalPosition: {x: 3.2, y: -1.95, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
+  - {fileID: 343144155}
   - {fileID: 1523927855}
+  - {fileID: 1943831860}
   - {fileID: 1667028371}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4096,7 +4328,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0027371645, y: 0.011180401}
+  m_Offset: {x: -0.002737403, y: 0.52785575}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -4107,7 +4339,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.8383372, y: 3.9842405}
+  m_Size: {x: 2.9440358, y: 2.3724287}
   m_EdgeRadius: 0
 --- !u!1 &1334604814
 GameObject:
@@ -4600,6 +4832,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1279052167}
     - target: {fileID: 8798142534471061310, guid: 5f58cd34726131541b795e8d5c0ed1d1, type: 3}
+      propertyPath: glowingPlate
+      value: 
+      objectReference: {fileID: 1943831859}
+    - target: {fileID: 8798142534471061310, guid: 5f58cd34726131541b795e8d5c0ed1d1, type: 3}
       propertyPath: scrollController
       value: 
       objectReference: {fileID: 1279052170}
@@ -4782,7 +5018,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.55, y: 0.55, z: 0.55}
+  m_LocalScale: {x: 0.65, y: 0.65, z: 0.65}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1296408961}
@@ -4827,8 +5063,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: c7fdcd158efd01840993675ab6b07459, type: 3}
+  m_SortingOrder: 2
+  m_Sprite: {fileID: 21300000, guid: 00dbe7bee8d3fba4cafe73bf6ecc2448, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -5328,7 +5564,7 @@ Transform:
   m_GameObject: {fileID: 1667028370}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.009999752, y: -0.64999986, z: 0}
+  m_LocalPosition: {x: 0, y: 0.197, z: 0}
   m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -5366,7 +5602,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.005897522, y: 0.7775569}
+  m_Offset: {x: -0.002737403, y: 0.41272247}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -5377,7 +5613,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 3.5548806, y: 4.8786287}
+  m_Size: {x: 3.6760643, y: 2.9692547}
   m_EdgeRadius: 0
 --- !u!114 &1667028373
 MonoBehaviour:
@@ -5393,7 +5629,92 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canDeliverOrder: 0
   levelManager: {fileID: 909970260}
-  trashbin: {fileID: 1058764449}
+  trashBin: {fileID: 1058764449}
+  trashBinHighlight: {fileID: 1682310910}
+--- !u!1 &1682310910
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1682310911}
+  - component: {fileID: 1682310912}
+  m_Layer: 0
+  m_Name: Highlight
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1682310911
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1682310910}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.031, y: -0.547, z: 0}
+  m_LocalScale: {x: 0.71036327, y: 1.6126956, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1058764452}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &1682310912
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1682310910}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 1
+  m_Sprite: {fileID: 21300000, guid: 702f013ccc699e044aab8749cb7d3d2f, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
 --- !u!1001 &1749693669
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5843,6 +6164,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1877472733}
     - target: {fileID: 5951623604161498372, guid: e2bee6b5a64799545b62d7b66dcccf30, type: 3}
+      propertyPath: glowingPlate
+      value: 
+      objectReference: {fileID: 1943831859}
+    - target: {fileID: 5951623604161498372, guid: e2bee6b5a64799545b62d7b66dcccf30, type: 3}
       propertyPath: scrollController
       value: 
       objectReference: {fileID: 1877472732}
@@ -5947,7 +6272,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 247.00499, y: 45}
+  m_AnchoredPosition: {x: 246, y: 32}
   m_SizeDelta: {x: 1198.08, y: 169.07}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1864242071
@@ -5970,7 +6295,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 37a534b0d5e4f0d4c8f9c19ddb68bf84, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7de9086f2df03b646b9ead980d35c10d, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -6212,13 +6537,97 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 5fa404909aeec5349b7f627558813637, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+--- !u!1 &1943831859
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1943831860}
+  - component: {fileID: 1943831861}
+  m_Layer: 0
+  m_Name: GLOWING AREA Dressing ESKRIM
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1943831860
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1943831859}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.65, y: 0.65, z: 0.65}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 1296408961}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &1943831861
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1943831859}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 1
+  m_Sprite: {fileID: 21300000, guid: 702f013ccc699e044aab8749cb7d3d2f, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 6.62, y: 4.07}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -6332,6 +6741,10 @@ PrefabInstance:
       propertyPath: scrollRect
       value: 
       objectReference: {fileID: 1279052167}
+    - target: {fileID: 8798142534471061310, guid: 5f58cd34726131541b795e8d5c0ed1d1, type: 3}
+      propertyPath: glowingPlate
+      value: 
+      objectReference: {fileID: 1943831859}
     - target: {fileID: 8798142534471061310, guid: 5f58cd34726131541b795e8d5c0ed1d1, type: 3}
       propertyPath: scrollController
       value: 
@@ -6579,6 +6992,10 @@ PrefabInstance:
       propertyPath: scrollRect
       value: 
       objectReference: {fileID: 1877472733}
+    - target: {fileID: 5951623604161498372, guid: e2bee6b5a64799545b62d7b66dcccf30, type: 3}
+      propertyPath: glowingPlate
+      value: 
+      objectReference: {fileID: 1943831859}
     - target: {fileID: 5951623604161498372, guid: e2bee6b5a64799545b62d7b66dcccf30, type: 3}
       propertyPath: scrollController
       value: 
@@ -6974,10 +7391,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ingredient Flavor (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3619617365886212028, guid: ba48931503c9afe45ab4235f1166705e, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3619617365886212028, guid: ba48931503c9afe45ab4235f1166705e, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3805363079458301109, guid: ba48931503c9afe45ab4235f1166705e, type: 3}
       propertyPath: scrollRect
       value: 
       objectReference: {fileID: 854072398}
+    - target: {fileID: 3805363079458301109, guid: ba48931503c9afe45ab4235f1166705e, type: 3}
+      propertyPath: glowingPlate
+      value: 
+      objectReference: {fileID: 1943831859}
     - target: {fileID: 3805363079458301109, guid: ba48931503c9afe45ab4235f1166705e, type: 3}
       propertyPath: scrollController
       value: 
@@ -6985,7 +7414,7 @@ PrefabInstance:
     - target: {fileID: 6223874439131162758, guid: ba48931503c9afe45ab4235f1166705e, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 01a6a04b5f5daef4784a78363ea26b01, type: 3}
+      objectReference: {fileID: 21300000, guid: 1fa6dd40ea5c40843ae13f370067c7d0, type: 3}
     - target: {fileID: 6498339801424959312, guid: ba48931503c9afe45ab4235f1166705e, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -7250,11 +7679,15 @@ PrefabInstance:
     - target: {fileID: 6172581379185969264, guid: 5f58cd34726131541b795e8d5c0ed1d1, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 96da524547fe58945b35954e24bfc4aa, type: 3}
+      objectReference: {fileID: 21300000, guid: 3e9c6bf61e47746498fb0c33fdad1e93, type: 3}
     - target: {fileID: 8798142534471061310, guid: 5f58cd34726131541b795e8d5c0ed1d1, type: 3}
       propertyPath: scrollRect
       value: 
       objectReference: {fileID: 1279052167}
+    - target: {fileID: 8798142534471061310, guid: 5f58cd34726131541b795e8d5c0ed1d1, type: 3}
+      propertyPath: glowingPlate
+      value: 
+      objectReference: {fileID: 1943831859}
     - target: {fileID: 8798142534471061310, guid: 5f58cd34726131541b795e8d5c0ed1d1, type: 3}
       propertyPath: scrollController
       value: 

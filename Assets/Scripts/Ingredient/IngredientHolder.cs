@@ -7,20 +7,15 @@ public class IngredientHolder : MonoBehaviour
     [HideInInspector] public bool canDeliverOrder;
 
     [SerializeField] LevelManager levelManager;
-    [SerializeField] TrashBinController trashbin;
+    [SerializeField] TrashBinController trashBin;
+    [SerializeField] GameObject trashBinHighlight;
 
-
-    //Private flags
     private Vector3 initialPosition;
     private Collider2D plateCollider;
-    private Vector3 platePos;
 
     void Awake()
     {
-        // transform.position = GameObject.FindGameObjectWithTag("Plate").transform.position;
-
         plateCollider = GetComponent<Collider2D>();
-
         canDeliverOrder = false;
         initialPosition = transform.position;
     }
@@ -37,7 +32,7 @@ public class IngredientHolder : MonoBehaviour
         EventHandler.ResetPlatePosition -= ResetPosition;
     }
 
-    void Update()
+    private void Update()
     {
         if (GameManager.Instance.isGameActive && canDeliverOrder)
         {
@@ -45,123 +40,119 @@ public class IngredientHolder : MonoBehaviour
         }
     }
 
-    void ManageDeliveryDrag()
+    private void ManageDeliveryDrag()
     {
-        if (!((Input.touches.Length > 0 && Input.touches[0].phase == TouchPhase.Moved) || Input.GetMouseButtonDown(0)))
+        if (!(Input.touches.Length > 0 && Input.touches[0].phase == TouchPhase.Moved) && !Input.GetMouseButtonDown(0))
         {
             return;
         }
 
         if (plateCollider != null)
         {
-            // Convert mouse position to world space
-            platePos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z));
-
-            if (plateCollider.bounds.Contains(platePos)) // && Ingredient not in hand
+            Vector3 platePos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z));
+            if (plateCollider.bounds.Contains(platePos))
             {
                 StartCoroutine(CreateDeliveryPackage());
             }
         }
     }
 
-    IEnumerator CreateDeliveryPackage()
+    private IEnumerator CreateDeliveryPackage()
     {
         while (canDeliverOrder && levelManager.deliveryQueueIngredient > 0)
         {
-            //follow mouse or touch
-            // platePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            // platePos = new Vector3(platePos.x, platePos.y, -0.5f);
-
-            //follow player's finger
-            // transform.position = platePos;
             transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z));
+            GameObject[] availableCustomers = GameObject.FindGameObjectsWithTag("Customer");
 
-            //deliver (dragging the plate) is not possible when user is not touching screen
-            //so we must decide what we are going to do after dragging and releasing the plate
-            if (Input.touches.Length < 1 && !Input.GetMouseButton(0))
+            foreach (GameObject customer in availableCustomers)
             {
-                //if we are giving the order to a customer (plate is close enough)
-                GameObject[] availableCustomers = GameObject.FindGameObjectsWithTag("Customer");
-
-                //if there is no customer in shop, take the plate back.
-                if (availableCustomers.Length < 1)
-                {
-                    //take the plate back to it's initial position
-                    ResetPosition();
-                    yield break;
-                }
-
-                bool delivered = false;
-                GameObject theCustomer = null;
-                for (int i = 0; i < availableCustomers.Length; i++)
-                {
-                    if (availableCustomers[i].GetComponent<CustomerController>().isCloseEnoughToDelivery)
-                    {
-                        //we know that just 1 customer is always nearest to the delivery. so "theCustomer" is unique.
-                        theCustomer = availableCustomers[i];
-
-                        if (levelManager.deliveryQueueIngredient > 1)
-                        {
-                            delivered = true;
-                        }
-                        else
-                        {
-                            delivered = false;
-
-                            theCustomer.GetComponent<CustomerController>().BaseOnlyServed();
-
-                            //TODO: make customer angry
-                            Debug.Log("Customer Angry");
-                        }
-                    }
-                }
-
-                //if customer got the delivery
-                if (delivered)
-                {
-                    //debug delivery
-                    for (int i = 0; i < levelManager.deliveryQueueIngredientsContent.Count; i++)
-                    {
-                        print("Delivery Items ID " + i.ToString() + " = " + levelManager.deliveryQueueIngredientsContent[i]);
-                    }
-
-                    //let the customers know what he got.
-                    bool isOrderCorrect = theCustomer.GetComponent<CustomerController>().ReceiveOrder(levelManager.deliveryQueueIngredientsContent);
-
-                    if (isOrderCorrect)
-                    {
-                        // reset and destroy serving plate contents
-                        ResetMainQueue();
-                    }
-
-                    //take the plate back to it's initial position
-                    ResetPosition();
-                }
-                else
-                {
-                    ResetPosition();
-                }
+                customer.transform.GetChild(customer.transform.childCount - 1).gameObject.SetActive(true);
             }
 
-            yield return 0;
+            trashBinHighlight.SetActive(true);
+            trashBin.OpenTrashBin();
+
+            if (Input.touches.Length < 1 && !Input.GetMouseButton(0))
+            {
+                HandleDelivery(availableCustomers);
+                yield break;
+            }
+
+            yield return null;
+        }
+    }
+
+    private void HandleDelivery(GameObject[] availableCustomers)
+    {
+        if (availableCustomers.Length < 1)
+        {
+            ResetPosition();
+            return;
+        }
+
+        bool delivered = false;
+        CustomerController theCustomer = null;
+
+        foreach (GameObject customerObj in availableCustomers)
+        {
+            CustomerController customer = customerObj.GetComponent<CustomerController>();
+            if (customer.isCloseEnoughToDelivery)
+            {
+                theCustomer = customer;
+                delivered = levelManager.deliveryQueueIngredient > 1;
+                if (!delivered)
+                {
+                    customer.BaseOnlyServed();
+                    Debug.Log("Customer Angry");
+                }
+                break;
+            }
+        }
+
+        if (delivered)
+        {
+            DebugDelivery();
+            bool isOrderCorrect = theCustomer.ReceiveOrder(levelManager.deliveryQueueIngredientsContent);
+
+            if (isOrderCorrect)
+            {
+                ResetMainQueue();
+            }
+        }
+
+        ResetPosition();
+        DeactivateCustomers(availableCustomers);
+        trashBinHighlight.SetActive(false);
+        trashBin.CloseTrashBin();
+    }
+
+    private void DebugDelivery()
+    {
+        for (int i = 0; i < levelManager.deliveryQueueIngredientsContent.Count; i++)
+        {
+            print($"Delivery Items ID {i} = {levelManager.deliveryQueueIngredientsContent[i]}");
+        }
+    }
+
+    private void DeactivateCustomers(GameObject[] availableCustomers)
+    {
+        foreach (GameObject customer in availableCustomers)
+        {
+            customer.transform.GetChild(customer.transform.childCount - 1).gameObject.SetActive(false);
         }
     }
 
     private void ResetMainQueue()
     {
-        //reset main queue
         levelManager.deliveryQueueIngredient = 0;
-        // levelManager.deliveryQueueIsFull = false;
         levelManager.deliveryQueueIngredientsContent.Clear();
 
-        //destroy the contents of the serving plate.
         foreach (Transform child in transform)
         {
             Destroy(child.gameObject);
         }
 
         EventHandler.CallEnableTabButtonEvent((int)IngredientType.Base);
-
         EventHandler.CallDisableTabButtonEvent((int)IngredientType.Flavor);
         EventHandler.CallDisableTabButtonEvent((int)IngredientType.Topping);
 
@@ -170,21 +161,19 @@ public class IngredientHolder : MonoBehaviour
 
     private void ResetPosition()
     {
-        //just incase user wants to move this to trashbin, check it here first
-        if (trashbin.isCloseEnoughToTrashbin)
+        if (trashBin.isCloseEnoughToTrashbin)
         {
             EventHandler.CallCloseTrashBinEvent();
             EventHandler.CallSquishTrashBinEvent();
             ResetMainQueue();
         }
 
-        //jump to initial trasnform
         transform.DOMove(initialPosition, 0.15f).SetEase(Ease.OutExpo);
         canDeliverOrder = false;
         StartCoroutine(Reactivate());
     }
 
-    IEnumerator Reactivate()
+    private IEnumerator Reactivate()
     {
         yield return new WaitForSeconds(0.25f);
         canDeliverOrder = true;
