@@ -18,7 +18,10 @@ public class PatienceBarController : MonoBehaviour
     private void Start()
     {
         customerController = GetComponent<CustomerController>();
+    }
 
+    public void StartDecreasingPatience()
+    {
         patienceDuration = customerController.customerPatience;
         currentPatience = patienceDuration;
 
@@ -28,10 +31,7 @@ public class PatienceBarController : MonoBehaviour
             patienceSlider.maxValue = patienceDuration;
             patienceSlider.value = patienceDuration;
         }
-    }
 
-    public void StartDecreasingPatience()
-    {
         // Start the coroutine to decrease patience over time
         decreaseCoroutine = StartCoroutine(DecreasePatienceOverTime());
     }

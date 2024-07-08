@@ -9,8 +9,9 @@ TagManager:
   - Topping
   - Plate
   - Ingredient Holder
-  - Customer
   - Flavor Point
+  - Level Manager
+  - Customer
   layers:
   - Default
   - TransparentFX

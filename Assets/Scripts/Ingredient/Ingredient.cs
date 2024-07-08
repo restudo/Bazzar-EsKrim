@@ -9,29 +9,52 @@ public class Ingredient : MonoBehaviour
     [SerializeField] private IngredientType _ingredientType;
     public IngredientType IngredientType { get { return _ingredientType; } set { _ingredientType = value; } }
     // [SerializeField] private GameObject[] allIngredients;
-    [SerializeField] private SO_IngredientObject allIngredients;
+    // [SerializeField] private SO_IngredientObject allIngredients;
 
-    private void Awake()
+    private ObjectPool<Ingredient> ingredientPool;
+    private bool isReleased = false;
+
+    // private void Awake()
+    // {
+    //     spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+    // }
+
+    // private void Start()
+    // {
+    //     if (IngredientCode != 0)
+    //     {
+    //         Init(IngredientCode);
+    //     }
+    // }
+
+    // public void Init(int ingredientCodeParam)
+    // {
+    //     foreach (GameObject item in allIngredients.ingredientObjects)
+    //     {
+    //         if (item.GetComponent<Ingredient>().IngredientCode == ingredientCodeParam)
+    //         {
+    //             transform.GetChild(transform.childCount - 1).localPosition = item.transform.GetChild(item.transform.childCount - 1).localPosition;
+    //         }
+    //     }
+    // }  
+
+    public void SetIngredientPool(ObjectPool<Ingredient> pool)
     {
-        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        ingredientPool = pool;
     }
 
-    private void Start()
+    public ObjectPool<Ingredient> GetIngredientPool()
     {
-        if (IngredientCode != 0)
-        {
-            Init(IngredientCode);
-        }
+        return ingredientPool;
     }
 
-    public void Init(int ingredientCodeParam)
+    public void SetReleaseFlag(bool isReleased)
     {
-        foreach (GameObject item in allIngredients.ingredientObjects)
-        {
-            if (item.GetComponent<Ingredient>().IngredientCode == ingredientCodeParam)
-            {
-                transform.GetChild(transform.childCount - 1).localPosition = item.transform.GetChild(item.transform.childCount - 1).localPosition;
-            }
-        }
-    }  
+        this.isReleased = isReleased;
+    }
+
+    public bool GetReleaseFlag()
+    {
+        return isReleased;
+    }
 }

@@ -8,5 +8,6 @@ public class IngredientDetails
     public IngredientType ingredientType;
     public Sprite basketIngredientSprite;
     public Sprite dressIngredientSprite;
+    public float nextIngredientPosY = 0.8162498f;
     // public Sprite plateIngredientSprite;
 }

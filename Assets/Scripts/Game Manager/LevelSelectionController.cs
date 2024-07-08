@@ -36,6 +36,7 @@ public class LevelSelectionController : MonoBehaviour
         GameManager.Instance.isGameActive = true;
 
         // Load the selected level
-        SceneController.Instance.LoadScene((Scenes)levelSelected - 1);
+        // SceneController.Instance.LoadScene((Scenes)levelSelected - 1);
+        SceneController.Instance.FadeAndLoadScene((Scenes)levelSelected - 1);
     }
 }

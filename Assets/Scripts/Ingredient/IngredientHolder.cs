@@ -59,14 +59,22 @@ public class IngredientHolder : MonoBehaviour
 
     private IEnumerator CreateDeliveryPackage()
     {
+        GameObject[] availableCustomers;
+
         while (canDeliverOrder && levelManager.deliveryQueueIngredient > 0)
         {
             transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z));
-            GameObject[] availableCustomers = GameObject.FindGameObjectsWithTag("Customer");
+            availableCustomers = GameObject.FindGameObjectsWithTag("Customer");
 
             foreach (GameObject customer in availableCustomers)
             {
-                customer.transform.GetChild(customer.transform.childCount - 1).gameObject.SetActive(true);
+                CustomerController customerController = customer.GetComponent<CustomerController>();
+
+                if (customerController.IsOnSeat())
+                {
+                    int lastChildIndex = customer.transform.childCount - 1;
+                    customer.transform.GetChild(lastChildIndex).gameObject.SetActive(true);
+                }
             }
 
             trashBinHighlight.SetActive(true);
@@ -103,7 +111,6 @@ public class IngredientHolder : MonoBehaviour
                 if (!delivered)
                 {
                     customer.BaseOnlyServed();
-                    Debug.Log("Customer Angry");
                 }
                 break;
             }
@@ -111,7 +118,7 @@ public class IngredientHolder : MonoBehaviour
 
         if (delivered)
         {
-            DebugDelivery();
+            // DebugDelivery();
             bool isOrderCorrect = theCustomer.ReceiveOrder(levelManager.deliveryQueueIngredientsContent);
 
             if (isOrderCorrect)
@@ -147,16 +154,22 @@ public class IngredientHolder : MonoBehaviour
         levelManager.deliveryQueueIngredient = 0;
         levelManager.deliveryQueueIngredientsContent.Clear();
 
+        // release ingredient pool
         foreach (Transform child in transform)
         {
-            Destroy(child.gameObject);
+            if (child.TryGetComponent<Ingredient>(out Ingredient ingredient))
+            {
+                if (!ingredient.GetReleaseFlag())
+                {
+                    ingredient.GetIngredientPool().Release(ingredient);
+                    ingredient.SetReleaseFlag(true);
+                }
+            }
         }
 
         EventHandler.CallEnableTabButtonEvent((int)IngredientType.Base);
         EventHandler.CallDisableTabButtonEvent((int)IngredientType.Flavor);
         EventHandler.CallDisableTabButtonEvent((int)IngredientType.Topping);
-
-        Debug.Log("Reset Queue");
     }
 
     private void ResetPosition()

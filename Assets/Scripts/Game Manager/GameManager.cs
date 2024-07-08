@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public bool isGameActive;
     [HideInInspector] public bool isHolding;
 
+    // public int randomMaxOrder = 2;
+
     public static GameManager Instance;
     private void Awake()
     {
@@ -31,26 +33,36 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            PlayerPrefs.SetInt("BaseUnlocked", GetBaseUnlock() + 1);
-            Debug.Log(GetBaseUnlock());
-        }
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            PlayerPrefs.SetInt("FlavorUnlocked", GetFlavorUnlock() + 1);
-            Debug.Log(GetFlavorUnlock());
-        }
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            PlayerPrefs.SetInt("ToppingUnlocked", GetToppingUnlock() + 1);
-            Debug.Log(GetToppingUnlock());
-        }
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            PlayerPrefs.SetInt("RecipeUnlocked", GetRecipeUnlock() + 1);
-            Debug.Log(GetRecipeUnlock());
-        }
+        // if(Input.GetKeyDown(KeyCode.T))
+        // {
+        //     randomMaxOrder++;
+        // }
+        
+        // if(Input.GetKeyDown(KeyCode.U))
+        // {
+        //     randomMaxOrder--;
+        // }
+
+        // if (Input.GetKeyDown(KeyCode.I))
+        // {
+        //     PlayerPrefs.SetInt("BaseUnlocked", GetBaseUnlock() + 1);
+        //     Debug.Log(GetBaseUnlock());
+        // }
+        // if (Input.GetKeyDown(KeyCode.O))
+        // {
+        //     PlayerPrefs.SetInt("FlavorUnlocked", GetFlavorUnlock() + 1);
+        //     Debug.Log(GetFlavorUnlock());
+        // }
+        // if (Input.GetKeyDown(KeyCode.P))
+        // {
+        //     PlayerPrefs.SetInt("ToppingUnlocked", GetToppingUnlock() + 1);
+        //     Debug.Log(GetToppingUnlock());
+        // }
+        // if (Input.GetKeyDown(KeyCode.Q))
+        // {
+        //     PlayerPrefs.SetInt("RecipeUnlocked", GetRecipeUnlock() + 1);
+        //     Debug.Log(GetRecipeUnlock());
+        // }
     }
 
     public int GetBaseUnlock()

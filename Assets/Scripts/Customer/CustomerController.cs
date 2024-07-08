@@ -6,23 +6,22 @@ using UnityEngine.Pool;
 
 public class CustomerController : MonoBehaviour
 {
-    public float customerPatience = 30.0f;  //seconds 
+    // Public properties
+    public float customerPatience = 30.0f;  // seconds 
 
     [HideInInspector] public int mySeat;
     [HideInInspector] public Vector3 destination;
     [HideInInspector] public Vector3 leavePoint;
     [HideInInspector] public bool isCloseEnoughToDelivery;
 
+    // Serialized fields for customization in the inspector
+    [SerializeField] private SO_CustomerList customerList;
     [Range(0.1f, 1f)][SerializeField] private float decreasePatiencePercentage = 0.25f;
     [SerializeField] private float customerSpeed = 3.0f;
     [SerializeField] private GameObject HudPos;
     [SerializeField] private Sprite[] customerMoods;
-    // [SerializeField] private GameObject[] allIngredients;
-    // [SerializeField] private GameObject[] baseIngredients;
-    // [SerializeField] private GameObject[] flavorIngredients;
-    // [SerializeField] private GameObject[] toppingIngredients;
 
-    private string customerName; //random name
+    // Private variables
     private int maxOrderSize = 6;
     private int moodIndex;
     private bool isOnSeat;
@@ -40,35 +39,29 @@ public class CustomerController : MonoBehaviour
     private IngredientHolder ingredientHolder;
     private PatienceBarController patienceBarController;
     private MoneySpawner moneySpawner;
+    private CustomerPool customerPool;
 
     private SpriteRenderer spriteRenderer;
     private Collider2D customerCol;
 
-    void Awake()
+    private void Awake()
     {
+        // Cache component references
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         customerCol = GetComponent<Collider2D>();
 
+        // Find and cache references to other objects in the scene
         levelManagerObj = FindObjectOfType<LevelManager>().gameObject;
         levelManager = levelManagerObj.GetComponent<LevelManager>();
-
+        customerPool = levelManagerObj.GetComponent<CustomerPool>();
         orderManager = GetComponent<OrderManager>();
-
         deliveryPlate = FindObjectOfType<IngredientHolder>().gameObject;
         ingredientHolder = deliveryPlate.GetComponent<IngredientHolder>();
         deliveryPlateCol = deliveryPlate.GetComponent<Collider2D>();
-
         patienceBarController = GetComponent<PatienceBarController>();
-
         moneySpawner = FindObjectOfType<MoneySpawner>();
 
-        isCloseEnoughToDelivery = false;
-        isOnSeat = false;
-        isLeaving = false;
         isFacingRight = true;
-
-        moodIndex = 0;
-        maxOrderSize = levelManager.maxOrderHeight;
     }
 
     private void OnEnable()
@@ -81,88 +74,92 @@ public class CustomerController : MonoBehaviour
         EventHandler.ChaseCustomer -= ChaseCustomer;
     }
 
-    private void Start()
-    {
-        Init();
-    }
-
     private void LateUpdate()
     {
-        //check if this customer is close enough to delivery, in order to receive it.
+        // Check if the customer is close enough to the delivery plate to receive the order
         if (ingredientHolder.canDeliverOrder)
         {
             CheckDistanceToDelivery();
         }
     }
 
-    private void Init()
+    public void Init()
     {
-        // give name
-        customerName = "Customer_" + Random.Range(100, 10000);
-        gameObject.name = customerName;
+        // Initialize customer with random details from the customer list
+        int randomCustomer = Random.Range(0, customerList.customerDetails.Count);
+        customerPatience = customerList.customerDetails[randomCustomer].customerPatience;
+        customerMoods = customerList.customerDetails[randomCustomer].customerMoods;
+        spriteRenderer.color = customerList.customerDetails[randomCustomer].customerColor; // remove later
 
-        // order
-        // int recipeUnlock = GameManager.Instance.GetRecipeUnlock();
+        // Reset flags and variables
+        isCloseEnoughToDelivery = false;
+        isOnSeat = false;
+        isLeaving = false;
+        moodIndex = 0;
+        maxOrderSize = levelManager.maxOrderHeight;
+
         if (levelManager.maxSpecialRecipeInThisLevel > 0 && levelManager.customerCounter == levelManager.spawnSpecialRecipeAfterXCustomer)
         {
+            // Generate order by recipe
             orderManager.OrderByRecipe(levelManager.maxSpecialRecipeInThisLevel);
             Debug.Log("By recipe");
         }
         else
         {
+            // Generate a random order
             int randomMaxOrder = Random.Range(2, maxOrderSize + 1);
             orderManager.OrderRandomProduct(randomMaxOrder);
-            Debug.Log("Random");
         }
 
-        HudPos.SetActive(false);
 
+        // Hide HUD and highlight
+        HudPos.SetActive(false);
+        transform.GetChild(transform.childCount - 1).gameObject.SetActive(false);
+
+        // Start moving to the assigned seat
         StartCoroutine(GoToSeat());
     }
 
     private IEnumerator GoToSeat()
     {
-        if (transform.position.x > destination.x && isFacingRight)
-        {
-            Flip();
-        }
-        else if (transform.position.x < destination.x && !isFacingRight)
-        {
-            Flip();
-        }
+        // Flip sprite if necessary based on the destination
+        FlipCheck(destination);
 
-        Vector3 targetPosition;
+        // Tween for yoyo movement (up and down) while moving horizontally
         Tween yoyoTween = transform.DOLocalMoveY(destination.y + 0.35f, 0.35f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.Linear);
 
+        // Move towards the destination
         while ((transform.position - new Vector3(destination.x, transform.position.y, destination.z)).sqrMagnitude > 0.01f)
         {
-            // Create a target position with the current Y value to keep Y-axis unchanged
-            targetPosition = new Vector3(destination.x, transform.position.y, destination.z);
-
-            // Move smoothly towards the target position
+            Vector3 targetPosition = new Vector3(destination.x, transform.position.y, destination.z);
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, customerSpeed * Time.deltaTime);
-
-            // Wait for the next frame before continuing the loop
             yield return null;
         }
 
-        // Kill the specific Y-axis movement tween
+        // Stop the yoyo movement and finalize position
         yoyoTween.Kill();
-
         yield return new WaitForEndOfFrame();
 
-        // Ensure the final position is exactly the target position, with the final Y value
         transform.DOMove(destination, 0.3f).SetEase(Ease.Linear).OnComplete(() =>
         {
             isOnSeat = true;
             HudPos.SetActive(true);
-
-            patienceBarController.StartDecreasingPatience(); // Start the patience bar
+            patienceBarController.StartDecreasingPatience();
         });
+    }
+
+    private void FlipCheck(Vector3 target)
+    {
+        // Flip the sprite to face the correct direction
+        if ((transform.position.x > target.x && isFacingRight) || (transform.position.x < target.x && !isFacingRight))
+        {
+            Flip();
+        }
     }
 
     private void Flip()
     {
+        // Rotate the sprite to flip it
         isFacingRight = !isFacingRight;
         spriteRenderer.transform.Rotate(0, 180, 0);
     }
@@ -178,159 +175,101 @@ public class CustomerController : MonoBehaviour
         // Get the mouse position in world coordinates
         mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        // Check if the delivery plate bounds intersect with the trash bin bounds
+        // Check if the delivery plate bounds intersect with the customer bounds
         isDeliveryPlateColliding = customerCol.bounds.Intersects(deliveryPlateCol.bounds);
 
-        // Check if the mouse position is within the bounds of the trash bin collider
+        // Check if the mouse position is within the bounds of the customer collider
         isMousePositionColliding = customerCol.bounds.Contains(mousePosition);
 
-        // Set the flag if both conditions are 
-        if (isDeliveryPlateColliding && isMousePositionColliding)
-        {
-            isCloseEnoughToDelivery = true;
-
-            // add other method like change the tint of customer
-        }
-        else
-        {
-            isCloseEnoughToDelivery = false;
-        }
+        // Set the flag if both conditions are true
+        isCloseEnoughToDelivery = isDeliveryPlateColliding && isMousePositionColliding;
     }
 
     public void UpdateCustomerMood(int moodIndex)
     {
+        // Update the customer's mood sprite (currently commented out)
         // spriteRenderer.sprite = customerMoods[moodIndex];
     }
 
     private void OrderIsCorrect()
     {
-        Debug.Log("Order is correct.");
+        moodIndex = 2;  // Make the customer happy
 
-        moodIndex = 2;  //make him/her happy :>
-
-        // TODO: trigger progression (number of successful order, etc)
-
+        // Trigger progression events and spawn money
         EventHandler.CallSetMoneyPosToCustomerPosEvent(transform.position);
         moneySpawner.moneyPool.Get();
 
+        // Stop decreasing patience and start leaving
         patienceBarController.StopDecreasingPatience();
         StartCoroutine(Leave());
     }
 
     private void OrderIsIncorrect()
     {
-        Debug.Log("Order is not correct.");
+        moodIndex = 3; // Make the customer angry
 
-        moodIndex = 3; //make him/her angry :<
-
-        // patienceBarController.StopDecreasingPatience();
-        // StartCoroutine(Leave());
-
+        // Decrease patience based on a percentage
         float decreaseValue = customerPatience * decreasePatiencePercentage;
         patienceBarController.DecreaseWithValue(decreaseValue);
     }
 
     public IEnumerator Leave()
     {
-        //prevent double animation
-        if (isLeaving)
-        {
-            yield break;
-        }
+        if (isLeaving) yield break;
 
-        //set the leave flag to prevent multiple calls to this function
+        // Flip the sprite if necessary and set leaving flag
+        FlipCheck(leavePoint);
         isLeaving = true;
 
+        // Mark the seat as available and hide HUD and highlight
         levelManager.availableSeatForCustomers[mySeat] = true;
-
-        //animate (close) patienceBar
-        //animate (close) request bubble
         HudPos.SetActive(false);
+        transform.GetChild(transform.childCount - 1).gameObject.SetActive(false);
 
-        if (transform.position.x > leavePoint.x && isFacingRight)
-        {
-            Flip();
-        }
-        else if (transform.position.x < leavePoint.x && !isFacingRight)
-        {
-            Flip();
-        }
-
-        //wait for seconds
         yield return new WaitForSeconds(0.15f);
 
-        Vector3 targetPosition;
+        // Tween for yoyo movement (up and down) while moving horizontally
         Tween yoyoTween = transform.DOLocalMoveY(destination.y + 0.35f, 0.35f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.Linear);
 
+        // Move towards the leave point
         while ((transform.position - new Vector3(leavePoint.x, transform.position.y, leavePoint.z)).sqrMagnitude > 0.01f)
         {
-            // Create a target position with the current Y value to keep Y-axis unchanged
-            targetPosition = new Vector3(leavePoint.x, transform.position.y, leavePoint.z);
-
-            // Move smoothly towards the target position
+            Vector3 targetPosition = new Vector3(leavePoint.x, transform.position.y, leavePoint.z);
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, customerSpeed * Time.deltaTime);
-
-            // Wait for the next frame before continuing the loop
             yield return null;
         }
 
-        // Kill the specific Y-axis movement tween
+        // Stop the yoyo movement and finalize position
         yoyoTween.Kill();
-
-        // Ensure the final position is exactly the target position, with the final Y value
         transform.DOMove(leavePoint, 0.3f).SetEase(Ease.Linear).OnComplete(() =>
         {
-            Destroy(gameObject);
+            orderManager.ReleaseAllIngredients();
+            customerPool.customerPool.Release(this);  // Return customer to the pool
         });
     }
 
     public bool ReceiveOrder(List<int> myReceivedOrder)
     {
-        //check the received order with the original one (customer's wish).
         int[] myOriginalOrder = orderManager.productIngredientsCodes;
 
-        //check if the two array are the same, meaning that we received what we were looking for.
-        //print(myOriginalOrder + " - " + myReceivedOrder);
+        // Check if the received order matches the original order
+        if (myOriginalOrder.Length != myReceivedOrder.Count) return OrderIsIncorrectAndReturnFalse();
 
-        //1.check the length of two arrays
-        if (myOriginalOrder.Length == myReceivedOrder.Count)
+        for (int i = 0; i < myOriginalOrder.Length; i++)
         {
-            //2.compare two arrays
-            bool detectInequality = false;
-            for (int i = 0; i < myOriginalOrder.Length; i++)
-            {
-                Debug.Log("Original Order: " + myOriginalOrder[i] + " vs Received Order: " + myReceivedOrder[i]);
-                if (myOriginalOrder[i] != myReceivedOrder[i])
-                {
-                    detectInequality = true;
-                }
-            }
-
-            if (!detectInequality)
-            {
-                OrderIsCorrect();
-
-                EventHandler.CallCorrectOrderEvent();
-
-                return true;
-            }
-            else
-            {
-                OrderIsIncorrect(); //different array items
-
-                EventHandler.CallIncorrectOrderEvent();
-
-                return false;
-            }
+            if (myOriginalOrder[i] != myReceivedOrder[i]) return OrderIsIncorrectAndReturnFalse();
         }
-        else
-        {
-            OrderIsIncorrect(); //different array length
 
-            EventHandler.CallIncorrectOrderEvent();
+        OrderIsCorrect();
+        EventHandler.CallCorrectOrderEvent();
+        return true;
+    }
 
-            return false;
-        }
+    private bool OrderIsIncorrectAndReturnFalse()
+    {
+        OrderIsIncorrect();
+        EventHandler.CallIncorrectOrderEvent();
+        return false;
     }
 
     private void ChaseCustomer()
@@ -341,5 +280,10 @@ public class CustomerController : MonoBehaviour
     public void BaseOnlyServed()
     {
         OrderIsIncorrect();
+    }
+
+    public bool IsOnSeat()
+    {
+        return isOnSeat;
     }
 }
