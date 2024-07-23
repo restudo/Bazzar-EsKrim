@@ -50,11 +50,15 @@ public enum IngredientName
 
 public enum Scenes
 {
-    Level1,
-    Level2,
-    Level3,
-    Level4,
-    Level5,
+    Level,
+    Menu
+}
+
+public enum GameStates
+{
     MainMenu,
-    LevelSelection
+    Collection,
+    LevelSelection,
+    MainGame,
+    MiniGame
 }

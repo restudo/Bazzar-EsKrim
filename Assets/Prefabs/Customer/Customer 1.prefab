@@ -423,6 +423,7 @@ MonoBehaviour:
   destination: {x: 0, y: 0, z: 0}
   leavePoint: {x: 0, y: 0, z: 0}
   isCloseEnoughToDelivery: 0
+  customerList: {fileID: 0}
   decreasePatiencePercentage: 0.33333
   customerSpeed: 5
   HudPos: {fileID: 3360901661718602744}
@@ -440,10 +441,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   productIngredientsCodes: 
-  ingredientPrefab: {fileID: 6495018262924332237, guid: 5f5f95725a85c524897ab9a5b282140c, type: 3}
-  BubblePos: {fileID: 5189934425792625927}
+  ingredientHolderPos: {fileID: 0}
   specialRecipeTag: {fileID: 8965391506936472974}
-  levelDataList: {fileID: 11400000, guid: cda18b11f7d02c74d9227b34da2e05a8, type: 2}
+  holderOffset: []
 --- !u!114 &3516723263549578601
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -715,7 +715,7 @@ Transform:
   m_GameObject: {fileID: 5189934425792625927}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.9543055, y: 0.0134591255, z: 0}
+  m_LocalPosition: {x: 1.9543055, y: 0.07, z: 0}
   m_LocalScale: {x: 0.36708656, y: 0.36708656, z: 0.36708656}
   m_ConstrainProportionsScale: 1
   m_Children:

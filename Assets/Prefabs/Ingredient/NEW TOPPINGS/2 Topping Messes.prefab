@@ -60,6 +60,14 @@ PrefabInstance:
       propertyPath: _ingredientType
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 2957173198663682563, guid: 5f5f95725a85c524897ab9a5b282140c, type: 3}
+      propertyPath: m_Size.y
+      value: 0.5592066
+      objectReference: {fileID: 0}
+    - target: {fileID: 2957173198663682563, guid: 5f5f95725a85c524897ab9a5b282140c, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.47227877
+      objectReference: {fileID: 0}
     - target: {fileID: 3224140681895905443, guid: 5f5f95725a85c524897ab9a5b282140c, type: 3}
       propertyPath: m_Sprite
       value: 

@@ -163,4 +163,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _ingredientCode: 0
   _ingredientType: 0
-  allIngredients: {fileID: 11400000, guid: 3b5b2ad427679a04398145806911d62e, type: 2}

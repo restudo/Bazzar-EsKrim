@@ -1,20 +1,15 @@
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
+using DG.Tweening;
 
 public class OrderManager : MonoBehaviour
 {
     [HideInInspector] public int[] productIngredientsCodes;
-    [SerializeField] private GameObject ingredientPrefab;
-
-    [SerializeField] private GameObject BubblePos;
+    [SerializeField] private GameObject ingredientHolderPos;
     [SerializeField] private GameObject specialRecipeTag;
-    // [SerializeField] private SO_IngredientList ingredientList;
-    // [SerializeField] private SO_IngredientObject allIngredients;
-    // [SerializeField] private SO_IngredientObject baseIngredients;
-    // [SerializeField] private SO_IngredientObject flavorIngredients;
-    // [SerializeField] private SO_IngredientObject toppingIngredients;
-    [SerializeField] private SO_LevelDataList levelDataList;
+    [SerializeField] private float[] holderYPos;
 
+    private SO_LevelDataList[] levelDataLists;
     private UiInventorySlot[] baseIngredientDetails;
     private UiInventorySlot[] flavorIngredientDetails;
     private UiInventorySlot[] toppingIngredientDetails;
@@ -27,6 +22,8 @@ public class OrderManager : MonoBehaviour
 
     private void Awake()
     {
+        levelDataLists = GameManager.Instance.levelDataLists;
+
         ingredientsInPool = new List<Ingredient>();
 
         specialRecipeTag.SetActive(false);
@@ -88,28 +85,17 @@ public class OrderManager : MonoBehaviour
     {
         productIngredientsCodes[0] = (int)baseIngredientDetails[GetRandomIngredientFromIngredientDetails(baseIngredientDetails)].ingredientDetails.ingredientCode;
     }
-    // private void AddBaseIngredient()
-    // {
-    //     Ingredient baseIngredient = GetRandomIngredientFromIngredientDetails(baseIngredients.ingredientObjects, levelDataList.levelDataList[GameManager.Instance.currentLevel - 1].baseIngredientCode.Length);
-    //     productIngredientsCodes[0] = baseIngredient.IngredientCode;
-    // }
 
     // Method to add a flavor ingredient to the order
     private void AddFlavorIngredient(int index)
     {
         productIngredientsCodes[index] = (int)flavorIngredientDetails[GetRandomIngredientFromIngredientDetails(flavorIngredientDetails)].ingredientDetails.ingredientCode;
-
-        // Ingredient flavorIngredient = GetRandomIngredientFromIngredientDetails(flavorIngredients.ingredientObjects, levelDataList.levelDataList[GameManager.Instance.currentLevel - 1].flavorIngredientCode.Length);
-        // productIngredientsCodes[index] = flavorIngredient.IngredientCode;
     }
 
     // Method to add a topping ingredient to the order
     private void AddToppingIngredient(int index)
     {
         productIngredientsCodes[index] = (int)toppingIngredientDetails[GetRandomIngredientFromIngredientDetails(toppingIngredientDetails)].ingredientDetails.ingredientCode;
-
-        // Ingredient toppingIngredient = GetRandomIngredientFromIngredientDetails(toppingIngredients.ingredientObjects, levelDataList.levelDataList[GameManager.Instance.currentLevel - 1].toppingIngredientCode.Length);
-        // productIngredientsCodes[index] = toppingIngredient.IngredientCode;
     }
 
     // Method to get a random ingredient from a specific array
@@ -118,17 +104,11 @@ public class OrderManager : MonoBehaviour
         return Random.Range(0, ingredientDetails.Length);
     }
 
-    // private Ingredient GetRandomIngredientFromIngredientDetails(GameObject[] ingredientArray, int unlockedCount)
-    // {
-    //     int randomIndex = Random.Range(0, Mathf.Min(unlockedCount, ingredientArray.Length));
-    //     return ingredientArray[randomIndex].GetComponent<Ingredient>();
-    // }
-
     private void DisplayOrder()
     {
         GameObject lastIngredient = null;
 
-        float nextPositionY = BubblePos.transform.position.y;
+        float nextPositionY = ingredientHolderPos.transform.position.y;
         int sortingOrder = 1;
 
         foreach (int ingredientCode in productIngredientsCodes)
@@ -158,7 +138,7 @@ public class OrderManager : MonoBehaviour
 
             // Instantiate the new ingredient object
             // GameObject ingredientObject = Instantiate(ingredientPrefab, BubblePos.transform);
-            ingredientPool.SetParent(BubblePos.transform);
+            ingredientPool.SetParent(ingredientHolderPos.transform);
 
             Ingredient ingredientObject = ingredientPool.ingredientPool.Get();
 
@@ -190,71 +170,12 @@ public class OrderManager : MonoBehaviour
                 spriteRenderer.sortingOrder -= 2;
             }
 
-            ingredientObject.transform.position = new Vector3(BubblePos.transform.position.x, nextPositionY, BubblePos.transform.position.z);
+            ingredientObject.transform.position = new Vector3(ingredientHolderPos.transform.position.x, nextPositionY, ingredientHolderPos.transform.position.z);
 
             // Debug.Log($"Instantiated ingredient {ingredientCode} at position {ingredientObject.transform.position} with sorting order {spriteRenderer.sortingOrder}");
         }
 
-        // // Create a dictionary for quick lookup of ingredients by code
-        // Dictionary<int, GameObject> ingredientLookup = new Dictionary<int, GameObject>();
-        // foreach (GameObject ingredientObject in allIngredients.ingredientObjects)
-        // {
-        //     Ingredient ingredient = ingredientObject.GetComponent<Ingredient>();
-        //     ingredientLookup[ingredient.IngredientCode] = ingredientObject;
-        // }
-
-        // GameObject lastTmpIngredient = null; // Initialize to null to avoid uninitialized usage
-        // int tempSortingOrder = 1;
-        // foreach (int ingredientCode in productIngredientsCodes)
-        // {
-        //     if (!ingredientLookup.TryGetValue(ingredientCode, out GameObject tmpIngredient))
-        //     {
-        //         Debug.LogError($"Ingredient code {ingredientCode} not found.");
-        //         continue;
-        //     }
-
-        //     Ingredient ingredient = tmpIngredient.GetComponent<Ingredient>();
-        //     IngredientType ingredientType = ingredient.IngredientType;
-
-        //     Vector3 spawnPosition = BubblePos.transform.position;
-        //     Transform parentTransform = BubblePos.transform;
-
-        //     if (lastTmpIngredient != null)
-        //     {
-        //         Transform pointTransform = lastTmpIngredient.transform.GetChild(lastTmpIngredient.transform.childCount - 1); // Assuming the point transform is the second child
-        //         spawnPosition = pointTransform.position;
-
-        //         if (ingredientType == IngredientType.Topping)
-        //         {
-        //             spawnPosition = lastTmpIngredient.transform.position;
-        //         }
-
-        //         tempSortingOrder++;
-        //     }
-
-        //     // Instantiate the ingredient
-        //     lastTmpIngredient = Instantiate(tmpIngredient, spawnPosition, Quaternion.identity, parentTransform);
-
-        //     // Set the sorting layer
-        //     Transform childlastTmpIngredientTransform = lastTmpIngredient.transform.GetChild(0);
-        //     SpriteRenderer childlastTmpIngredientSpriteRenderer = childlastTmpIngredientTransform.GetComponent<SpriteRenderer>();
-
-        //     childlastTmpIngredientSpriteRenderer.sortingLayerName = "Customer HUD";
-
-        //     if (lastTmpIngredient != null)
-        //     {
-        //         childlastTmpIngredientSpriteRenderer.sortingOrder = tempSortingOrder;
-        //     }
-        //     else
-        //     {
-        //         tempSortingOrder = childlastTmpIngredientSpriteRenderer.sortingOrder;
-        //     }
-
-        //     if (ingredientCode == 1023) // astor
-        //     {
-        //         childlastTmpIngredientSpriteRenderer.sortingOrder -= 2;
-        //     }
-        // }
+        ingredientHolderPos.transform.localPosition = new Vector3(ingredientHolderPos.transform.localPosition.x, holderYPos[productIngredientsCodes.Length - 1], ingredientHolderPos.transform.localPosition.z);
     }
 
     private UiInventorySlot FindIngredientDetail(int ingredientCode)
@@ -283,6 +204,8 @@ public class OrderManager : MonoBehaviour
     // Main method to add ingredients to the order
     public void OrderRandomProduct(int randomMaxOrder)
     {
+        specialRecipeTag.SetActive(false);
+
         productIngredientsCodes = new int[randomMaxOrder];
 
         // Add base ingredient
@@ -301,7 +224,7 @@ public class OrderManager : MonoBehaviour
             }
             else if (i == randomMaxOrder - 1) // Last element
             {
-                int unlockedToppingsCount = levelDataList.levelDataList[GameManager.Instance.currentLevel - 1].toppingIngredientCode.Length;
+                int unlockedToppingsCount = levelDataLists[GameManager.Instance.currentLevel - 1].mainGameLevelData.toppingIngredientCode.Length;
                 if (unlockedToppingsCount > 0)
                 {
                     AddToppingIngredient(i);
@@ -323,13 +246,13 @@ public class OrderManager : MonoBehaviour
 
         int randomRecipeIndex = Random.Range(0, recipeUnlockIndex);
 
-        int maxOrderByRecipe = levelDataList.levelDataList[GameManager.Instance.currentLevel - 1].recipeList[randomRecipeIndex].ingredientsCodes.Length;
+        int maxOrderByRecipe = levelDataLists[GameManager.Instance.currentLevel - 1].mainGameLevelData.recipeList[randomRecipeIndex].ingredientsCodes.Length;
 
         productIngredientsCodes = new int[maxOrderByRecipe];
 
         for (int i = 0; i < maxOrderByRecipe; i++)
         {
-            productIngredientsCodes[i] = (int)levelDataList.levelDataList[GameManager.Instance.currentLevel - 1].recipeList[randomRecipeIndex].ingredientsCodes[i];
+            productIngredientsCodes[i] = (int)levelDataLists[GameManager.Instance.currentLevel - 1].mainGameLevelData.recipeList[randomRecipeIndex].ingredientsCodes[i];
         }
 
         Invoke("DisplayOrder", 0.5f);
@@ -337,19 +260,6 @@ public class OrderManager : MonoBehaviour
 
     public void ReleaseAllIngredients()
     {
-        // release ingredient pool
-        // foreach (Transform child in BubblePos.transform)
-        // {
-        //     if (child.TryGetComponent<Ingredient>(out Ingredient ingredient))
-        //     {
-        //         if (!ingredient.GetReleaseFlag())
-        //         {
-        //             ingredient.GetIngredientPool().Release(ingredient);
-        //             ingredient.SetReleaseFlag(true);
-        //         }
-        //     }
-        // }
-
         foreach (Ingredient ingredient in ingredientsInPool)
         {
             if (!ingredient.GetReleaseFlag())

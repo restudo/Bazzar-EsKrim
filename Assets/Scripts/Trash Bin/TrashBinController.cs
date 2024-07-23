@@ -128,27 +128,26 @@ public class TrashBinController : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (!GameManager.Instance.isGameActive)
+        if (GameManager.Instance.gameStates == GameStates.MainGame && GameManager.Instance.isGameActive)
         {
-            return;
+            currentClick++;
+
+            if (currentClick == 1)
+            {
+                OpenTrashBin();
+            }
+
+            if (currentClick == 2)
+            {
+                EventHandler.CallResetMainQueueEvent();
+                EventHandler.CallResetPlatePositionEvent();
+
+                CloseTrashBin();
+
+                Squish();
+            }
         }
 
-        currentClick++;
-
-        if (currentClick == 1)
-        {
-            OpenTrashBin();
-        }
-
-        if (currentClick == 2)
-        {
-            EventHandler.CallResetMainQueueEvent();
-            EventHandler.CallResetPlatePositionEvent();
-
-            CloseTrashBin();
-
-            Squish();
-        }
     }
 
     private void Squish()

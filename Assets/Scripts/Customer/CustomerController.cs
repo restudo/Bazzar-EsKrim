@@ -32,9 +32,9 @@ public class CustomerController : MonoBehaviour
 
     private Vector2 mousePosition;
     private GameObject deliveryPlate;
-    private GameObject levelManagerObj;
+    private GameObject mainGameControllerObj;
     private Collider2D deliveryPlateCol;
-    private LevelManager levelManager;
+    private MainGameController mainGameController;
     private OrderManager orderManager;
     private IngredientHolder ingredientHolder;
     private PatienceBarController patienceBarController;
@@ -51,9 +51,9 @@ public class CustomerController : MonoBehaviour
         customerCol = GetComponent<Collider2D>();
 
         // Find and cache references to other objects in the scene
-        levelManagerObj = FindObjectOfType<LevelManager>().gameObject;
-        levelManager = levelManagerObj.GetComponent<LevelManager>();
-        customerPool = levelManagerObj.GetComponent<CustomerPool>();
+        mainGameControllerObj = FindObjectOfType<MainGameController>().gameObject;
+        mainGameController = mainGameControllerObj.GetComponent<MainGameController>();
+        customerPool = mainGameController.GetComponent<CustomerPool>();
         orderManager = GetComponent<OrderManager>();
         deliveryPlate = FindObjectOfType<IngredientHolder>().gameObject;
         ingredientHolder = deliveryPlate.GetComponent<IngredientHolder>();
@@ -96,12 +96,12 @@ public class CustomerController : MonoBehaviour
         isOnSeat = false;
         isLeaving = false;
         moodIndex = 0;
-        maxOrderSize = levelManager.maxOrderHeight;
+        maxOrderSize = mainGameController.maxOrderHeight;
 
-        if (levelManager.maxSpecialRecipeInThisLevel > 0 && levelManager.customerCounter == levelManager.spawnSpecialRecipeAfterXCustomer)
+        if (mainGameController.maxSpecialRecipeInThisLevel > 0 && mainGameController.customerCounter == mainGameController.spawnSpecialRecipeAfterXCustomer)
         {
             // Generate order by recipe
-            orderManager.OrderByRecipe(levelManager.maxSpecialRecipeInThisLevel);
+            orderManager.OrderByRecipe(mainGameController.maxSpecialRecipeInThisLevel);
             Debug.Log("By recipe");
         }
         else
@@ -222,7 +222,7 @@ public class CustomerController : MonoBehaviour
         isLeaving = true;
 
         // Mark the seat as available and hide HUD and highlight
-        levelManager.availableSeatForCustomers[mySeat] = true;
+        mainGameController.availableSeatForCustomers[mySeat] = true;
         HudPos.SetActive(false);
         transform.GetChild(transform.childCount - 1).gameObject.SetActive(false);
 

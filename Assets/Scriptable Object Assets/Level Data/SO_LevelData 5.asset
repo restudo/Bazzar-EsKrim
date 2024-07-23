@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95262ed971ade9c42826881b5c69872d, type: 3}
+  m_Name: SO_LevelData 5
+  m_EditorClassIdentifier: 
+  mainGameLevelData:
+    maxOrderHeight: 5
+    spawnSpecialRecipeAfterXCustomer: 4
+    customerDelay: 9
+    doubleCustomerProbability: 0.6
+    maxPoint: 2000
+    pointPerCustomer: 100
+    timer: 180
+    baseIngredientCode: ea030000ee030000eb030000e9030000ea030000
+    flavorIngredientCode: f5030000f4030000f0030000f7030000f8030000
+    toppingIngredientCode: f9030000fa030000ff030000fb03000001040000
+    recipeList:
+    - ingredientsCodes: e9030000f8030000f9030000
+    - ingredientsCodes: ea030000f5030000f403000001040000
+    - ingredientsCodes: eb030000f0030000f4030000f7030000
+  miniGameLevelData:
+    timer: 40
+    totalObjectSpawner: 3

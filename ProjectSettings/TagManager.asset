@@ -9,9 +9,10 @@ TagManager:
   - Topping
   - Plate
   - Ingredient Holder
-  - Flavor Point
-  - Level Manager
   - Customer
+  - Basket
+  - MainGameController
+  - Falling Object Destroyer
   layers:
   - Default
   - TransparentFX

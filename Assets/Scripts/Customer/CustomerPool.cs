@@ -15,7 +15,7 @@ public class CustomerPool : MonoBehaviour
 
     private CustomerController CreateCustomer()
     {
-        CustomerController customer = Instantiate(customerPrefabs);
+        CustomerController customer = Instantiate(customerPrefabs, transform.root);
 
         return customer;
     }

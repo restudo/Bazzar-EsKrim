@@ -5,8 +5,8 @@ public class IngredientPool : MonoBehaviour
 {
     public ObjectPool<Ingredient> ingredientPool;
 
-    [SerializeField] private Ingredient ingredientPrefab; 
-    private LevelManager levelManager; 
+    [SerializeField] private Ingredient ingredientPrefab;
+    private MainGameController mainGameController;
     private Transform lastIngredient;
     private Transform parent;
 
@@ -14,9 +14,9 @@ public class IngredientPool : MonoBehaviour
     {
         lastIngredient = null;
 
-        levelManager = GameObject.FindGameObjectWithTag("Level Manager").GetComponent<LevelManager>();
+        mainGameController = GameObject.FindGameObjectWithTag("MainGameController").GetComponent<MainGameController>();
 
-        ingredientPool = new ObjectPool<Ingredient>(CreateIngredient, OnTakeIngredientFromPool, OnReturnIngredientToPool, OnDestroyIngredient, true, levelManager.maxOrderHeight, levelManager.maxOrderHeight);
+        ingredientPool = new ObjectPool<Ingredient>(CreateIngredient, OnTakeIngredientFromPool, OnReturnIngredientToPool, OnDestroyIngredient, true, mainGameController.maxOrderHeight, mainGameController.maxOrderHeight);
     }
 
     private Ingredient CreateIngredient()

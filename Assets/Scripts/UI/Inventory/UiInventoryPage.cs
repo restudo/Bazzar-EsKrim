@@ -10,13 +10,15 @@ public class UiInventoryPage : MonoBehaviour
     [SerializeField] private UiInventorySlot[] inventorySlot = null;
     [SerializeField] private InventoryLocation _inventoryLocation;
     [SerializeField] private Image imageBlocker;
-    [SerializeField] private SO_LevelDataList levelDataIngredientCodes;
+    private SO_LevelDataList[] levelDataIngredientCodes;
     private int[] ingredientCodeRecipe;
 
     // private ScrollRect scrollRect;
 
     private void Awake()
     {
+        levelDataIngredientCodes = GameManager.Instance.levelDataLists;
+
         // Transform grandparentTransform = GetGrandparentTransform(transform);
         // if (grandparentTransform != null)
         // {
@@ -80,16 +82,16 @@ public class UiInventoryPage : MonoBehaviour
         switch (_inventoryLocation)
         {
             case InventoryLocation.Base:
-                ingredientNames = levelDataIngredientCodes.levelDataList[GameManager.Instance.currentLevel - 1].baseIngredientCode;
+                ingredientNames = levelDataIngredientCodes[GameManager.Instance.currentLevel - 1].mainGameLevelData.baseIngredientCode;
                 break;
             case InventoryLocation.Flavor:
-                ingredientNames = levelDataIngredientCodes.levelDataList[GameManager.Instance.currentLevel - 1].flavorIngredientCode;
+                ingredientNames = levelDataIngredientCodes[GameManager.Instance.currentLevel - 1].mainGameLevelData.flavorIngredientCode;
                 break;
             case InventoryLocation.Topping:
-                ingredientNames = levelDataIngredientCodes.levelDataList[GameManager.Instance.currentLevel - 1].toppingIngredientCode;
+                ingredientNames = levelDataIngredientCodes[GameManager.Instance.currentLevel - 1].mainGameLevelData.toppingIngredientCode;
                 break;
             default:
-                ingredientNames = levelDataIngredientCodes.levelDataList[GameManager.Instance.currentLevel - 1].baseIngredientCode;
+                ingredientNames = levelDataIngredientCodes[GameManager.Instance.currentLevel - 1].mainGameLevelData.baseIngredientCode;
                 break;
         }
 

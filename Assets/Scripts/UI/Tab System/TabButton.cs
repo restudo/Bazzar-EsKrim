@@ -32,7 +32,7 @@ public class TabButton : MonoBehaviour, IPointerDownHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (GameManager.Instance.isGameActive && button.interactable)
+        if (GameManager.Instance.gameStates == GameStates.MainGame && GameManager.Instance.isGameActive && button.interactable)
         {
             tabGroup.OnTabSelected(this);
         }

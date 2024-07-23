@@ -2,10 +2,12 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public SO_LevelDataList levelDataList;
+    public SO_LevelDataList[] levelDataLists;
     public int currentLevel;
-    [HideInInspector] public bool isGameActive;
+    public bool isGameActive;
     [HideInInspector] public bool isHolding;
+
+    public GameStates gameStates { get; set; }
 
     // public int randomMaxOrder = 2;
 
@@ -37,7 +39,7 @@ public class GameManager : MonoBehaviour
         // {
         //     randomMaxOrder++;
         // }
-        
+
         // if(Input.GetKeyDown(KeyCode.U))
         // {
         //     randomMaxOrder--;

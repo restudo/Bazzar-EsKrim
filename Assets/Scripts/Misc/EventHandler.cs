@@ -80,4 +80,11 @@ public static class EventHandler
         if (SetMoneyPosToCustomerPos != null)
             SetMoneyPosToCustomerPos(customerPos);
     }
+    
+    public static event Action AddMiniGameScore;
+    public static void CallAddMiniGameScoreEvent()
+    {
+        if (AddMiniGameScore != null)
+            AddMiniGameScore();
+    }
 }

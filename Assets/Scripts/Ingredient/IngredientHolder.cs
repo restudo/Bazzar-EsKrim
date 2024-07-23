@@ -6,7 +6,7 @@ public class IngredientHolder : MonoBehaviour
 {
     [HideInInspector] public bool canDeliverOrder;
 
-    [SerializeField] LevelManager levelManager;
+    [SerializeField] MainGameController mainGameController;
     [SerializeField] TrashBinController trashBin;
     [SerializeField] GameObject trashBinHighlight;
 
@@ -34,7 +34,7 @@ public class IngredientHolder : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.Instance.isGameActive && canDeliverOrder)
+        if (GameManager.Instance.isGameActive && canDeliverOrder && GameManager.Instance.gameStates == GameStates.MainGame)
         {
             ManageDeliveryDrag();
         }
@@ -61,7 +61,7 @@ public class IngredientHolder : MonoBehaviour
     {
         GameObject[] availableCustomers;
 
-        while (canDeliverOrder && levelManager.deliveryQueueIngredient > 0)
+        while (canDeliverOrder && mainGameController.deliveryQueueIngredient > 0)
         {
             transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z));
             availableCustomers = GameObject.FindGameObjectsWithTag("Customer");
@@ -107,7 +107,7 @@ public class IngredientHolder : MonoBehaviour
             if (customer.isCloseEnoughToDelivery)
             {
                 theCustomer = customer;
-                delivered = levelManager.deliveryQueueIngredient > 1;
+                delivered = mainGameController.deliveryQueueIngredient > 1;
                 if (!delivered)
                 {
                     customer.BaseOnlyServed();
@@ -119,7 +119,7 @@ public class IngredientHolder : MonoBehaviour
         if (delivered)
         {
             // DebugDelivery();
-            bool isOrderCorrect = theCustomer.ReceiveOrder(levelManager.deliveryQueueIngredientsContent);
+            bool isOrderCorrect = theCustomer.ReceiveOrder(mainGameController.deliveryQueueIngredientsContent);
 
             if (isOrderCorrect)
             {
@@ -135,9 +135,9 @@ public class IngredientHolder : MonoBehaviour
 
     private void DebugDelivery()
     {
-        for (int i = 0; i < levelManager.deliveryQueueIngredientsContent.Count; i++)
+        for (int i = 0; i < mainGameController.deliveryQueueIngredientsContent.Count; i++)
         {
-            print($"Delivery Items ID {i} = {levelManager.deliveryQueueIngredientsContent[i]}");
+            print($"Delivery Items ID {i} = {mainGameController.deliveryQueueIngredientsContent[i]}");
         }
     }
 
@@ -151,8 +151,8 @@ public class IngredientHolder : MonoBehaviour
 
     private void ResetMainQueue()
     {
-        levelManager.deliveryQueueIngredient = 0;
-        levelManager.deliveryQueueIngredientsContent.Clear();
+        mainGameController.deliveryQueueIngredient = 0;
+        mainGameController.deliveryQueueIngredientsContent.Clear();
 
         // release ingredient pool
         foreach (Transform child in transform)

@@ -44,7 +44,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a4ba6f0270693c46977f40db19c06ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelDataList: {fileID: 11400000, guid: cda18b11f7d02c74d9227b34da2e05a8, type: 2}
+  levelDataLists:
+  - {fileID: 11400000, guid: cda18b11f7d02c74d9227b34da2e05a8, type: 2}
+  - {fileID: 11400000, guid: a6971271bfa53e44c880c430216893ba, type: 2}
+  - {fileID: 11400000, guid: c7ae02c27598d0442b59da106f63fd1a, type: 2}
+  - {fileID: 11400000, guid: c2401da1a52b9a14cbdc482ecbb49892, type: 2}
+  - {fileID: 11400000, guid: 3780bdd3971b1a3418b1318183aad512, type: 2}
   currentLevel: 0
   isGameActive: 0
   isHolding: 0

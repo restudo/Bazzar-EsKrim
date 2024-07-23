@@ -4,11 +4,13 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "SO_LevelDataList", menuName = "Scriptable Objects/Level Data")]
 public class SO_LevelDataList : ScriptableObject
 {
-    public List<LevelData> levelDataList;
+    public LevelDataMainGame mainGameLevelData;
+
+    public LevelDataMiniGame miniGameLevelData;
 }
 
 [System.Serializable]
-public struct LevelData
+public struct LevelDataMainGame
 {
     [Header("General Settings")]
     [Tooltip("Maximum height of the order.")]
@@ -78,4 +80,11 @@ public struct RecipeCodes
 	ingredientsCodes[1] = 2;
 	ingredientsCodes[2] = 15;
 	*/
+}
+
+[System.Serializable]
+public struct LevelDataMiniGame
+{
+    public float timer;
+    public int totalObjectSpawner;
 }
