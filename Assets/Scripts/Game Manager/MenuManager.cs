@@ -1,3 +1,4 @@
+using BazarEsKrim;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,7 @@ public class MenuManager : MonoBehaviour
 
     [Header("Collection Menu")]
     [SerializeField] private GameObject collectionObj;
+    private CollectionManager collectionManager;
 
     [Header("Level Selection")]
     [SerializeField] private GameObject levelSelectionObj;
@@ -32,6 +34,8 @@ public class MenuManager : MonoBehaviour
                 Debug.LogError("Current Game State = " + GameManager.Instance.gameStates.ToString());
                 break;
         }
+
+        collectionManager = collectionObj.GetComponent<CollectionManager>();
     }
 
     private void Start()
@@ -100,7 +104,11 @@ public class MenuManager : MonoBehaviour
 
     public void Back()
     {
-        if (GameManager.Instance.gameStates != GameStates.MainMenu)
+        if (GameManager.Instance.gameStates == GameStates.CollectionPanel)
+        {
+            collectionManager.CloseCollectionPanel();
+        }
+        else if (GameManager.Instance.gameStates != GameStates.MainMenu)
         {
             LoadToMainMenu();
         }

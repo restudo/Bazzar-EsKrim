@@ -10,9 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3f6be30cbc7b22f44854229338bdf476, type: 3}
-  m_Name: SO_RecipeList
+  m_Name: SO_RecipeList 3
   m_EditorClassIdentifier: 
-  recipeList:
-  - ingredientsCodes: ea030000f0030000f2030000fb030000
-  - ingredientsCodes: ec030000f6030000fc030000
-  - ingredientsCodes: ee030000f4030000
+  ingredientsCodes: ed030000f703000002040000
+  recipeName: Tutty Frutty
+  recipeSprite: {fileID: 21300000, guid: 9ddd84af6ed9d074a95790ecda3447d2, type: 3}

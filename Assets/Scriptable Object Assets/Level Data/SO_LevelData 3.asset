@@ -23,9 +23,8 @@ MonoBehaviour:
     baseIngredientCode: ed030000ec030000ea030000ee030000e9030000
     flavorIngredientCode: f7030000f5030000f6030000f2030000f8030000
     toppingIngredientCode: 020400000004000001040000fc030000ff030000
-    recipeList:
-    - ingredientsCodes: e9030000f703000002040000
-    - ingredientsCodes: eb030000f6030000f8030000
+    sO_RecipeList:
+    - {fileID: 11400000, guid: 5b9a662412ec7a045bb9bd257f4fafe0, type: 2}
   miniGameLevelData:
     timer: 30
     totalObjectSpawner: 2

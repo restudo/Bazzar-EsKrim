@@ -10,8 +10,8 @@ public class MainGameController : MonoBehaviour
     [HideInInspector] public int maxOrderHeight = 6;
     [HideInInspector] public int spawnSpecialRecipeAfterXCustomer;
     [HideInInspector] public int maxSpecialRecipeInThisLevel;
-    [HideInInspector] public int customerCounter;	
-    [HideInInspector] public int deliveryQueueIngredient;	
+    [HideInInspector] public int customerCounter;
+    [HideInInspector] public int deliveryQueueIngredient;
     [HideInInspector] public bool[] availableSeatForCustomers;
     [HideInInspector] public List<int> deliveryQueueIngredientsContent = new List<int>();
 
@@ -48,7 +48,7 @@ public class MainGameController : MonoBehaviour
         LevelDataMainGame levelData = GameManager.Instance.levelDataLists[GameManager.Instance.currentLevel - 1].mainGameLevelData;
         maxOrderHeight = levelData.maxOrderHeight;
         spawnSpecialRecipeAfterXCustomer = levelData.spawnSpecialRecipeAfterXCustomer;
-        maxSpecialRecipeInThisLevel = levelData.recipeList.Length;
+        maxSpecialRecipeInThisLevel = levelData.sO_RecipeList.Length;
         customerDelay = levelData.customerDelay;
         doubleCustomerProbability = levelData.doubleCustomerProbability;
         pointPerCustomer = levelData.pointPerCustomer;

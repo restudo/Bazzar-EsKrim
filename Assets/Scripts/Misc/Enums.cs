@@ -58,6 +58,7 @@ public enum GameStates
 {
     MainMenu,
     Collection,
+    CollectionPanel,
     LevelSelection,
     MainGame,
     MiniGame

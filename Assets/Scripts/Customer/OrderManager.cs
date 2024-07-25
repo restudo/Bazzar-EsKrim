@@ -246,13 +246,13 @@ public class OrderManager : MonoBehaviour
 
         int randomRecipeIndex = Random.Range(0, recipeUnlockIndex);
 
-        int maxOrderByRecipe = levelDataLists[GameManager.Instance.currentLevel - 1].mainGameLevelData.recipeList[randomRecipeIndex].ingredientsCodes.Length;
+        int maxOrderByRecipe = levelDataLists[GameManager.Instance.currentLevel - 1].mainGameLevelData.sO_RecipeList[randomRecipeIndex].ingredientsCodes.Length;
 
         productIngredientsCodes = new int[maxOrderByRecipe];
 
         for (int i = 0; i < maxOrderByRecipe; i++)
         {
-            productIngredientsCodes[i] = (int)levelDataLists[GameManager.Instance.currentLevel - 1].mainGameLevelData.recipeList[randomRecipeIndex].ingredientsCodes[i];
+            productIngredientsCodes[i] = (int)levelDataLists[GameManager.Instance.currentLevel - 1].mainGameLevelData.sO_RecipeList[randomRecipeIndex].ingredientsCodes[i];
         }
 
         Invoke("DisplayOrder", 0.5f);
