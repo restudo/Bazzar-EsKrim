@@ -1,3 +1,4 @@
+using DanielLochner.Assets.SimpleScrollSnap;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,16 +8,21 @@ namespace BazarEsKrim
     {
         public int unlockedLevel;
 
+        [SerializeField] private SimpleScrollSnap simpleScrollSnap;
+
+        [Space(20)]
         [SerializeField] private Button[] collectionDetailButtons;
 
         [Space(20)]
-        [SerializeField] private CollectionPanel[] collectionPanels;
+        [SerializeField] private GameObject collectionPanelContainer;
+        private CollectionPanel[] collectionPanels;
 
         private void Start()
         {
-            foreach (CollectionPanel collectionPanel in collectionPanels)
+            collectionPanels = new CollectionPanel[collectionPanelContainer.transform.childCount];
+            for (int i = 0; i < collectionPanels.Length; i++)
             {
-                collectionPanel.gameObject.SetActive(false);
+                collectionPanels[i] = collectionPanelContainer.transform.GetChild(i).GetComponent<CollectionPanel>();
             }
 
             // add listener to collection button
@@ -25,6 +31,8 @@ namespace BazarEsKrim
                 int index = i;
                 collectionDetailButtons[i].onClick.AddListener(() => OnCollectionDetailClicked(index));
             }
+
+            simpleScrollSnap.gameObject.SetActive(false);
 
             // TODO: change to unlocked level method
             for (int i = 0; i < unlockedLevel; i++)
@@ -39,25 +47,17 @@ namespace BazarEsKrim
             {
                 GameManager.Instance.gameStates = GameStates.CollectionPanel;
 
-                // TODO: avtivate the correct panel of ingredient detail using simple scroll snap
-                collectionPanels[index].gameObject.SetActive(true);
-                Debug.Log("Collection Number " + index);
+                simpleScrollSnap.gameObject.SetActive(true);
+
+                simpleScrollSnap.GoToPanel(index);
             }
         }
 
         public void CloseCollectionPanel()
         {
-            foreach (CollectionPanel collectionPanel in collectionPanels)
-            {
-                if (collectionPanel.gameObject.activeSelf)
-                {
-                    collectionPanel.gameObject.SetActive(false);
+            simpleScrollSnap.gameObject.SetActive(false);
 
-                    GameManager.Instance.gameStates = GameStates.Collection;
-
-                    return;
-                }
-            }
+            GameManager.Instance.gameStates = GameStates.Collection;
         }
     }
 }
