@@ -15,18 +15,18 @@ namespace BazarEsKrim
 
     public class CollectionPanel : MonoBehaviour
     {
-        public SO_LevelDataList[] sO_LevelDataList;
-        // public SO_IngredientList sO_IngredientList;
         //TODO: add SO_Collection for main image thumbnail
+        public SO_RecipeList recipeLists;
 
-        [SerializeField] private GameObject ingredientPrefab;
-        [SerializeField] private GameObject iceCreamHolder;
+        [SerializeField] private CollectionManager collectionManager;
+        [SerializeField] private RectTransform iceCreamHolder;
         [SerializeField] private GameObject ingredientContainer;
         // [SerializeField] private Image mainImage;
         [SerializeField] private TextMeshProUGUI titleText;
         [SerializeField] private CollectionIngredients[] collectionIngredients;
 
         private GameObject lastIngredient = null;
+        private bool canCheckHolderYPos;
 
         private void Awake()
         {
@@ -40,85 +40,75 @@ namespace BazarEsKrim
 
                 ingredientContainer.transform.GetChild(i).gameObject.SetActive(false);
             }
+
+            canCheckHolderYPos = true;
         }
 
-        public void SetCollectionIngredient(int currentCollection)
+        public void SetCollectionIngredient()
         {
-            LevelDataMainGame currentLevelData = sO_LevelDataList[currentCollection].mainGameLevelData;
-
-            if (currentLevelData.sO_RecipeList == null)
+            if (recipeLists == null)
             {
                 return;
             }
 
-            int recipeLengthInCurrentCollection = currentLevelData.sO_RecipeList.Length;
+            titleText.text = recipeLists.recipeName;
 
-            for (int i = 0; i < recipeLengthInCurrentCollection; i++)
+            int ingredientLength = recipeLists.ingredientsCodes.Length;
+
+            for (int i = 0; i < ingredientLength; i++)
             {
-                // mainImage.sprite = currentLevelData.sO_RecipeList[i].recipeSprite; // main image
-                titleText.text = currentLevelData.sO_RecipeList[i].recipeName;
+                ingredientContainer.transform.GetChild(i).gameObject.SetActive(true);
 
-                int ingredientLength = currentLevelData.sO_RecipeList[i].ingredientsCodes.Length;
+                int ingredientCodeIndex = (int)recipeLists.ingredientsCodes[i];
 
-                for (int j = 0; j < ingredientLength; j++)
+                IngredientDetails ingredientDetails = InventoryManager.Instance.GetIngredientDetails(ingredientCodeIndex);
+
+                // change the ingredient holder pos in collection main image panel
+                if (canCheckHolderYPos)
                 {
-                    ingredientContainer.transform.GetChild(j).gameObject.SetActive(true);
-
-                    int ingredientCodeIndex = (int)currentLevelData.sO_RecipeList[i].ingredientsCodes[j];
-
-                    IngredientDetails ingredientDetails = InventoryManager.Instance.GetIngredientDetails(ingredientCodeIndex);
-
-                    collectionIngredients[j].ingredientImage.sprite = ingredientDetails.collectionIngredientSprite;
-                    collectionIngredients[j].ingredientName.text = ingredientDetails.ingredientName;
-
-                    if (ingredientDetails.ingredientType == IngredientType.Topping)
+                    foreach (IngredientHolderPosInfos holderPos in collectionManager.holderYPos.ingredientHolderPosInfos)
                     {
-                        collectionIngredients[j].ingredientImage.GetComponent<RectTransform>().localScale = Vector3.one;
+                        if (holderPos.coneTypes == ingredientDetails.coneTypes)
+                        {
+                            iceCreamHolder.anchoredPosition = new Vector3(iceCreamHolder.anchoredPosition.x, holderPos.holderYPosByHeight[ingredientLength - 1]);
+
+                            canCheckHolderYPos = false;
+                        }
                     }
+                }
 
-                    // // Create the new ingredient GameObject with an Image component
-                    // GameObject ingredient = new GameObject("ingredient", typeof(RectTransform), typeof(Image), typeof(ContentSizeFitter));
+                collectionIngredients[i].ingredientImage.sprite = ingredientDetails.collectionIngredientSprite;
+                collectionIngredients[i].ingredientName.text = ingredientDetails.ingredientName;
 
-                    // // Set the parent of the ingredient to be icecreamholder
-                    // ingredient.transform.SetParent(iceCreamHolder.transform, false);
+                if (ingredientDetails.ingredientType == IngredientType.Topping)
+                {
+                    collectionIngredients[i].ingredientImage.GetComponent<RectTransform>().localScale = Vector3.one;
+                }
 
-                    // ContentSizeFitter ingredientSizeFitter = ingredient.GetComponent<ContentSizeFitter>();
-                    // ingredientSizeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
-                    // ingredientSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+                // TODO: change to object pooling
+                GameObject prefab = Instantiate(collectionManager.ingredientPrefab, iceCreamHolder.transform);
 
-                    // ingredient.GetComponent<Image>().sprite = ingredientDetails.collectionIngredientSprite;
-
-                    GameObject prefab = Instantiate(ingredientPrefab, iceCreamHolder.transform);
-
-                    if (lastIngredient != null)
+                if (lastIngredient != null)
+                {
+                    if (ingredientDetails.ingredientType != IngredientType.Topping)
                     {
                         prefab.transform.position = lastIngredient.transform.GetChild(1).transform.position;
                     }
-
-                    prefab.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = ingredientDetails.dressIngredientSprite;
-
-                    Transform nextPosTransform = prefab.transform.GetChild(prefab.transform.childCount - 1);
-                    nextPosTransform.localPosition = new Vector3(nextPosTransform.localPosition.x, ingredientDetails.nextIngredientPosY, nextPosTransform.localPosition.z);
-
-                    // ingredientGameobject.IngredientCode = (int)ingredientDetails.ingredientCode;
-                    // ingredientGameobject.IngredientType = ingredientDetails.ingredientType;
-
-                    // prefab.transform.GetChild(0).AddComponent<Image>().sprite = ingredientDetails.dressIngredientSprite;
-                    // prefab.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
-
-                    lastIngredient = prefab;
-
-                    Debug.Log("Last Ingredient : " + j + " " + lastIngredient.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite.name);
-
-                    // // Convert the Transform component to RectTransform
-                    // RectTransform rectTransform = prefab.GetComponent<RectTransform>();
-                    // if (rectTransform == null)
-                    // {
-                    //     rectTransform = prefab.AddComponent<RectTransform>();
-                    // }
-
-                    // rectTransform.localScale = Vector3.one;
+                    else
+                    {
+                        prefab.transform.position = lastIngredient.transform.position;
+                    }
                 }
+
+                prefab.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = ingredientDetails.dressIngredientSprite;
+
+                Transform nextPosTransform = prefab.transform.GetChild(prefab.transform.childCount - 1);
+                nextPosTransform.localPosition = new Vector3(nextPosTransform.localPosition.x, ingredientDetails.nextIngredientPosY, nextPosTransform.localPosition.z);
+
+                prefab.transform.GetChild(0).AddComponent<Image>().sprite = ingredientDetails.dressIngredientSprite;
+                prefab.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
+
+                lastIngredient = prefab;
             }
         }
     }

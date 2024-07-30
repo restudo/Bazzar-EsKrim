@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainGameLevelData:
     maxOrderHeight: 3
-    spawnSpecialRecipeAfterXCustomer: 0
+    spawnSpecialRecipeAfterXCustomer: 5
     customerDelay: 11
     doubleCustomerProbability: 0.2
     maxPoint: 800

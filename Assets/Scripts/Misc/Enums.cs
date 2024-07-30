@@ -63,3 +63,12 @@ public enum GameStates
     MainGame,
     MiniGame
 }
+
+public enum ConeTypes
+{
+    NotACone,
+    High, 
+    Medium, 
+    Low, 
+    VeryLow
+}

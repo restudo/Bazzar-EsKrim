@@ -16,48 +16,55 @@ MonoBehaviour:
   - ingredientCode: 1001
     ingredientName: Cone 1
     ingredientType: 0
+    coneTypes: 2
     basketIngredientSprite: {fileID: 21300000, guid: b130c9b7a727d3f48ba1be884a6a2340, type: 3}
     dressIngredientSprite: {fileID: -936154894, guid: 1fd2bf6760553624791f9ee29c49a36b, type: 3}
     collectionIngredientSprite: {fileID: 78178519, guid: 1fd2bf6760553624791f9ee29c49a36b, type: 3}
-    nextIngredientPosY: 1.603
+    nextIngredientPosY: 0.9
   - ingredientCode: 1002
     ingredientName: Cone 2
     ingredientType: 0
+    coneTypes: 4
     basketIngredientSprite: {fileID: 21300000, guid: 83deb83664b22494fb2f541076ce9073, type: 3}
     dressIngredientSprite: {fileID: 1617667868, guid: 91e77a01e41e06746ac8137f312b4360, type: 3}
     collectionIngredientSprite: {fileID: 960626792, guid: 91e77a01e41e06746ac8137f312b4360, type: 3}
-    nextIngredientPosY: 1.252
+    nextIngredientPosY: 0.464
   - ingredientCode: 1003
     ingredientName: Cone 3
     ingredientType: 0
+    coneTypes: 1
     basketIngredientSprite: {fileID: 21300000, guid: 9dbfe76c33ab5364291f505e123148ba, type: 3}
     dressIngredientSprite: {fileID: -567450419, guid: 9d3454dbc00ddf546937f95ea62b8d57, type: 3}
     collectionIngredientSprite: {fileID: -567450419, guid: 9d3454dbc00ddf546937f95ea62b8d57, type: 3}
-    nextIngredientPosY: 2.058
+    nextIngredientPosY: 1.4
   - ingredientCode: 1004
     ingredientName: Cone 4
     ingredientType: 0
+    coneTypes: 3
     basketIngredientSprite: {fileID: 21300000, guid: 4146f641048ad7b40ae21c4fadb58f71, type: 3}
     dressIngredientSprite: {fileID: 610894309, guid: 3ede06f7eb11e8f43adacf060b171575, type: 3}
     collectionIngredientSprite: {fileID: -339682240, guid: 3ede06f7eb11e8f43adacf060b171575, type: 3}
-    nextIngredientPosY: 1.499
+    nextIngredientPosY: 0.767
   - ingredientCode: 1005
     ingredientName: Cone 5
     ingredientType: 0
+    coneTypes: 1
     basketIngredientSprite: {fileID: 21300000, guid: eca311ac01a47fb4eb02800e5f43e47a, type: 3}
     dressIngredientSprite: {fileID: -475298107, guid: 4fcaa7d043802ab4aa0695416d659d86, type: 3}
     collectionIngredientSprite: {fileID: -475298107, guid: 4fcaa7d043802ab4aa0695416d659d86, type: 3}
-    nextIngredientPosY: 2.058
+    nextIngredientPosY: 1.4
   - ingredientCode: 1006
     ingredientName: Cone 6
     ingredientType: 0
+    coneTypes: 1
     basketIngredientSprite: {fileID: 21300000, guid: 8e197acfc2172654a9bbf6d17fc32ce5, type: 3}
     dressIngredientSprite: {fileID: 88897284, guid: 08a25d52dc0e64b4aad4d5f064de2d0b, type: 3}
     collectionIngredientSprite: {fileID: 88897284, guid: 08a25d52dc0e64b4aad4d5f064de2d0b, type: 3}
-    nextIngredientPosY: 2.058
+    nextIngredientPosY: 1.4
   - ingredientCode: 1007
     ingredientName: Chocolate
     ingredientType: 1
+    coneTypes: 0
     basketIngredientSprite: {fileID: 21300000, guid: 826437a0a75568f4ba26689112958fbe, type: 3}
     dressIngredientSprite: {fileID: 21300000, guid: 826437a0a75568f4ba26689112958fbe, type: 3}
     collectionIngredientSprite: {fileID: 21300000, guid: 826437a0a75568f4ba26689112958fbe, type: 3}
@@ -65,6 +72,7 @@ MonoBehaviour:
   - ingredientCode: 1008
     ingredientName: Vanilla
     ingredientType: 1
+    coneTypes: 0
     basketIngredientSprite: {fileID: 21300000, guid: b661f6d29823e2542937ff84cc5a541e, type: 3}
     dressIngredientSprite: {fileID: 21300000, guid: b661f6d29823e2542937ff84cc5a541e, type: 3}
     collectionIngredientSprite: {fileID: 21300000, guid: b661f6d29823e2542937ff84cc5a541e, type: 3}
@@ -72,6 +80,7 @@ MonoBehaviour:
   - ingredientCode: 1009
     ingredientName: Strawberry
     ingredientType: 1
+    coneTypes: 0
     basketIngredientSprite: {fileID: 21300000, guid: 46ef0204834b10941a1f4cd869027441, type: 3}
     dressIngredientSprite: {fileID: 21300000, guid: 46ef0204834b10941a1f4cd869027441, type: 3}
     collectionIngredientSprite: {fileID: 21300000, guid: 46ef0204834b10941a1f4cd869027441, type: 3}
@@ -79,6 +88,7 @@ MonoBehaviour:
   - ingredientCode: 1010
     ingredientName: Matcha
     ingredientType: 1
+    coneTypes: 0
     basketIngredientSprite: {fileID: 21300000, guid: d177c9c7c364c0e4792c28868589440d, type: 3}
     dressIngredientSprite: {fileID: 21300000, guid: d177c9c7c364c0e4792c28868589440d, type: 3}
     collectionIngredientSprite: {fileID: 21300000, guid: d177c9c7c364c0e4792c28868589440d, type: 3}
@@ -86,6 +96,7 @@ MonoBehaviour:
   - ingredientCode: 1011
     ingredientName: Berry
     ingredientType: 1
+    coneTypes: 0
     basketIngredientSprite: {fileID: 21300000, guid: 4a78bfef049a344468f287557b4e82b8, type: 3}
     dressIngredientSprite: {fileID: 21300000, guid: 4a78bfef049a344468f287557b4e82b8, type: 3}
     collectionIngredientSprite: {fileID: 21300000, guid: 4a78bfef049a344468f287557b4e82b8, type: 3}
@@ -93,6 +104,7 @@ MonoBehaviour:
   - ingredientCode: 1012
     ingredientName: Candy
     ingredientType: 1
+    coneTypes: 0
     basketIngredientSprite: {fileID: 21300000, guid: 01a9b53bb3dea5a4487f115ba292a9a7, type: 3}
     dressIngredientSprite: {fileID: 21300000, guid: 01a9b53bb3dea5a4487f115ba292a9a7, type: 3}
     collectionIngredientSprite: {fileID: 21300000, guid: 01a9b53bb3dea5a4487f115ba292a9a7, type: 3}
@@ -100,6 +112,7 @@ MonoBehaviour:
   - ingredientCode: 1013
     ingredientName: Bubblegum
     ingredientType: 1
+    coneTypes: 0
     basketIngredientSprite: {fileID: 21300000, guid: aabe02cddbae10b4fa75336c73213f8c, type: 3}
     dressIngredientSprite: {fileID: 21300000, guid: aabe02cddbae10b4fa75336c73213f8c, type: 3}
     collectionIngredientSprite: {fileID: 21300000, guid: aabe02cddbae10b4fa75336c73213f8c, type: 3}
@@ -107,6 +120,7 @@ MonoBehaviour:
   - ingredientCode: 1014
     ingredientName: Mocca
     ingredientType: 1
+    coneTypes: 0
     basketIngredientSprite: {fileID: 21300000, guid: 6bf1d7611215f7b4aaa1e3138883b53b, type: 3}
     dressIngredientSprite: {fileID: 21300000, guid: 6bf1d7611215f7b4aaa1e3138883b53b, type: 3}
     collectionIngredientSprite: {fileID: 21300000, guid: 6bf1d7611215f7b4aaa1e3138883b53b, type: 3}
@@ -114,6 +128,7 @@ MonoBehaviour:
   - ingredientCode: 1015
     ingredientName: Mango
     ingredientType: 1
+    coneTypes: 0
     basketIngredientSprite: {fileID: 21300000, guid: 414f3877a813286479a783b9cc390e5d, type: 3}
     dressIngredientSprite: {fileID: 21300000, guid: 414f3877a813286479a783b9cc390e5d, type: 3}
     collectionIngredientSprite: {fileID: 21300000, guid: 414f3877a813286479a783b9cc390e5d, type: 3}
@@ -121,6 +136,7 @@ MonoBehaviour:
   - ingredientCode: 1016
     ingredientName: Taro
     ingredientType: 1
+    coneTypes: 0
     basketIngredientSprite: {fileID: 21300000, guid: 1fa6dd40ea5c40843ae13f370067c7d0, type: 3}
     dressIngredientSprite: {fileID: 21300000, guid: 1fa6dd40ea5c40843ae13f370067c7d0, type: 3}
     collectionIngredientSprite: {fileID: 21300000, guid: 1fa6dd40ea5c40843ae13f370067c7d0, type: 3}
@@ -128,6 +144,7 @@ MonoBehaviour:
   - ingredientCode: 1017
     ingredientName: Almond
     ingredientType: 2
+    coneTypes: 0
     basketIngredientSprite: {fileID: 21300000, guid: 3e9c6bf61e47746498fb0c33fdad1e93, type: 3}
     dressIngredientSprite: {fileID: -1093788204, guid: a1a6ca087707422429c603b598fdc6f7, type: 3}
     collectionIngredientSprite: {fileID: 207996834, guid: a1a6ca087707422429c603b598fdc6f7, type: 3}
@@ -135,6 +152,7 @@ MonoBehaviour:
   - ingredientCode: 1018
     ingredientName: Messes
     ingredientType: 2
+    coneTypes: 0
     basketIngredientSprite: {fileID: 21300000, guid: c9396570c27783e44b12704b97459e4a, type: 3}
     dressIngredientSprite: {fileID: -919541033, guid: c680d5df7bba3b848b4d7d0c7b9aa706, type: 3}
     collectionIngredientSprite: {fileID: 141888282, guid: c680d5df7bba3b848b4d7d0c7b9aa706, type: 3}
@@ -142,6 +160,7 @@ MonoBehaviour:
   - ingredientCode: 1019
     ingredientName: Cherry
     ingredientType: 2
+    coneTypes: 0
     basketIngredientSprite: {fileID: 21300000, guid: 9ddd84af6ed9d074a95790ecda3447d2, type: 3}
     dressIngredientSprite: {fileID: 964617113, guid: 7e14e020e27983c41b44ebd411844926, type: 3}
     collectionIngredientSprite: {fileID: 2092944744, guid: 7e14e020e27983c41b44ebd411844926, type: 3}
@@ -149,6 +168,7 @@ MonoBehaviour:
   - ingredientCode: 1020
     ingredientName: Biscuit
     ingredientType: 2
+    coneTypes: 0
     basketIngredientSprite: {fileID: 21300000, guid: 1099f34b413f0c84f807e2b82257e272, type: 3}
     dressIngredientSprite: {fileID: -236341990, guid: 45227740c28bb1d4db280e4a6c0d722b, type: 3}
     collectionIngredientSprite: {fileID: 1713826616, guid: 45227740c28bb1d4db280e4a6c0d722b, type: 3}
@@ -156,6 +176,7 @@ MonoBehaviour:
   - ingredientCode: 1021
     ingredientName: Chocochip
     ingredientType: 2
+    coneTypes: 0
     basketIngredientSprite: {fileID: 21300000, guid: c62c7897b6ee1a64daaed6d949228467, type: 3}
     dressIngredientSprite: {fileID: -2147115414, guid: 5da8209726124ae48b8b11c659fd6689, type: 3}
     collectionIngredientSprite: {fileID: 210969319, guid: 5da8209726124ae48b8b11c659fd6689, type: 3}
@@ -163,6 +184,7 @@ MonoBehaviour:
   - ingredientCode: 1022
     ingredientName: Marshmallow
     ingredientType: 2
+    coneTypes: 0
     basketIngredientSprite: {fileID: 21300000, guid: 478c9bb106a612e47835e1f0b708c8c5, type: 3}
     dressIngredientSprite: {fileID: -191610015, guid: a1224aa2ef5de9543958342745d41e03, type: 3}
     collectionIngredientSprite: {fileID: 2122581025, guid: a1224aa2ef5de9543958342745d41e03, type: 3}
@@ -170,6 +192,7 @@ MonoBehaviour:
   - ingredientCode: 1023
     ingredientName: Astor
     ingredientType: 2
+    coneTypes: 0
     basketIngredientSprite: {fileID: 21300000, guid: 8fb46f60ec845cf489fac23bfd03b92f, type: 3}
     dressIngredientSprite: {fileID: -1244755608, guid: fe250a4335a0f7a44a9cd1c97f1ae251, type: 3}
     collectionIngredientSprite: {fileID: -725625552, guid: fe250a4335a0f7a44a9cd1c97f1ae251, type: 3}
@@ -177,6 +200,7 @@ MonoBehaviour:
   - ingredientCode: 1024
     ingredientName: Nuts
     ingredientType: 2
+    coneTypes: 0
     basketIngredientSprite: {fileID: 21300000, guid: c9d51d7d18b4a054dad99091c47480dc, type: 3}
     dressIngredientSprite: {fileID: -29471715, guid: e60696d5020e6e04eba6c3b89dde5d8b, type: 3}
     collectionIngredientSprite: {fileID: -1517802982, guid: e60696d5020e6e04eba6c3b89dde5d8b, type: 3}
@@ -184,6 +208,7 @@ MonoBehaviour:
   - ingredientCode: 1025
     ingredientName: Orange
     ingredientType: 2
+    coneTypes: 0
     basketIngredientSprite: {fileID: 21300000, guid: bdf416fc286bdbd4ea64168d4c443ab6, type: 3}
     dressIngredientSprite: {fileID: 1879913257, guid: e6a86f2f35e4b4147bce0f4a3dcf1eea, type: 3}
     collectionIngredientSprite: {fileID: 1938998344, guid: e6a86f2f35e4b4147bce0f4a3dcf1eea, type: 3}
@@ -191,6 +216,7 @@ MonoBehaviour:
   - ingredientCode: 1026
     ingredientName: Strawberry
     ingredientType: 2
+    coneTypes: 0
     basketIngredientSprite: {fileID: 21300000, guid: 76c9d1cf5898fba4ba03b6bb641b0316, type: 3}
     dressIngredientSprite: {fileID: 868127872, guid: 17d822d478290fb4dba20cfba87d5224, type: 3}
     collectionIngredientSprite: {fileID: -1598196120, guid: 17d822d478290fb4dba20cfba87d5224, type: 3}

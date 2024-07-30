@@ -1,12 +1,15 @@
 using DanielLochner.Assets.SimpleScrollSnap;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 namespace BazarEsKrim
 {
     public class CollectionManager : MonoBehaviour
     {
         public int unlockedLevel;
+        public SO_IngredientHolderPos holderYPos; // 0 is recipe 1, 1 is recipe 2
+        public GameObject ingredientPrefab;
 
         [SerializeField] private SimpleScrollSnap simpleScrollSnap;
 
@@ -37,7 +40,7 @@ namespace BazarEsKrim
             // TODO: change to unlocked level method
             for (int i = 0; i < unlockedLevel; i++)
             {
-                collectionPanels[i].SetCollectionIngredient(i);
+                collectionPanels[i].SetCollectionIngredient();
             }
         }
 

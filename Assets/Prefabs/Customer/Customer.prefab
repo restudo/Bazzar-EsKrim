@@ -1034,7 +1034,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 1.2432437, y: 0.3171804}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -1045,7 +1045,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 2}
+  m_Size: {x: 3.6029792, y: 2.6343603}
   m_EdgeRadius: 0
 --- !u!114 &7299200579780514882
 MonoBehaviour:
@@ -1084,12 +1084,7 @@ MonoBehaviour:
   productIngredientsCodes: 
   ingredientHolderPos: {fileID: 1406602995801206518}
   specialRecipeTag: {fileID: 3595383465829210722}
-  holderYPos:
-  - -1.116
-  - -0.43
-  - -0.52
-  - -0.79
-  - -1.08
+  holderYPos: {fileID: 11400000, guid: c0af8600b9d19ab49b0c6a7a3a59cfc2, type: 2}
 --- !u!114 &1846372722703254002
 MonoBehaviour:
   m_ObjectHideFlags: 0

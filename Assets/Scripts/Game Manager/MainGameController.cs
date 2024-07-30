@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using DG.Tweening;
 
 public class MainGameController : MonoBehaviour
 {
@@ -30,6 +31,7 @@ public class MainGameController : MonoBehaviour
     [Header("Progress")]
     [SerializeField] private TextMeshProUGUI pointText;
     [SerializeField] private TextMeshProUGUI targetText;
+    [SerializeField] private Slider progressSlider;
     private int pointPerCustomer;
     private int maxPoint;
 
@@ -65,6 +67,9 @@ public class MainGameController : MonoBehaviour
         {
             availableSeatForCustomers[i] = true;
         }
+
+        progressSlider.maxValue = maxPoint;
+        progressSlider.value = 0;
     }
 
     private void OnEnable()
@@ -220,6 +225,8 @@ public class MainGameController : MonoBehaviour
         progressCount += pointPerCustomer;
         pointText.text = progressCount.ToString();
 
+        IncreaseSliderValue(pointPerCustomer);
+
         if (progressCount >= maxPoint)
         {
             GameManager.Instance.isGameActive = false;
@@ -230,6 +237,34 @@ public class MainGameController : MonoBehaviour
     private void IncorrectOrderEvent()
     {
         // Handle incorrect order logic here
+    }
+
+    public void IncreaseSliderValue(float value)
+    {
+        float newPatience = Mathf.Clamp(progressCount + value, 0, maxPoint);
+
+        // // Get the fill image of the slider
+        // Image fillImage = progressSlider.fillRect.GetComponent<Image>();
+        // if (fillImage == null) return;
+
+        // // Store the original color
+        // Color originalColor = fillImage.color;
+        // Color blinkColor = _blinkColor;
+
+        // // Blink animation: Change color to red and back to the original color
+        // Sequence blinkSequence = DOTween.Sequence();
+        // // Use a loop to blink
+        // for (int i = 0; i < blinkCount; i++)
+        // {
+        //     blinkSequence.Append(fillImage.DOColor(blinkColor, blinkDuration));
+        //     blinkSequence.Append(fillImage.DOColor(originalColor, blinkDuration));
+        // }
+
+        // After blinking, update the slider value
+        progressSlider.DOValue(newPatience, 0.15f).OnUpdate(() => progressCount = (int)progressSlider.value);
+
+        // Start the sequence
+        // blinkSequence.Play();
     }
 
     // public void LoadToNextLevel()

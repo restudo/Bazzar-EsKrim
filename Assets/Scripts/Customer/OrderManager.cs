@@ -1,13 +1,14 @@
 using UnityEngine;
 using System.Collections.Generic;
-using DG.Tweening;
+using BazarEsKrim;
 
 public class OrderManager : MonoBehaviour
 {
     [HideInInspector] public int[] productIngredientsCodes;
     [SerializeField] private GameObject ingredientHolderPos;
     [SerializeField] private GameObject specialRecipeTag;
-    [SerializeField] private float[] holderYPos;
+    // [SerializeField] private float[] holderYPos;
+    [SerializeField] private SO_IngredientHolderPos holderYPos;
 
     private SO_LevelDataList[] levelDataLists;
     private UiInventorySlot[] baseIngredientDetails;
@@ -175,7 +176,19 @@ public class OrderManager : MonoBehaviour
             // Debug.Log($"Instantiated ingredient {ingredientCode} at position {ingredientObject.transform.position} with sorting order {spriteRenderer.sortingOrder}");
         }
 
-        ingredientHolderPos.transform.localPosition = new Vector3(ingredientHolderPos.transform.localPosition.x, holderYPos[productIngredientsCodes.Length - 1], ingredientHolderPos.transform.localPosition.z);
+        // get base ingredient detail
+        UiInventorySlot baseIngredientDetail = FindIngredientDetail(productIngredientsCodes[0]);
+
+        // change the ingredient holder pos in customer bubble
+        foreach (IngredientHolderPosInfos holderPosInfos in holderYPos.ingredientHolderPosInfos)
+        {
+            if (holderPosInfos.coneTypes == baseIngredientDetail.ingredientDetails.coneTypes)
+            {
+                ingredientHolderPos.transform.localPosition = new Vector3(ingredientHolderPos.transform.localPosition.x, holderPosInfos.holderYPosByHeight[productIngredientsCodes.Length - 1], ingredientHolderPos.transform.localPosition.z);
+            }
+        }
+
+        // ingredientHolderPos.transform.localPosition = new Vector3(ingredientHolderPos.transform.localPosition.x, holderYPos[productIngredientsCodes.Length - 1], ingredientHolderPos.transform.localPosition.z);
     }
 
     private UiInventorySlot FindIngredientDetail(int ingredientCode)
