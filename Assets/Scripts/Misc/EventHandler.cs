@@ -87,4 +87,11 @@ public static class EventHandler
         if (AddMiniGameScore != null)
             AddMiniGameScore();
     }
+    
+    public static event Action BasketFlashEffect;
+    public static void CallBasketFlashEffectEvent()
+    {
+        if (BasketFlashEffect != null)
+            BasketFlashEffect();
+    }
 }

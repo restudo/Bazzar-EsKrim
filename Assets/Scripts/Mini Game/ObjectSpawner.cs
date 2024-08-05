@@ -6,18 +6,21 @@ public class ObjectSpawner : MonoBehaviour
     public ObjectPool<FallingObject> fallingObjectPool;
 
     [SerializeField] private FallingObject[] fallingObjects;
-    [SerializeField] private float spawnDelay;
     [SerializeField] private float xOffset; // Offset to add to minX and maxX
 
     private Vector3 screenLeft;
     private Vector3 screenRight;
+    private float spawnDelay;
     private float minX;
     private float maxX;
+    private float excludeMinX;
+    private float excludeMaxX;
     private float elapsedTime;
+    private float yPos;
 
     private void Start()
     {
-        fallingObjectPool = new ObjectPool<FallingObject>(CreateFallingObject, OnTakeFallingObjectFromPool, OnReturnFallingObjectToPool, OnDestroyFallingObject, true, 15, 20);
+        fallingObjectPool = new ObjectPool<FallingObject>(CreateFallingObject, OnTakeFallingObjectFromPool, OnReturnFallingObjectToPool, OnDestroyFallingObject, true, 20, 25);
 
         // Get screen boundaries in world coordinates
         screenLeft = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, Camera.main.nearClipPlane));
@@ -25,6 +28,10 @@ public class ObjectSpawner : MonoBehaviour
 
         minX = screenLeft.x + xOffset; // Adding xOffset to minX
         maxX = screenRight.x - xOffset; // Subtracting xOffset from maxX
+
+        spawnDelay = Random.Range(0.5f, 2f);
+
+        yPos = transform.position.y;
     }
 
     void Update()
@@ -35,7 +42,9 @@ public class ObjectSpawner : MonoBehaviour
 
             if (elapsedTime >= spawnDelay)
             {
-                elapsedTime = 0.0f;
+                spawnDelay = Random.Range(0.5f, 2f);
+
+                elapsedTime = 0f;
 
                 // Spawn the object
                 fallingObjectPool.Get();
@@ -60,7 +69,7 @@ public class ObjectSpawner : MonoBehaviour
         float randomX = Random.Range(minX, maxX);
 
         // set the transform
-        fallingObject.transform.position = new Vector3(randomX, transform.position.y, transform.position.z);
+        fallingObject.transform.position = new Vector3(randomX, yPos, transform.position.z);
 
         // activate
         fallingObject.gameObject.SetActive(true);

@@ -16,8 +16,6 @@ namespace BazarEsKrim
     public class CollectionPanel : MonoBehaviour
     {
         //TODO: add SO_Collection for main image thumbnail
-        public SO_RecipeList recipeLists;
-
         [SerializeField] private CollectionManager collectionManager;
         [SerializeField] private RectTransform iceCreamHolder;
         [SerializeField] private GameObject ingredientContainer;
@@ -25,6 +23,7 @@ namespace BazarEsKrim
         [SerializeField] private TextMeshProUGUI titleText;
         [SerializeField] private CollectionIngredients[] collectionIngredients;
 
+        private SO_RecipeList recipeList;
         private GameObject lastIngredient = null;
         private bool canCheckHolderYPos;
 
@@ -46,27 +45,27 @@ namespace BazarEsKrim
 
         public void SetCollectionIngredient()
         {
-            if (recipeLists == null)
+            if (recipeList == null)
             {
                 return;
             }
 
-            titleText.text = recipeLists.recipeName;
+            titleText.text = recipeList.recipeName;
 
-            int ingredientLength = recipeLists.ingredientsCodes.Length;
+            int ingredientLength = recipeList.ingredientsCodes.Length;
 
             for (int i = 0; i < ingredientLength; i++)
             {
                 ingredientContainer.transform.GetChild(i).gameObject.SetActive(true);
 
-                int ingredientCodeIndex = (int)recipeLists.ingredientsCodes[i];
+                int ingredientCodeIndex = (int)recipeList.ingredientsCodes[i];
 
                 IngredientDetails ingredientDetails = InventoryManager.Instance.GetIngredientDetails(ingredientCodeIndex);
 
                 // change the ingredient holder pos in collection main image panel
                 if (canCheckHolderYPos)
                 {
-                    foreach (IngredientHolderPosInfos holderPos in collectionManager.holderYPos.ingredientHolderPosInfos)
+                    foreach (IngredientHolderPosInfos holderPos in collectionManager.holderPanelYPos.ingredientHolderPosInfos)
                     {
                         if (holderPos.coneTypes == ingredientDetails.coneTypes)
                         {
@@ -110,6 +109,11 @@ namespace BazarEsKrim
 
                 lastIngredient = prefab;
             }
+        }
+
+        public void SetRecipeList(SO_RecipeList recipe)
+        {
+            recipeList = recipe;
         }
     }
 }

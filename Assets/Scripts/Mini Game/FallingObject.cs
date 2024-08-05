@@ -10,28 +10,40 @@ public class FallingObject : MonoBehaviour
 
     private ObjectPool<FallingObject> fallingObjectPool;
     private GameObject basket;
-    private GameObject topBasket;
+    // private GameObject topBasket;
     private GameObject fallingObjectDestroyer;
+    private PolygonCollider2D destroyerCol;
+    private Bounds bounds;
+    private Vector2 min;
+    private Vector2 max;
+    private Vector2 randomPoint;
     private SpriteRenderer spRend;
     private bool isCanBeTouch;
 
-    private const int sortOrder = 2;
+    // private const int sortOrder = 2;
 
     private void Awake()
     {
         basket = GameObject.FindGameObjectWithTag("Basket");
-        topBasket = basket.transform.GetChild(0).gameObject;
+        // topBasket = basket.transform.GetChild(0).gameObject;
         fallingObjectDestroyer = GameObject.FindGameObjectWithTag("Falling Object Destroyer");
         spRend = GetComponentInChildren<SpriteRenderer>();
+
+        destroyerCol = fallingObjectDestroyer.GetComponent<PolygonCollider2D>();
+        bounds = destroyerCol.bounds;
+        min = bounds.min;
+        max = bounds.max;
+        randomPoint = Vector2.zero;
     }
 
     private void OnEnable()
     {
         isCanBeTouch = true;
 
-        spRend.sortingOrder = -sortOrder;
+        // spRend.sortingOrder = -sortOrder;
 
-        StartCoroutine(FallDelay());
+        randomPoint = Vector2.zero;
+        GetRandomPointInPolygon();
     }
 
     private void OnMouseUp()
@@ -40,17 +52,20 @@ public class FallingObject : MonoBehaviour
         {
             isCanBeTouch = false;
 
-            spRend.sortingOrder = sortOrder;
+            // spRend.sortingOrder = sortOrder;
 
             float randomOffset = Random.Range(-1, 1);
-            Vector3 topBasketPos = topBasket.transform.position;
+            // Vector3 topBasketPos = topBasket.transform.position;
+            Vector3 basketPos = basket.transform.position;
 
             DOTween.Kill(transform);
 
-            transform.DOMove(new Vector3(topBasketPos.x + randomOffset, topBasketPos.y, topBasketPos.z), 1f).SetEase(Ease.OutExpo).OnComplete(() =>
-            {
-                transform.DOMove(basket.transform.position, 0.5f).SetEase(Ease.InExpo);
-            });
+            // transform.DOMove(new Vector3(topBasketPos.x + randomOffset, topBasketPos.y, topBasketPos.z), 1f).SetEase(Ease.OutExpo).OnComplete(() =>
+            // {
+            // transform.DOMove(new Vector3(topBasketPos.x + randomOffset, topBasketPos.y, topBasketPos.z), 0.8f).SetEase(Ease.InExpo);
+
+            transform.DOJump(new Vector3(basketPos.x + randomOffset, basketPos.y, basketPos.z), 5f, 1, 0.5f, false);
+            // });
         }
     }
 
@@ -65,32 +80,57 @@ public class FallingObject : MonoBehaviour
 
         if (other.gameObject == fallingObjectDestroyer)
         {
-            isCanBeTouch = false;
+            // isCanBeTouch = false;
 
             StartCoroutine(ReleasePoolWithDelay());
         }
 
-        if(other.gameObject == basket)
+        if (other.gameObject == basket)
         {
-            EventHandler.CallAddMiniGameScoreEvent();
-
             isCanBeTouch = false;
 
-            StartCoroutine(ReleasePoolWithDelay());
+            DOTween.Kill(transform);
+
+            EventHandler.CallAddMiniGameScoreEvent();
+            EventHandler.CallBasketFlashEffectEvent();
+
+            // StartCoroutine(ReleasePoolWithDelay());
+            fallingObjectPool.Release(this);
         }
     }
 
-    private IEnumerator FallDelay()
+    private void GetRandomPointInPolygon()
     {
-        yield return new WaitForSeconds(releaseDelay / 2);
+        while (true)
+        {
+            randomPoint = new Vector2(
+                Random.Range(min.x, max.x),
+                Random.Range(min.y, max.y)
+            );
 
-        int additionalY = 2;
-        transform.DOMoveY(fallingObjectDestroyer.transform.position.y - additionalY, fallDuration).SetEase(Ease.Linear);
+            if (destroyerCol.OverlapPoint(randomPoint))
+            {
+                StartCoroutine(FallDelay(randomPoint));
+                return;
+            }
+        }
+    }
+
+    private IEnumerator FallDelay(Vector2 randomPoint)
+    {
+        yield return new WaitForSeconds(0.2f);
+
+        // int additionalY = 2;
+        transform.DOMoveY(randomPoint.y, fallDuration).SetEase(Ease.Linear);
     }
 
     private IEnumerator ReleasePoolWithDelay()
     {
         yield return new WaitForSeconds(releaseDelay);
+
+        isCanBeTouch = false;
+
+        DOTween.Kill(transform);
 
         fallingObjectPool.Release(this);
     }

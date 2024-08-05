@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1dd70ded963cc348992f3520e1904c3, type: 3}
+  m_Name: SO_IngredientHolderPos (Collection Frame)
+  m_EditorClassIdentifier: 
+  ingredientHolderPosInfos:
+  - coneTypes: 1
+    holderYPosByHeight:
+    - 0
+    - -15.9
+    - -28.1
+    - -47.3
+    - -70
+  - coneTypes: 2
+    holderYPosByHeight:
+    - 0
+    - -8.3
+    - -15.6
+    - -35.1
+    - -59
+  - coneTypes: 3
+    holderYPosByHeight:
+    - 0
+    - -6.3
+    - -15.6
+    - -33.1
+    - -57
+  - coneTypes: 4
+    holderYPosByHeight:
+    - 0
+    - 0
+    - -0.7
+    - -14.1
+    - -40.3

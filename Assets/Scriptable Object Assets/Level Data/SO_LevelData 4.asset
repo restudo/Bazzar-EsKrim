@@ -26,5 +26,5 @@ MonoBehaviour:
     sO_RecipeList:
     - {fileID: 11400000, guid: 5e211bcb99b58604182065a192ec25ed, type: 2}
   miniGameLevelData:
-    timer: 35
-    totalObjectSpawner: 3
+    timer: 30
+    totalObjectSpawner: 5

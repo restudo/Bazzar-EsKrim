@@ -116,6 +116,7 @@ namespace DanielLochner.Assets.SimpleScrollSnap
         {
             Initialize();
 
+            StartScrollSnap();
         }
         private void Start()
         {
@@ -127,7 +128,6 @@ namespace DanielLochner.Assets.SimpleScrollSnap
             //     {
             //         throw new Exception("Invalid configuration.");
             //     } 
-            StartScrollSnap();
         }
         public void Init()
         {

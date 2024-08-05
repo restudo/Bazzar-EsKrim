@@ -8,7 +8,9 @@ namespace BazarEsKrim
     public class CollectionManager : MonoBehaviour
     {
         public int unlockedLevel;
-        public SO_IngredientHolderPos holderYPos; // 0 is recipe 1, 1 is recipe 2
+        public SO_RecipeList[] recipeLists;
+        public SO_IngredientHolderPos holderPanelYPos; // 0 is recipe 1, 1 is recipe 2
+        public SO_IngredientHolderPos holderFrameYPos;
         public GameObject ingredientPrefab;
 
         [SerializeField] private SimpleScrollSnap simpleScrollSnap;
@@ -20,27 +22,40 @@ namespace BazarEsKrim
         [SerializeField] private GameObject collectionPanelContainer;
         private CollectionPanel[] collectionPanels;
 
-        private void Start()
-        {
-            collectionPanels = new CollectionPanel[collectionPanelContainer.transform.childCount];
-            for (int i = 0; i < collectionPanels.Length; i++)
-            {
-                collectionPanels[i] = collectionPanelContainer.transform.GetChild(i).GetComponent<CollectionPanel>();
-            }
+        private CollectionFrame[] collectionFrames;
 
+        private void Awake()
+        {
+            simpleScrollSnap.gameObject.SetActive(false);
+
+            collectionFrames = new CollectionFrame[collectionDetailButtons.Length];
             // add listener to collection button
             for (int i = 0; i < collectionDetailButtons.Length; i++)
             {
                 int index = i;
                 collectionDetailButtons[i].onClick.AddListener(() => OnCollectionDetailClicked(index));
+
+                collectionFrames[i] = collectionDetailButtons[i].GetComponent<CollectionFrame>();
             }
 
-            simpleScrollSnap.gameObject.SetActive(false);
+            collectionPanels = new CollectionPanel[collectionPanelContainer.transform.childCount];
+            for (int i = 0; i < collectionPanels.Length; i++)
+            {
+                collectionPanels[i] = collectionPanelContainer.transform.GetChild(i).GetComponent<CollectionPanel>();
+
+                collectionPanels[i].SetRecipeList(recipeLists[i]);
+
+                // ensure the frames qty are the same as panels 
+                collectionFrames[i].SetRecipeList(recipeLists[i]);
+            }
 
             // TODO: change to unlocked level method
             for (int i = 0; i < unlockedLevel; i++)
             {
                 collectionPanels[i].SetCollectionIngredient();
+
+                // ensure the frames qty are the same as panels 
+                collectionFrames[i].SetCollectionIngredient();
             }
         }
 

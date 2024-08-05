@@ -118,7 +118,7 @@ TextureImporter:
         width: 573
         height: 216
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -139,7 +139,7 @@ TextureImporter:
         width: 573
         height: 173
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -147,6 +147,48 @@ TextureImporter:
       bones: []
       spriteID: 4d2ce93817a6a6643aba7d1ce398fb4b
       internalID: -1188265004
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Basket_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 178
+        width: 573
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f9c72b6d5f0fc66498900a5bf3df5c90
+      internalID: -2137500988
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Basket_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 178
+        width: 573
+        height: 211
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fd5a39eb7b401fd4798b92a3afd85e74
+      internalID: -1180195
       vertices: []
       indices: 
       edges: []
@@ -164,6 +206,8 @@ TextureImporter:
     nameFileIdTable:
       Basket_0: -1925292131
       Basket_1: -1188265004
+      Basket_2: -2137500988
+      Basket_3: -1180195
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
