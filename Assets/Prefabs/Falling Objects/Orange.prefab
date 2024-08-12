@@ -16,6 +16,14 @@ PrefabInstance:
       propertyPath: fallDuration
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 4134567442699731301, guid: b2a81d1392e20514f971e3e962c55af9, type: 3}
+      propertyPath: m_Size.x
+      value: 1.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4134567442699731301, guid: b2a81d1392e20514f971e3e962c55af9, type: 3}
+      propertyPath: m_Size.y
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 5025524339872388680, guid: b2a81d1392e20514f971e3e962c55af9, type: 3}
       propertyPath: m_Size.x
       value: 2.2461538

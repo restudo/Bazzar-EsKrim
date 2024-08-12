@@ -69,7 +69,8 @@ public class ObjectSpawner : MonoBehaviour
         float randomX = Random.Range(minX, maxX);
 
         // set the transform
-        fallingObject.transform.position = new Vector3(randomX, yPos, transform.position.z);
+        // z transform is set to the Camera nearClipPlane, so its always on top 
+        fallingObject.transform.position = new Vector3(randomX, yPos, -Camera.main.nearClipPlane);
 
         // activate
         fallingObject.gameObject.SetActive(true);

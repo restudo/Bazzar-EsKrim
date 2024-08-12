@@ -27,4 +27,4 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 6ac739c495321514cad3f9d82b8377fc, type: 2}
   miniGameLevelData:
     timer: 30
-    totalObjectSpawner: 5
+    totalObjectSpawner: 4

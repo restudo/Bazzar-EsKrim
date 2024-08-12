@@ -8,7 +8,7 @@ using DG.Tweening;
 
 public class MainGameController : MonoBehaviour
 {
-    [HideInInspector] public int maxOrderHeight = 6;
+    [HideInInspector] public int maxOrderHeight;
     [HideInInspector] public int spawnSpecialRecipeAfterXCustomer;
     [HideInInspector] public int maxSpecialRecipeInThisLevel;
     [HideInInspector] public int customerCounter;
@@ -241,7 +241,7 @@ public class MainGameController : MonoBehaviour
 
     public void IncreaseSliderValue(float value)
     {
-        float newPatience = Mathf.Clamp(progressCount + value, 0, maxPoint);
+        // float newPatience = Mathf.Clamp(progressCount + value, 0, maxPoint);
 
         // // Get the fill image of the slider
         // Image fillImage = progressSlider.fillRect.GetComponent<Image>();
@@ -261,7 +261,7 @@ public class MainGameController : MonoBehaviour
         // }
 
         // After blinking, update the slider value
-        progressSlider.DOValue(newPatience, 0.15f).OnUpdate(() => progressCount = (int)progressSlider.value);
+        progressSlider.DOValue(progressCount, 0.15f).OnUpdate(() => progressCount = (int)progressSlider.value);
 
         // Start the sequence
         // blinkSequence.Play();

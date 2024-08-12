@@ -78,7 +78,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.5, y: 1.5}
   m_EdgeRadius: 0
 --- !u!114 &2998603904254154723
 MonoBehaviour:
@@ -94,6 +94,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fallDuration: 4.5
   releaseDelay: 4
+  flashMaterial: {fileID: 2100000, guid: c669800ebffa6804280ef53fb1cbffbd, type: 2}
+  flashDuration: 0.1
+  flashCount: 1
 --- !u!50 &478152037904986922
 Rigidbody2D:
   serializedVersion: 4

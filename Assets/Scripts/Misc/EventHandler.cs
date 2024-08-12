@@ -94,4 +94,11 @@ public static class EventHandler
         if (BasketFlashEffect != null)
             BasketFlashEffect();
     }
+    
+    public static event Action<Vector3, Vector3> SetPointCounterPos;
+    public static void CallSetPointCounterPosEvent(Vector3 fallingObjPos, Vector3 basketPos)
+    {
+        if (SetPointCounterPos != null)
+            SetPointCounterPos(fallingObjPos, basketPos);
+    }
 }

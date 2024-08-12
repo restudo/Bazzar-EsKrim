@@ -11,7 +11,6 @@ namespace BazarEsKrim
         [SerializeField] private float flashDuration = 0.1f; // Duration of each flash
         [SerializeField] private int flashCount = 1; // Number of flashes
 
-        private Sequence flashSequence;
         private Material originalMaterial;
 
         private void OnEnable()
@@ -31,14 +30,17 @@ namespace BazarEsKrim
 
         private IEnumerator StartFlashEffect()
         {
-            // Swap to the flashMaterial.
-            visual.material = flashMaterial;
+            for (int i = 0; i < flashCount; i++)
+            {
+                // Swap to the flashMaterial.
+                visual.material = flashMaterial;
 
-            // Pause the execution of this function for "duration" seconds.
-            yield return new WaitForSeconds(flashDuration);
+                // Pause the execution of this function for "duration" seconds.
+                yield return new WaitForSeconds(flashDuration);
 
-            // After the pause, swap back to the original material.
-            visual.material = originalMaterial;
+                // After the pause, swap back to the original material.
+                visual.material = originalMaterial;
+            }
         }
 
         public void FlashEffect()
@@ -46,7 +48,7 @@ namespace BazarEsKrim
             if (visual != null)
             {
                 visual.material = originalMaterial;
-             
+
                 StartCoroutine(StartFlashEffect());
             }
         }

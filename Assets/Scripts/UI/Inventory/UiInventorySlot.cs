@@ -114,6 +114,8 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
             glowingPlate.SetActive(false);
 
+            ingredientHolder.canDeliverOrder = true;
+
             // else
             // {
             //     levelManager.deliveryQueueIsFull = false;
@@ -345,8 +347,6 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         mainGameController.deliveryQueueIngredientsContent.Add(ingredientGameobject.IngredientCode);
 
         SetButtonLogic(ingredientGameobject.IngredientType);
-
-        ingredientHolder.canDeliverOrder = true;
     }
 
     private void SetButtonLogic(IngredientType ingredientType)

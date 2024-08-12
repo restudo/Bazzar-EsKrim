@@ -5,8 +5,15 @@ using System.Collections;
 
 public class FallingObject : MonoBehaviour
 {
+    [Header("Fall")]
     [SerializeField] private float fallDuration;
     [SerializeField] private float releaseDelay;
+
+    [Space(20)]
+    [Header("Flash")]
+    [SerializeField] private Material flashMaterial;
+    [SerializeField] private float flashDuration = 0.1f; // Duration of each flash
+    [SerializeField] private int flashCount = 1; // Number of flashes
 
     private ObjectPool<FallingObject> fallingObjectPool;
     private GameObject basket;
@@ -18,6 +25,7 @@ public class FallingObject : MonoBehaviour
     private Vector2 max;
     private Vector2 randomPoint;
     private SpriteRenderer spRend;
+    private Material originalMaterial;
     private bool isCanBeTouch;
 
     // private const int sortOrder = 2;
@@ -34,23 +42,31 @@ public class FallingObject : MonoBehaviour
         min = bounds.min;
         max = bounds.max;
         randomPoint = Vector2.zero;
+
+        //set the mat to original
+        originalMaterial = spRend.material;
     }
 
     private void OnEnable()
     {
         isCanBeTouch = true;
 
+        spRend.material = originalMaterial;
         // spRend.sortingOrder = -sortOrder;
-
+        
         randomPoint = Vector2.zero;
+
         GetRandomPointInPolygon();
     }
 
-    private void OnMouseUp()
+    private void OnMouseDown()
     {
         if (GameManager.Instance.isGameActive && isCanBeTouch && GameManager.Instance.gameStates == GameStates.MiniGame)
         {
             isCanBeTouch = false;
+
+            // make it flash
+            FlashEffect();
 
             // spRend.sortingOrder = sortOrder;
 
@@ -93,6 +109,7 @@ public class FallingObject : MonoBehaviour
 
             EventHandler.CallAddMiniGameScoreEvent();
             EventHandler.CallBasketFlashEffectEvent();
+            EventHandler.CallSetPointCounterPosEvent(transform.position, basket.transform.position);
 
             // StartCoroutine(ReleasePoolWithDelay());
             fallingObjectPool.Release(this);
@@ -133,6 +150,31 @@ public class FallingObject : MonoBehaviour
         DOTween.Kill(transform);
 
         fallingObjectPool.Release(this);
+    }
+
+    private void FlashEffect()
+    {
+        if (spRend != null)
+        {
+            spRend.material = originalMaterial;
+
+            StartCoroutine(StartFlashEffect());
+        }
+    }
+
+    private IEnumerator StartFlashEffect()
+    {
+        for (int i = 0; i < flashCount; i++)
+        {
+            // Swap to the flashMaterial.
+            spRend.material = flashMaterial;
+
+            // Pause the execution of this function for "duration" seconds.
+            yield return new WaitForSeconds(flashDuration);
+
+            // After the pause, swap back to the original material.
+            spRend.material = originalMaterial;
+        }
     }
 
     public void SetPool(ObjectPool<FallingObject> pool)

@@ -69,8 +69,6 @@ public class LevelManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         gameOverWinUI.transform.GetChild(gameOverWinUI.transform.childCount - 1).gameObject.SetActive(true);
 
-        EventHandler.CallChaseCustomerEvent();
-
         Debug.Log("Game Over - Win");
     }
 
@@ -84,8 +82,6 @@ public class LevelManager : MonoBehaviour
         gameOverLoseUI.transform.parent.DOScale(1, 0.4f).SetEase(Ease.OutBounce).SetDelay(0.6f);
         gameOverLoseUI.transform.parent.GetComponent<Image>().DOColor(new Color32(0, 0, 0, 150), 1.5f).SetDelay(1f);
 
-        EventHandler.CallChaseCustomerEvent();
-
         Debug.Log("Game Over - Lose");
     }
 
@@ -93,6 +89,8 @@ public class LevelManager : MonoBehaviour
     {
         if (GameManager.Instance.gameStates == GameStates.MainGame)
         {
+            EventHandler.CallChaseCustomerEvent();
+
             winDescription.text = mainGameWinDesc;
         }
         else if (GameManager.Instance.gameStates == GameStates.MiniGame)
@@ -105,6 +103,8 @@ public class LevelManager : MonoBehaviour
 
     public void Lose()
     {
+        EventHandler.CallChaseCustomerEvent();
+
         StartCoroutine(LoseAnim());
     }
 
