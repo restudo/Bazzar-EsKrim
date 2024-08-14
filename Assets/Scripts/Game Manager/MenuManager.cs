@@ -40,6 +40,8 @@ public class MenuManager : MonoBehaviour
 
     private void Start()
     {
+        int unlockedLevel = GameManager.Instance.LoadUnlockedLevel();
+
         // Initialize the buttons array with the child buttons of buttonContainer
         buttons = new Button[levelButtonContainer.transform.childCount];
 
@@ -47,16 +49,35 @@ public class MenuManager : MonoBehaviour
         {
             buttons[i] = levelButtonContainer.transform.GetChild(i).GetComponent<Button>();
             int index = i;
-            buttons[i].onClick.AddListener(() => OnLevelButtonClicked(index));
+
+            // hide locked icon
+            if(index + 1 <= unlockedLevel)
+            {
+                buttons[i].transform.GetChild(buttons[i].transform.childCount - 1).gameObject.SetActive(false);
+            }
+            else
+            {
+                buttons[i].transform.GetChild(buttons[i].transform.childCount - 1).gameObject.SetActive(true);
+            }
+
+            buttons[i].onClick.AddListener(() => OnLevelButtonClicked(index, index + 1 <= unlockedLevel));
         }
     }
 
-    private void OnLevelButtonClicked(int index)
+    private void OnLevelButtonClicked(int index, bool isUnlocked)
     {
         if (GameManager.Instance.gameStates == GameStates.LevelSelection)
         {
-            // Load the level based on the button clicked
-            LoadToLevel(index + 1);
+            if (isUnlocked)
+            {
+                // Load the level based on the button clicked
+                LoadToLevel(index + 1);
+            }
+            else
+            {
+                // TODO: add something if level still locked
+                Debug.Log("Level " + (index + 1) + " still locked");
+            }
         }
     }
 
@@ -71,7 +92,7 @@ public class MenuManager : MonoBehaviour
     {
         // Set game state and current level
         GameManager.Instance.currentLevel = levelSelected;
-        GameManager.Instance.UnlockIngredientLevel();
+        // GameManager.Instance.UnlockIngredientLevel();
         GameManager.Instance.isGameActive = true;
 
         GameManager.Instance.gameStates = GameStates.MainGame;

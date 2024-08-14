@@ -17,19 +17,23 @@ namespace BazarEsKrim
 
         private void Awake()
         {
-            titleText.text = "";
+            titleText.text = "???";
 
             canCheckHolderYPos = true;
         }
 
-        public void SetCollectionIngredient()
+        public void SetCollectionIngredient(SO_RecipeList recipe, bool isUnlocked)
         {
+            recipeList = recipe;
             if (recipeList == null)
             {
                 return;
             }
 
-            titleText.text = recipeList.recipeName;
+            if (isUnlocked)
+            {
+                titleText.text = recipeList.recipeName;
+            }
 
             int ingredientLength = recipeList.ingredientsCodes.Length;
 
@@ -80,9 +84,9 @@ namespace BazarEsKrim
             }
         }
 
-        public void SetRecipeList(SO_RecipeList recipe)
-        {
-            recipeList = recipe;
-        }
+        // public void SetRecipeList(SO_RecipeList recipe)
+        // {
+        //     recipeList = recipe;
+        // }
     }
 }

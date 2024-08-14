@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -11,6 +12,7 @@ namespace BazarEsKrim
     {
         public Image ingredientImage;
         public TextMeshProUGUI ingredientName;
+        public TextMeshProUGUI ingredientCount;
     }
 
     public class CollectionPanel : MonoBehaviour
@@ -35,7 +37,7 @@ namespace BazarEsKrim
             for (int i = 0; i < collectionIngredients.Length; i++)
             {
                 // collectionIngredients[i].ingredientImage = null;
-                collectionIngredients[i].ingredientName.text = "";
+                collectionIngredients[i].ingredientName.text = "???";
 
                 ingredientContainer.transform.GetChild(i).gameObject.SetActive(false);
             }
@@ -43,45 +45,68 @@ namespace BazarEsKrim
             canCheckHolderYPos = true;
         }
 
-        public void SetCollectionIngredient()
+        private Dictionary<int, int> GetMergedIngredients(SO_RecipeList recipeList)
         {
-            if (recipeList == null)
+            var ingredientCounts = new Dictionary<int, int>();
+
+            foreach (var ingredientCode in recipeList.ingredientsCodes)
             {
-                return;
+                int ingredientCodeIndex = (int)ingredientCode;
+                if (ingredientCounts.ContainsKey(ingredientCodeIndex))
+                {
+                    ingredientCounts[ingredientCodeIndex]++;
+                }
+                else
+                {
+                    ingredientCounts[ingredientCodeIndex] = 1;
+                }
             }
+
+            return ingredientCounts;
+        }
+
+        public void SetCollectionIngredient(SO_RecipeList recipe)
+        {
+            recipeList = recipe;
+            if (recipeList == null) return;
 
             titleText.text = recipeList.recipeName;
 
-            int ingredientLength = recipeList.ingredientsCodes.Length;
+            var mergedIngredients = GetMergedIngredients(recipeList);
+            int i = 0;
 
-            for (int i = 0; i < ingredientLength; i++)
+            foreach (var kvp in mergedIngredients)
             {
-                ingredientContainer.transform.GetChild(i).gameObject.SetActive(true);
-
-                int ingredientCodeIndex = (int)recipeList.ingredientsCodes[i];
+                int ingredientCodeIndex = kvp.Key;
+                int ingredientCount = kvp.Value;
 
                 IngredientDetails ingredientDetails = InventoryManager.Instance.GetIngredientDetails(ingredientCodeIndex);
 
-                // change the ingredient holder pos in collection main image panel
+                // Update the iceCreamHolder position if needed
                 if (canCheckHolderYPos)
                 {
                     foreach (IngredientHolderPosInfos holderPos in collectionManager.holderPanelYPos.ingredientHolderPosInfos)
                     {
                         if (holderPos.coneTypes == ingredientDetails.coneTypes)
                         {
-                            iceCreamHolder.anchoredPosition = new Vector3(iceCreamHolder.anchoredPosition.x, holderPos.holderYPosByHeight[ingredientLength - 1]);
+                            iceCreamHolder.anchoredPosition = new Vector3(
+                                iceCreamHolder.anchoredPosition.x,
+                                holderPos.holderYPosByHeight[mergedIngredients.Count - 1]);
 
                             canCheckHolderYPos = false;
                         }
                     }
                 }
 
-                collectionIngredients[i].ingredientImage.sprite = ingredientDetails.collectionIngredientSprite;
-                collectionIngredients[i].ingredientName.text = ingredientDetails.ingredientName;
+                var ingredientUI = collectionIngredients[i];
+                ingredientUI.ingredientImage.sprite = ingredientDetails.collectionIngredientSprite;
+                ingredientUI.ingredientName.text = ingredientDetails.ingredientName;
+                ingredientUI.ingredientCount.text = "x" + ingredientCount;
+                ingredientContainer.transform.GetChild(i).gameObject.SetActive(true);
 
                 if (ingredientDetails.ingredientType == IngredientType.Topping)
                 {
-                    collectionIngredients[i].ingredientImage.GetComponent<RectTransform>().localScale = Vector3.one;
+                    ingredientUI.ingredientImage.GetComponent<RectTransform>().localScale = Vector3.one;
                 }
 
                 // TODO: change to object pooling
@@ -89,31 +114,26 @@ namespace BazarEsKrim
 
                 if (lastIngredient != null)
                 {
-                    if (ingredientDetails.ingredientType != IngredientType.Topping)
-                    {
-                        prefab.transform.position = lastIngredient.transform.GetChild(1).transform.position;
-                    }
-                    else
-                    {
-                        prefab.transform.position = lastIngredient.transform.position;
-                    }
+                    prefab.transform.position = ingredientDetails.ingredientType != IngredientType.Topping
+                        ? lastIngredient.transform.GetChild(1).transform.position
+                        : lastIngredient.transform.position;
                 }
 
                 prefab.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = ingredientDetails.dressIngredientSprite;
-
-                Transform nextPosTransform = prefab.transform.GetChild(prefab.transform.childCount - 1);
-                nextPosTransform.localPosition = new Vector3(nextPosTransform.localPosition.x, ingredientDetails.nextIngredientPosY, nextPosTransform.localPosition.z);
-
                 prefab.transform.GetChild(0).AddComponent<Image>().sprite = ingredientDetails.dressIngredientSprite;
                 prefab.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
 
+                prefab.SetActive(true);
                 lastIngredient = prefab;
+
+                i++;
             }
         }
 
-        public void SetRecipeList(SO_RecipeList recipe)
-        {
-            recipeList = recipe;
-        }
+
+        // public void SetRecipeList(SO_RecipeList recipe)
+        // {
+        //     recipeList = recipe;
+        // }
     }
 }

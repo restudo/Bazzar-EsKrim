@@ -53,7 +53,7 @@ public class FallingObject : MonoBehaviour
 
         spRend.material = originalMaterial;
         // spRend.sortingOrder = -sortOrder;
-        
+
         randomPoint = Vector2.zero;
 
         GetRandomPointInPolygon();
@@ -93,26 +93,28 @@ public class FallingObject : MonoBehaviour
 
 
         // }
-
-        if (other.gameObject == fallingObjectDestroyer)
+        if (GameManager.Instance.isGameActive)
         {
-            // isCanBeTouch = false;
+            if (other.gameObject == fallingObjectDestroyer)
+            {
+                // isCanBeTouch = false;
 
-            StartCoroutine(ReleasePoolWithDelay());
-        }
+                StartCoroutine(ReleasePoolWithDelay());
+            }
 
-        if (other.gameObject == basket)
-        {
-            isCanBeTouch = false;
+            if (other.gameObject == basket)
+            {
+                isCanBeTouch = false;
 
-            DOTween.Kill(transform);
+                DOTween.Kill(transform);
 
-            EventHandler.CallAddMiniGameScoreEvent();
-            EventHandler.CallBasketFlashEffectEvent();
-            EventHandler.CallSetPointCounterPosEvent(transform.position, basket.transform.position);
+                EventHandler.CallAddMiniGameScoreEvent();
+                EventHandler.CallBasketFlashEffectEvent();
+                EventHandler.CallSetPointCounterPosEvent(transform.position, basket.transform.position);
 
-            // StartCoroutine(ReleasePoolWithDelay());
-            fallingObjectPool.Release(this);
+                // StartCoroutine(ReleasePoolWithDelay());
+                fallingObjectPool.Release(this);
+            }
         }
     }
 

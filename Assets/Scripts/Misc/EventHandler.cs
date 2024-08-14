@@ -101,4 +101,11 @@ public static class EventHandler
         if (SetPointCounterPos != null)
             SetPointCounterPos(fallingObjPos, basketPos);
     }
+    
+    public static event Action<float> CameraMove;
+    public static void CallCameraMoveEvent(float delta)
+    {
+        if (CameraMove != null)
+            CameraMove(delta);
+    }
 }

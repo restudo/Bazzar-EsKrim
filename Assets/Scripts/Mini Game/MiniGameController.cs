@@ -108,6 +108,10 @@ public class MiniGameController : MonoBehaviour
             scoreGameOverText.text = score.ToString();
             yield return new WaitForSeconds(animSpeed);
         }
+
+        // TODO: change with the right gameflow
+        // Unlock level selection
+        GameManager.Instance.UnlockLevel();
     }
 
     private void AddMiniGameScore()

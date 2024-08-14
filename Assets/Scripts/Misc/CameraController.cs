@@ -1,15 +1,18 @@
 using UnityEngine;
+using System;
 
 public class CameraController : MonoBehaviour
 {
     [SerializeField] private float minX = -4.25f; // Minimum x value for the camera
     [SerializeField] private float maxX = 4.25f;  // Maximum x value for the camera
+
     private Vector3 touchStart;
     private Camera mainCamera;
 
     private void Start()
     {
         mainCamera = Camera.main;
+
         // Initialize the camera's position to the minimum x value
         Vector3 initialPosition = mainCamera.transform.position;
         initialPosition.x = minX;
@@ -38,11 +41,19 @@ public class CameraController : MonoBehaviour
             // Clamp the new position's x value between minX and maxX
             newPosition.x = Mathf.Clamp(newPosition.x, minX, maxX);
 
-            // Set the camera's position to the new position
+            // Set the camera's position to the new clamped position
             mainCamera.transform.position = newPosition;
 
             // Update touchStart to the current position for continuous movement
             touchStart = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+
+            if (newPosition.x >= maxX || newPosition.x <= minX)
+            {
+                return;
+            }
+            
+            // Trigger the camera move event
+            EventHandler.CallCameraMoveEvent(deltaX);
         }
     }
 }

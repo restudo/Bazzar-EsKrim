@@ -102,13 +102,15 @@ public class CustomerController : MonoBehaviour
         {
             // Generate order by recipe
             orderManager.OrderByRecipe(mainGameController.maxSpecialRecipeInThisLevel);
-            Debug.Log("By recipe");
+            Debug.Log("order by recipe");
         }
         else
         {
             // Generate a random order
             int randomMaxOrder = Random.Range(2, maxOrderSize + 1);
             orderManager.OrderRandomProduct(randomMaxOrder);
+
+            Debug.Log("random order");
         }
 
 
@@ -217,9 +219,10 @@ public class CustomerController : MonoBehaviour
     {
         if (isLeaving) yield break;
 
+        isLeaving = true;
+
         // Flip the sprite if necessary and set leaving flag
         FlipCheck(leavePoint);
-        isLeaving = true;
 
         // Mark the seat as available and hide HUD and highlight
         mainGameController.availableSeatForCustomers[mySeat] = true;
@@ -274,6 +277,9 @@ public class CustomerController : MonoBehaviour
 
     private void ChaseCustomer()
     {
+        HudPos.SetActive(false);
+        transform.GetChild(transform.childCount - 1).gameObject.SetActive(false);
+
         StartCoroutine(Leave());
     }
 

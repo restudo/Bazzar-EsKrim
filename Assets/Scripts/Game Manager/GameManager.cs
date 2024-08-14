@@ -2,14 +2,14 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public GameStates gameStates { get; set; }
+    // public int randomMaxOrder = 2;
     public SO_LevelDataList[] levelDataLists;
     public int currentLevel;
     public bool isGameActive;
     [HideInInspector] public bool isHolding;
 
-    public GameStates gameStates { get; set; }
-
-    // public int randomMaxOrder = 2;
+    private int unlockedLevel;
 
     public static GameManager Instance;
     private void Awake()
@@ -30,15 +30,15 @@ public class GameManager : MonoBehaviour
     {
         isGameActive = false;
 
-        PlayerPrefs.DeleteAll();
+        PlayerPrefs.DeleteKey("UnlockedLevel");
     }
 
     private void Update()
     {
-        // if(Input.GetKeyDown(KeyCode.T))
-        // {
-        //     randomMaxOrder++;
-        // }
+        if(Input.GetKeyDown(KeyCode.T))
+        {
+            UnlockLevel();
+        }
 
         // if(Input.GetKeyDown(KeyCode.U))
         // {
@@ -112,6 +112,21 @@ public class GameManager : MonoBehaviour
                 break;
             default:
                 break;
+        }
+    }
+
+    public int LoadUnlockedLevel()
+    {
+        unlockedLevel = PlayerPrefs.GetInt("UnlockedLevel", 1);
+        return unlockedLevel;
+    }
+
+    public void UnlockLevel()
+    {
+        if(currentLevel >= LoadUnlockedLevel())
+        {
+            PlayerPrefs.SetInt("UnlockedLevel", currentLevel + 1);
+            PlayerPrefs.Save();
         }
     }
 }

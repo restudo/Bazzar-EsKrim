@@ -249,6 +249,15 @@ public class OrderManager : MonoBehaviour
             }
         }
 
+        Debug.Log("========== START RECIPE ==========");
+
+        foreach (int code in productIngredientsCodes)
+        {
+            Debug.Log(code);
+        }
+
+        Debug.Log("=========== END RECIPE ===========");
+
         Invoke("DisplayOrder", 0.5f);
         // DisplayOrder();
     }
@@ -263,10 +272,16 @@ public class OrderManager : MonoBehaviour
 
         productIngredientsCodes = new int[maxOrderByRecipe];
 
+        Debug.Log("========== START RECIPE ==========");
+
         for (int i = 0; i < maxOrderByRecipe; i++)
         {
             productIngredientsCodes[i] = (int)levelDataLists[GameManager.Instance.currentLevel - 1].mainGameLevelData.sO_RecipeList[randomRecipeIndex].ingredientsCodes[i];
+
+            Debug.Log(productIngredientsCodes[i]);
         }
+
+        Debug.Log("=========== END RECIPE ===========");
 
         Invoke("DisplayOrder", 0.5f);
     }
