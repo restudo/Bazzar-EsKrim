@@ -6,7 +6,9 @@ using System.Collections;
 public class FallingObject : MonoBehaviour
 {
     [Header("Fall")]
-    [SerializeField] private float fallDuration;
+    [SerializeField] private float minfallDuration;
+    [SerializeField] private float maxfallDuration;
+    [SerializeField] private float rotationSpeedMax;
     [SerializeField] private float releaseDelay;
 
     [Space(20)]
@@ -19,7 +21,7 @@ public class FallingObject : MonoBehaviour
     private GameObject basket;
     // private GameObject topBasket;
     private GameObject fallingObjectDestroyer;
-    private PolygonCollider2D destroyerCol;
+    private Collider2D destroyerCol;
     private Bounds bounds;
     private Vector2 min;
     private Vector2 max;
@@ -28,7 +30,8 @@ public class FallingObject : MonoBehaviour
     private Material originalMaterial;
     private bool isCanBeTouch;
 
-    // private const int sortOrder = 2;
+    private const int sortOrder = 2;
+    private const int additionalY = 2;
 
     private void Awake()
     {
@@ -37,7 +40,7 @@ public class FallingObject : MonoBehaviour
         fallingObjectDestroyer = GameObject.FindGameObjectWithTag("Falling Object Destroyer");
         spRend = GetComponentInChildren<SpriteRenderer>();
 
-        destroyerCol = fallingObjectDestroyer.GetComponent<PolygonCollider2D>();
+        destroyerCol = fallingObjectDestroyer.GetComponent<Collider2D>();
         bounds = destroyerCol.bounds;
         min = bounds.min;
         max = bounds.max;
@@ -49,14 +52,22 @@ public class FallingObject : MonoBehaviour
 
     private void OnEnable()
     {
+        EventHandler.MiniGameWin += MiniGameWin;
+
         isCanBeTouch = true;
 
         spRend.material = originalMaterial;
-        // spRend.sortingOrder = -sortOrder;
+        spRend.sortingOrder = -sortOrder;
 
         randomPoint = Vector2.zero;
 
-        GetRandomPointInPolygon();
+        StartCoroutine(FallDelay(Random.Range(minfallDuration, maxfallDuration)));
+        // GetRandomPointInPolygon();
+    }
+
+    private void OnDisable()
+    {
+        EventHandler.MiniGameWin -= MiniGameWin;
     }
 
     private void OnMouseDown()
@@ -68,7 +79,7 @@ public class FallingObject : MonoBehaviour
             // make it flash
             FlashEffect();
 
-            // spRend.sortingOrder = sortOrder;
+            spRend.sortingOrder = sortOrder;
 
             float randomOffset = Random.Range(-1, 1);
             // Vector3 topBasketPos = topBasket.transform.position;
@@ -93,16 +104,18 @@ public class FallingObject : MonoBehaviour
 
 
         // }
-        if (GameManager.Instance.isGameActive)
-        {
-            if (other.gameObject == fallingObjectDestroyer)
+        // if (GameManager.Instance.isGameActive)
+        // {
+            if (other.gameObject == fallingObjectDestroyer && spRend.sortingOrder == -sortOrder)
             {
-                // isCanBeTouch = false;
+                isCanBeTouch = false;
+
+                // DOTween.Kill(transform);
 
                 StartCoroutine(ReleasePoolWithDelay());
             }
 
-            if (other.gameObject == basket)
+            if (other.gameObject == basket && spRend.sortingOrder == sortOrder)
             {
                 isCanBeTouch = false;
 
@@ -115,32 +128,41 @@ public class FallingObject : MonoBehaviour
                 // StartCoroutine(ReleasePoolWithDelay());
                 fallingObjectPool.Release(this);
             }
-        }
+        // }
     }
 
-    private void GetRandomPointInPolygon()
-    {
-        while (true)
-        {
-            randomPoint = new Vector2(
-                Random.Range(min.x, max.x),
-                Random.Range(min.y, max.y)
-            );
+    // private void GetRandomPointInPolygon()
+    // {
+    //     while (true)
+    //     {
+    //         randomPoint = new Vector2(
+    //             Random.Range(min.x, max.x),
+    //             Random.Range(min.y, max.y)
+    //         );
 
-            if (destroyerCol.OverlapPoint(randomPoint))
-            {
-                StartCoroutine(FallDelay(randomPoint));
-                return;
-            }
-        }
-    }
+    //         if (destroyerCol.OverlapPoint(randomPoint))
+    //         {
+    //             StartCoroutine(FallDelay(randomPoint));
+    //             return;
+    //         }
+    //     }
+    // }
 
-    private IEnumerator FallDelay(Vector2 randomPoint)
+    private IEnumerator FallDelay(float fallDuration)
     {
         yield return new WaitForSeconds(0.2f);
 
-        // int additionalY = 2;
-        transform.DOMoveY(randomPoint.y, fallDuration).SetEase(Ease.Linear);
+        transform.DOMoveY(fallingObjectDestroyer.transform.position.y - additionalY, fallDuration).SetEase(Ease.Linear);
+
+        float randomSpeed = Random.Range(rotationSpeedMax - rotationSpeedMax, rotationSpeedMax);
+
+        // Randomly decide the rotation direction
+        int direction = Random.Range(0, 2) == 0 ? -1 : 1;
+
+        // Rotate the sprite infinitely around the Z-axis in the chosen direction
+        transform.DORotate(new Vector3(0, 0, 360 * direction), 1 / randomSpeed, RotateMode.FastBeyond360)
+            .SetLoops(-1, LoopType.Incremental) // Infinite loop, adds the rotation value each loop
+            .SetEase(Ease.Linear); // Linear ease for constant rotation speed
     }
 
     private IEnumerator ReleasePoolWithDelay()
@@ -177,6 +199,13 @@ public class FallingObject : MonoBehaviour
             // After the pause, swap back to the original material.
             spRend.material = originalMaterial;
         }
+    }
+
+    private void MiniGameWin()
+    {
+        // DOTween.Kill(transform);
+
+        // fallingObjectPool.Release(this);
     }
 
     public void SetPool(ObjectPool<FallingObject> pool)

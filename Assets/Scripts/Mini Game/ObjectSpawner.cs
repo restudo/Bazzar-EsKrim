@@ -18,6 +18,9 @@ public class ObjectSpawner : MonoBehaviour
     private float elapsedTime;
     private float yPos;
 
+    private const float minSpawnDelay = 0.5f;
+    private const float maxSpawnDelay = 2f;
+
     private void Start()
     {
         fallingObjectPool = new ObjectPool<FallingObject>(CreateFallingObject, OnTakeFallingObjectFromPool, OnReturnFallingObjectToPool, OnDestroyFallingObject, true, 20, 25);
@@ -29,7 +32,7 @@ public class ObjectSpawner : MonoBehaviour
         minX = screenLeft.x + xOffset; // Adding xOffset to minX
         maxX = screenRight.x - xOffset; // Subtracting xOffset from maxX
 
-        spawnDelay = Random.Range(0.5f, 2f);
+        spawnDelay = Random.Range(minSpawnDelay, maxSpawnDelay);
 
         yPos = transform.position.y;
     }
@@ -42,7 +45,7 @@ public class ObjectSpawner : MonoBehaviour
 
             if (elapsedTime >= spawnDelay)
             {
-                spawnDelay = Random.Range(0.5f, 2f);
+                spawnDelay = Random.Range(minSpawnDelay, maxSpawnDelay);
 
                 elapsedTime = 0f;
 

@@ -33,6 +33,7 @@ public class MainGameController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI targetText;
     [SerializeField] private Slider progressSlider;
     private int pointPerCustomer;
+    private int specialRecipePoint;
     private int maxPoint;
 
     private int progressCount;
@@ -42,6 +43,7 @@ public class MainGameController : MonoBehaviour
     private float doubleCustomerProbability;
     private bool canCreateNewCustomer;
     private CustomerPool customerPool; // Reference to the CustomerPool
+    private const float animationTime = .15f;
 
     private void Awake()
     {
@@ -54,6 +56,7 @@ public class MainGameController : MonoBehaviour
         customerDelay = levelData.customerDelay;
         doubleCustomerProbability = levelData.doubleCustomerProbability;
         pointPerCustomer = levelData.pointPerCustomer;
+        specialRecipePoint = levelData.specialRecipePoint;
         maxPoint = levelData.maxPoint;
         timer = levelData.timer;
 
@@ -220,9 +223,9 @@ public class MainGameController : MonoBehaviour
         newCustomer.Init();
     }
 
-    private void CorrectOrderEvent()
+    private void CorrectOrderEvent(bool isRecipeOrder)
     {
-        progressCount += pointPerCustomer;
+        progressCount += isRecipeOrder ? specialRecipePoint : pointPerCustomer;
         pointText.text = progressCount.ToString();
 
         IncreaseSliderValue(pointPerCustomer);
@@ -261,7 +264,7 @@ public class MainGameController : MonoBehaviour
         // }
 
         // After blinking, update the slider value
-        progressSlider.DOValue(progressCount, 0.15f).OnUpdate(() => progressCount = (int)progressSlider.value);
+        progressSlider.DOValue(progressCount, animationTime).OnUpdate(() => progressCount = (int)progressSlider.value);
 
         // Start the sequence
         // blinkSequence.Play();

@@ -1,14 +1,13 @@
 using DanielLochner.Assets.SimpleScrollSnap;
 using UnityEngine;
 using UnityEngine.UI;
-using System;
 
 namespace BazarEsKrim
 {
     public class CollectionManager : MonoBehaviour
     {
         public SO_RecipeList[] recipeLists;
-        public SO_IngredientHolderPos holderPanelYPos; // 0 is recipe 1, 1 is recipe 2
+        public SO_IngredientHolderPos holderPanelYPos;
         public SO_IngredientHolderPos holderFrameYPos;
         public GameObject ingredientPrefab;
 
@@ -26,49 +25,30 @@ namespace BazarEsKrim
 
         private void Awake()
         {
-            unlockedLevel = GameManager.Instance.LoadUnlockedLevel();
+            simpleScrollSnap.gameObject.SetActive(true);
 
             collectionFrames = new CollectionFrame[collectionDetailButtons.Length];
             collectionPanels = new CollectionPanel[collectionPanelContainer.transform.childCount];
-
-
-
-            // add listener and set ingredient to collection button
-            for (int i = 0; i < collectionDetailButtons.Length; i++)
-            {
-                int index = i;
-
-                collectionFrames[index] = collectionDetailButtons[index].GetComponent<CollectionFrame>();
-
-                // hide locked icon
-                if (index + 1 < unlockedLevel)
-                {
-                    collectionFrames[index].transform.GetChild(collectionFrames[index].transform.childCount - 1).gameObject.SetActive(false);
-                }
-                else
-                {
-                    collectionFrames[index].transform.GetChild(collectionFrames[index].transform.childCount - 1).gameObject.SetActive(true);
-                }
-
-                collectionDetailButtons[index].onClick.AddListener(() => OnCollectionDetailClicked(index, index + 1 < unlockedLevel));
-            }
-
-            for (int i = 0; i < collectionPanels.Length; i++)
-            {
-                collectionPanels[i] = collectionPanelContainer.transform.GetChild(i).GetComponent<CollectionPanel>();
-            }
         }
 
         private void Start()
         {
+            unlockedLevel = GameManager.Instance.LoadUnlockedLevel();
+
             if (collectionFrames.Length == collectionPanels.Length)
             {
-                int length = collectionFrames.Length;
-
-                for (int i = 0; i < length; i++)
+                // Cache components and optimize UI
+                for (int i = 0; i < collectionFrames.Length; i++)
                 {
-                    collectionPanels[i].SetCollectionIngredient(recipeLists[i]);
-                    collectionFrames[i].SetCollectionIngredient(recipeLists[i], i + 1 < unlockedLevel); // check is unlcoked as well to show recipe name
+                    int index = i;
+
+                    collectionFrames[index] = collectionDetailButtons[index].GetComponent<CollectionFrame>();
+                    collectionPanels[index] = collectionPanelContainer.transform.GetChild(index).GetComponent<CollectionPanel>();
+
+                    collectionDetailButtons[index].onClick.AddListener(() => OnCollectionDetailClicked(index, index + 1 < unlockedLevel));
+
+                    collectionPanels[index].SetCollectionIngredient(recipeLists[index], index + 1 < unlockedLevel);
+                    collectionFrames[index].SetCollectionIngredient(recipeLists[index], index + 1 < unlockedLevel);
                 }
             }
             else
@@ -87,13 +67,12 @@ namespace BazarEsKrim
                 {
                     GameManager.Instance.gameStates = GameStates.CollectionPanel;
 
+                    // Enable scroll snap with async or caching if necessary
                     simpleScrollSnap.gameObject.SetActive(true);
-
                     simpleScrollSnap.GoToPanel(index);
                 }
                 else
                 {
-                    // TODO: add something if level still locked
                     Debug.Log("Collection " + (index + 1) + " still locked");
                 }
             }
@@ -102,7 +81,6 @@ namespace BazarEsKrim
         public void CloseCollectionPanel()
         {
             simpleScrollSnap.gameObject.SetActive(false);
-
             GameManager.Instance.gameStates = GameStates.Collection;
         }
     }

@@ -10,22 +10,30 @@ namespace BazarEsKrim
         [SerializeField] private Material flashMaterial;
         [SerializeField] private float flashDuration = 0.1f; // Duration of each flash
         [SerializeField] private int flashCount = 1; // Number of flashes
+        [SerializeField] private GameObject[] basketContentVisuals;
 
         private Material originalMaterial;
 
         private void OnEnable()
         {
             EventHandler.BasketFlashEffect += FlashEffect;
+            EventHandler.MiniGameScoreTier += ActivateBasketVisual;
         }
 
         private void OnDisable()
         {
             EventHandler.BasketFlashEffect += FlashEffect;
+            EventHandler.MiniGameScoreTier -= ActivateBasketVisual;
         }
 
         private void Start()
         {
             originalMaterial = visual.material;
+
+            foreach (GameObject content in basketContentVisuals)
+            {
+                content.SetActive(false);
+            }
         }
 
         private IEnumerator StartFlashEffect()
@@ -43,7 +51,7 @@ namespace BazarEsKrim
             }
         }
 
-        public void FlashEffect()
+        private void FlashEffect()
         {
             if (visual != null)
             {
@@ -51,6 +59,13 @@ namespace BazarEsKrim
 
                 StartCoroutine(StartFlashEffect());
             }
+        }
+
+        private void ActivateBasketVisual(int scoreTier)
+        {
+            if (scoreTier >= basketContentVisuals.Length) return; // Check if scoreTier is within bounds
+
+            basketContentVisuals[scoreTier].SetActive(true);
         }
     }
 }

@@ -14,14 +14,22 @@ public class PatienceBarController : MonoBehaviour
     private float currentPatience;
     private Coroutine decreaseCoroutine;
     private CustomerController customerController;
+    private Image fillImage;
+    private Color colorOrigin;
 
-    private void Start()
+    private void Awake()
     {
         customerController = GetComponent<CustomerController>();
+
+        // Get the fill image of the slider
+        fillImage = patienceSlider.fillRect.GetComponent<Image>();
+        colorOrigin = fillImage.color;
     }
 
     public void StartDecreasingPatience()
     {
+        fillImage.color = colorOrigin;
+
         patienceDuration = customerController.customerPatience;
         currentPatience = patienceDuration;
 
@@ -78,21 +86,19 @@ public class PatienceBarController : MonoBehaviour
     {
         float newPatience = Mathf.Clamp(currentPatience - value, 0, patienceDuration);
 
-        // Get the fill image of the slider
-        Image fillImage = patienceSlider.fillRect.GetComponent<Image>();
         if (fillImage == null) return;
 
         // Store the original color
-        Color originalColor = fillImage.color;
-        Color blinkColor = _blinkColor;
+        // Color originalColor = fillImage.color;
+        // Color blinkColor = _blinkColor;
 
         // Blink animation: Change color to red and back to the original color
         Sequence blinkSequence = DOTween.Sequence();
         // Use a loop to blink
         for (int i = 0; i < blinkCount; i++)
         {
-            blinkSequence.Append(fillImage.DOColor(blinkColor, blinkDuration));
-            blinkSequence.Append(fillImage.DOColor(originalColor, blinkDuration));
+            blinkSequence.Append(fillImage.DOColor(_blinkColor, blinkDuration));
+            blinkSequence.Append(fillImage.DOColor(colorOrigin, blinkDuration));
         }
 
         // After blinking, update the slider value

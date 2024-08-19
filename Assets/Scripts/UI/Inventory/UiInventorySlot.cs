@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
@@ -18,8 +19,9 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     private Transform parentIngredient;
     private IngredientHolder ingredientHolder;
     private MainGameController mainGameController;
-    // private GameObject draggedIngredient;
     private Vector3 worldPosition;
+    private const float flewDuration = 0.2f;
+    // private GameObject draggedIngredient;
     // private bool isPointerOverUI;
     // private bool isDragging;
     // private bool isScrolling;
@@ -104,13 +106,10 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         if (draggedIngredient != null)
         {
             // Destroy(draggedIngredient);
-            draggedIngredient.SetActive(false);
+            // draggedIngredient.SetActive(false);
 
-            if (mainGameController.deliveryQueueIngredient < mainGameController.maxOrderHeight)
-            {
-                // levelManager.deliveryQueueIsFull = true;
-                HandleIngredientDrop(parentIngredient.gameObject, mainGameController);
-            }
+            // levelManager.deliveryQueueIsFull = true;
+            HandleIngredientDrop(parentIngredient.gameObject, mainGameController);
 
             glowingPlate.SetActive(false);
 
@@ -202,6 +201,10 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             {
                 TryAddIngredientToPlate(ingredientHolderObj, mainGameController);
             }
+            else
+            {
+                DraggedIngredientFlewAnim();
+            }
         }
         else
         {
@@ -215,13 +218,13 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         return collider.bounds.Contains(mousePos);
     }
 
-    private void AddIngredientDirectlyToHolder(GameObject ingredientHolderObj, MainGameController mainGameController)
-    {
-        if (ingredientHolderObj != null && mainGameController != null)
-        {
-            TryAddIngredientToPlate(ingredientHolderObj, mainGameController);
-        }
-    }
+    // private void AddIngredientDirectlyToHolder(GameObject ingredientHolderObj, MainGameController mainGameController)
+    // {
+    //     if (ingredientHolderObj != null && mainGameController != null)
+    //     {
+    //         TryAddIngredientToPlate(ingredientHolderObj, mainGameController);
+    //     }
+    // }
 
     private void TryAddIngredientToPlate(GameObject ingredientHolderObj, MainGameController mainGameController)
     {
@@ -231,6 +234,8 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             Transform lastIngredient = ingredientPool.GetLastIngredient();
             if (IsInvalidIngredientPlacement(ingredientHolderObj, lastIngredient))
             {
+                DraggedIngredientFlewAnim();
+
                 return;
             }
 
@@ -239,10 +244,15 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         }
     }
 
-    private Transform GetLastIngredient(GameObject ingredientHolderObj)
+    private void DraggedIngredientFlewAnim()
     {
-        return ingredientHolderObj.transform.childCount > 0 ? ingredientHolderObj.transform.GetChild(ingredientHolderObj.transform.childCount - 1) : null;
+        draggedIngredient.transform.DOMove(transform.position, flewDuration).SetEase(Ease.OutExpo).OnComplete(() => draggedIngredient.SetActive(false));
     }
+
+    // private Transform GetLastIngredient(GameObject ingredientHolderObj)
+    // {
+    //     return ingredientHolderObj.transform.childCount > 0 ? ingredientHolderObj.transform.GetChild(ingredientHolderObj.transform.childCount - 1) : null;
+    // }
 
     private bool IsInvalidIngredientPlacement(GameObject ingredientHolderObj, Transform lastIngredient)
     {
@@ -255,6 +265,11 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
             if (lastIngredient != null && lastIngredient.childCount > 0)
             {
+                if (mainGameController.deliveryQueueIngredient >= mainGameController.maxOrderHeight)
+                {
+                    return true;
+                }
+
                 if (lastIngredient.GetComponent<Ingredient>().IngredientType == IngredientType.Base && ingredientDetails.ingredientType == IngredientType.Topping)
                 {
                     return true;
@@ -347,6 +362,8 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         mainGameController.deliveryQueueIngredientsContent.Add(ingredientGameobject.IngredientCode);
 
         SetButtonLogic(ingredientGameobject.IngredientType);
+
+        draggedIngredient.SetActive(false);
     }
 
     private void SetButtonLogic(IngredientType ingredientType)

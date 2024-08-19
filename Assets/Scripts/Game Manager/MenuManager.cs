@@ -36,31 +36,26 @@ public class MenuManager : MonoBehaviour
         }
 
         collectionManager = collectionObj.GetComponent<CollectionManager>();
+
+        // Initialize the buttons array with the child buttons of buttonContainer
+        buttons = new Button[levelButtonContainer.transform.childCount];
     }
 
     private void Start()
     {
         int unlockedLevel = GameManager.Instance.LoadUnlockedLevel();
 
-        // Initialize the buttons array with the child buttons of buttonContainer
-        buttons = new Button[levelButtonContainer.transform.childCount];
-
         for (int i = 0; i < buttons.Length; i++)
         {
-            buttons[i] = levelButtonContainer.transform.GetChild(i).GetComponent<Button>();
             int index = i;
 
-            // hide locked icon
-            if(index + 1 <= unlockedLevel)
-            {
-                buttons[i].transform.GetChild(buttons[i].transform.childCount - 1).gameObject.SetActive(false);
-            }
-            else
-            {
-                buttons[i].transform.GetChild(buttons[i].transform.childCount - 1).gameObject.SetActive(true);
-            }
+            buttons[index] = levelButtonContainer.transform.GetChild(index).GetComponent<Button>();
 
-            buttons[i].onClick.AddListener(() => OnLevelButtonClicked(index, index + 1 <= unlockedLevel));
+            // Hide or show the locked icon based on the unlocked level
+            buttons[index].transform.GetChild(buttons[index].transform.childCount - 1).gameObject.SetActive(index + 1 > unlockedLevel);
+            buttons[index].transform.GetChild(buttons[index].transform.childCount - 2).gameObject.SetActive(index + 1 > unlockedLevel);
+
+            buttons[index].onClick.AddListener(() => OnLevelButtonClicked(index, index + 1 <= unlockedLevel));
         }
     }
 

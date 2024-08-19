@@ -11,11 +11,11 @@ public static class EventHandler
             InventoryUpdatedEvent(inventoryLocation, inventoryList, ingredientUnlockedInLocation);
     }
 
-    public static event Action CorrectOrder;
-    public static void CallCorrectOrderEvent()
+    public static event Action<bool> CorrectOrder;
+    public static void CallCorrectOrderEvent(bool isRecipeOrder)
     {
         if (CorrectOrder != null)
-            CorrectOrder();
+            CorrectOrder(isRecipeOrder);
     }
     
     public static event Action IncorrectOrder;
@@ -107,5 +107,19 @@ public static class EventHandler
     {
         if (CameraMove != null)
             CameraMove(delta);
+    }
+    
+    public static event Action<int> MiniGameScoreTier;
+    public static void CallMiniGameScoreTierEvent(int scoreTier)
+    {
+        if (MiniGameScoreTier != null)
+            MiniGameScoreTier(scoreTier);
+    }
+    
+    public static event Action MiniGameWin;
+    public static void CallminiGameWinEvent()
+    {
+        if (MiniGameWin != null)
+            MiniGameWin();
     }
 }

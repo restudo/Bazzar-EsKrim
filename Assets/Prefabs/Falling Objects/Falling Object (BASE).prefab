@@ -92,8 +92,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 246cdc4d13878e148a7a4821b416b001, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fallDuration: 4.5
-  releaseDelay: 4
+  minfallDuration: 2
+  maxfallDuration: 8
+  rotationSpeedMax: 0.7
+  releaseDelay: 2
   flashMaterial: {fileID: 2100000, guid: c669800ebffa6804280ef53fb1cbffbd, type: 2}
   flashDuration: 0.1
   flashCount: 1
@@ -196,7 +198,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: -1
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

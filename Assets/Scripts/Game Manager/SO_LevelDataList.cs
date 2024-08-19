@@ -32,6 +32,9 @@ public struct LevelDataMainGame
     [Tooltip("Points awarded per customer.")]
     public int pointPerCustomer;
 
+    [Tooltip("Points awarded per special Recipe.")]
+    public int specialRecipePoint;
+
     [Tooltip("Timer for the level.")]
     public int timer;
 

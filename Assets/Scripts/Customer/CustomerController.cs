@@ -27,6 +27,7 @@ public class CustomerController : MonoBehaviour
     private bool isOnSeat;
     private bool isLeaving;
     private bool isFacingRight;
+    private bool isRecipeOrder;
     private bool isDeliveryPlateColliding;
     private bool isMousePositionColliding;
 
@@ -95,6 +96,7 @@ public class CustomerController : MonoBehaviour
         isCloseEnoughToDelivery = false;
         isOnSeat = false;
         isLeaving = false;
+        isRecipeOrder = false;
         moodIndex = 0;
         maxOrderSize = mainGameController.maxOrderHeight;
 
@@ -102,6 +104,8 @@ public class CustomerController : MonoBehaviour
         {
             // Generate order by recipe
             orderManager.OrderByRecipe(mainGameController.maxSpecialRecipeInThisLevel);
+            isRecipeOrder = true;
+
             Debug.Log("order by recipe");
         }
         else
@@ -109,6 +113,7 @@ public class CustomerController : MonoBehaviour
             // Generate a random order
             int randomMaxOrder = Random.Range(2, maxOrderSize + 1);
             orderManager.OrderRandomProduct(randomMaxOrder);
+            isRecipeOrder = false;
 
             Debug.Log("random order");
         }
@@ -220,6 +225,7 @@ public class CustomerController : MonoBehaviour
         if (isLeaving) yield break;
 
         isLeaving = true;
+        isOnSeat = false;
 
         // Flip the sprite if necessary and set leaving flag
         FlipCheck(leavePoint);
@@ -264,7 +270,7 @@ public class CustomerController : MonoBehaviour
         }
 
         OrderIsCorrect();
-        EventHandler.CallCorrectOrderEvent();
+        EventHandler.CallCorrectOrderEvent(isRecipeOrder);
         return true;
     }
 

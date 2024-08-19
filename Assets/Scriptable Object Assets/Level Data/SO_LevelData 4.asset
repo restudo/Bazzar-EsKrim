@@ -19,6 +19,7 @@ MonoBehaviour:
     doubleCustomerProbability: 0.5
     maxPoint: 1700
     pointPerCustomer: 100
+    specialRecipePoint: 200
     timer: 180
     baseIngredientCode: ee030000ec030000ed030000e9030000eb030000
     flavorIngredientCode: f3030000f7030000f0030000f1030000f8030000

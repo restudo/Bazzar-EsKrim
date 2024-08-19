@@ -139,12 +139,18 @@ public class TrashBinController : MonoBehaviour
 
             if (currentClick == 2)
             {
-                EventHandler.CallResetMainQueueEvent();
-                EventHandler.CallResetPlatePositionEvent();
+                deliveryPlate.transform.DOMove(transform.position, 0.2f).SetEase(Ease.OutExpo).OnComplete(() =>
+                {
+                    EventHandler.CallResetMainQueueEvent();
+                    EventHandler.CallResetPlatePositionEvent();
 
-                CloseTrashBin();
+                    CloseTrashBin();
 
-                Squish();
+                    Squish();
+
+                    currentClick = 0;
+                });
+
             }
         }
 
@@ -167,8 +173,6 @@ public class TrashBinController : MonoBehaviour
 
         // topSprite.DOLocalRotate(topRotation, 0.15f).SetEase(Ease.OutExpo);
         // topSprite.DOLocalMove(topPosition, 0.15f).SetEase(Ease.OutExpo);
-
-        currentClick = 0;
     }
 
     public void OpenTrashBin()

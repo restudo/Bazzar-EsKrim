@@ -14,7 +14,9 @@ public class MiniGameController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI scoreGameOverText;
     [SerializeField] private float animSpeed;
+    [SerializeField] private int basketVisualMultiplier = 10;
     private int currentScore;
+    private int scoreTier;
 
     [Header("Timer")]
     [SerializeField] private TextMeshProUGUI timerText;
@@ -53,6 +55,7 @@ public class MiniGameController : MonoBehaviour
     private void Start()
     {
         currentScore = 0;
+        scoreTier = 0;
 
         GameManager.Instance.isGameActive = true;
 
@@ -77,6 +80,7 @@ public class MiniGameController : MonoBehaviour
             GameManager.Instance.isGameActive = false;
             // levelManager.Win();
             StartCoroutine(Win());
+            EventHandler.CallminiGameWinEvent();
 
             Debug.Log("Countdown time is up!");
         }
@@ -90,6 +94,10 @@ public class MiniGameController : MonoBehaviour
     {
         int score = 0;
         scoreGameOverText.text = score.ToString();
+
+        // TODO: change with the right gameflow
+        // Unlock level selection
+        GameManager.Instance.UnlockLevel();
 
         gameOverWinUI.transform.parent.GetComponent<Image>().color = new Color(0, 0, 0, 0);
         gameOverWinUI.transform.parent.localScale = Vector3.zero;
@@ -108,10 +116,6 @@ public class MiniGameController : MonoBehaviour
             scoreGameOverText.text = score.ToString();
             yield return new WaitForSeconds(animSpeed);
         }
-
-        // TODO: change with the right gameflow
-        // Unlock level selection
-        GameManager.Instance.UnlockLevel();
     }
 
     private void AddMiniGameScore()
@@ -119,15 +123,21 @@ public class MiniGameController : MonoBehaviour
         currentScore++;
 
         scoreText.text = currentScore.ToString();
+
+        if (currentScore % basketVisualMultiplier == 0)
+        {
+            // Call the score tier event to activate the basket visual
+            EventHandler.CallMiniGameScoreTierEvent(scoreTier); 
+
+            scoreTier++;
+        }
     }
 
     public void LoadToLevelSelection()
     {
-        DOTween.KillAll();
-
-        GameManager.Instance.isGameActive = false;
-
         GameManager.Instance.gameStates = GameStates.LevelSelection;
+        GameManager.Instance.isGameActive = false;
+        DOTween.KillAll();
 
         SceneController.Instance.FadeAndLoadScene(Scenes.Menu);
     }

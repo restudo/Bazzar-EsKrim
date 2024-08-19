@@ -24,13 +24,13 @@ public class ScrollController : MonoBehaviour
             switch (transform.tag)
             {
                 case nameof(IngredientType.Base):
-                    maxContentForButtonShow = GameManager.Instance.GetBaseUnlock();
+                    // maxContentForButtonShow = GameManager.Instance.GetBaseUnlock();
                     break;
                 case nameof(IngredientType.Flavor):
-                    maxContentForButtonShow = GameManager.Instance.GetFlavorUnlock();
+                    // maxContentForButtonShow = GameManager.Instance.GetFlavorUnlock();
                     break;
                 case nameof(IngredientType.Topping):
-                    maxContentForButtonShow = GameManager.Instance.GetToppingUnlock();
+                    // maxContentForButtonShow = GameManager.Instance.GetToppingUnlock();
                     break;
                 default:
                     Debug.LogWarning("Unknown ingredient type: " + transform.tag);

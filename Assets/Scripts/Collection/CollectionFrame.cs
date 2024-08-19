@@ -10,6 +10,9 @@ namespace BazarEsKrim
         [SerializeField] private CollectionManager collectionManager;
         [SerializeField] private RectTransform iceCreamHolder;
         [SerializeField] private TextMeshProUGUI titleText;
+        [SerializeField] private GameObject frameBlocker;
+        [SerializeField] private GameObject tagBlocker;
+        [SerializeField] private GameObject lockedIcon;
 
         private SO_RecipeList recipeList;
         private GameObject lastIngredient = null;
@@ -18,6 +21,10 @@ namespace BazarEsKrim
         private void Awake()
         {
             titleText.text = "???";
+
+            frameBlocker.SetActive(true);
+            tagBlocker.SetActive(true);
+            lockedIcon.SetActive(true);
 
             canCheckHolderYPos = true;
         }
@@ -33,6 +40,10 @@ namespace BazarEsKrim
             if (isUnlocked)
             {
                 titleText.text = recipeList.recipeName;
+
+                frameBlocker.SetActive(false);
+                tagBlocker.SetActive(false);
+                lockedIcon.SetActive(false);
             }
 
             int ingredientLength = recipeList.ingredientsCodes.Length;

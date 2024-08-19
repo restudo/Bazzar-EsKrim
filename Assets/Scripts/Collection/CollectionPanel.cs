@@ -32,7 +32,7 @@ namespace BazarEsKrim
         private void Awake()
         {
             // mainImage = null;
-            titleText.text = "";
+            titleText.text = "???";
 
             for (int i = 0; i < collectionIngredients.Length; i++)
             {
@@ -65,10 +65,10 @@ namespace BazarEsKrim
             return ingredientCounts;
         }
 
-        public void SetCollectionIngredient(SO_RecipeList recipe)
+        public void SetCollectionIngredient(SO_RecipeList recipe, bool isUnlocked)
         {
             recipeList = recipe;
-            if (recipeList == null) return;
+            if (recipeList == null || !isUnlocked) return;
 
             titleText.text = recipeList.recipeName;
 
@@ -111,17 +111,20 @@ namespace BazarEsKrim
 
                 // TODO: change to object pooling
                 GameObject prefab = Instantiate(collectionManager.ingredientPrefab, iceCreamHolder.transform);
+                Transform lastChild = prefab.transform.GetChild(prefab.transform.childCount - 1);
 
                 if (lastIngredient != null)
                 {
                     prefab.transform.position = ingredientDetails.ingredientType != IngredientType.Topping
-                        ? lastIngredient.transform.GetChild(1).transform.position
+                        ? lastIngredient.transform.GetChild(prefab.transform.childCount - 1).transform.position
                         : lastIngredient.transform.position;
                 }
 
+                // set the sprite renderer first to determine the size of prefab, then add image component
                 prefab.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = ingredientDetails.dressIngredientSprite;
                 prefab.transform.GetChild(0).AddComponent<Image>().sprite = ingredientDetails.dressIngredientSprite;
                 prefab.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
+                lastChild.localPosition = new Vector3(lastChild.localPosition.x, ingredientDetails.nextIngredientPosY, lastChild.localPosition.z);
 
                 prefab.SetActive(true);
                 lastIngredient = prefab;
