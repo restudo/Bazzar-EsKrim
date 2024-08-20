@@ -120,6 +120,13 @@ public class LevelManager : MonoBehaviour
         SceneController.Instance.FadeAndLoadScene(Scenes.Menu);
     }
 
+    public void LoadToMainMenu()
+    {
+        GameManager.Instance.gameStates = GameStates.MainMenu;
+
+        SceneController.Instance.FadeAndLoadScene(Scenes.Menu);
+    }
+
     public void LoadToMiniGame()
     {
         gameOverWinUI.transform.parent.gameObject.SetActive(false);

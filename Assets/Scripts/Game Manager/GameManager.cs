@@ -29,10 +29,10 @@ public class GameManager : MonoBehaviour
     // TODO: change to int variable
     private void Start()
     {
-        // PlayerPrefs.DeleteKey("UnlockedLevel");
+        PlayerPrefs.DeleteKey("UnlockedLevel");
 
         isGameActive = false;
-        PlayerPrefs.SetInt("UnlockedLevel", 6);
+        // PlayerPrefs.SetInt("UnlockedLevel", 6);
     }
 
     private void Update()
