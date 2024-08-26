@@ -81,7 +81,7 @@ public class FallingObject : MonoBehaviour
 
             spRend.sortingOrder = sortOrder;
 
-            float randomOffset = Random.Range(-1, 1);
+            float randomOffset = Random.Range(-2, 2);
             // Vector3 topBasketPos = topBasket.transform.position;
             Vector3 basketPos = basket.transform.position;
 

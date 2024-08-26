@@ -29,10 +29,18 @@ public class GameManager : MonoBehaviour
     // TODO: change to int variable
     private void Start()
     {
-        PlayerPrefs.DeleteKey("UnlockedLevel");
+        // PlayerPrefs.DeleteKey("UnlockedLevel");
 
         isGameActive = false;
-        // PlayerPrefs.SetInt("UnlockedLevel", 6);
+        PlayerPrefs.SetInt("UnlockedLevel", 6);
+
+        foreach (var level in levelDataLists)
+        {            
+            for (int i = 0; i < level.mainGameLevelData.sO_RecipeList.Length; i++)
+            {
+                level.mainGameLevelData.sO_RecipeList[i].Set();
+            }
+        }
     }
 
     private void Update()

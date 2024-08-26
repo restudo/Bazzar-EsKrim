@@ -237,7 +237,7 @@ public class OrderManager : MonoBehaviour
             }
             else if (i == randomMaxOrder - 1) // Last element
             {
-                int unlockedToppingsCount = levelDataLists[GameManager.Instance.currentLevel - 1].mainGameLevelData.toppingIngredientCode.Length;
+                int unlockedToppingsCount = levelDataLists[GameManager.Instance.currentLevel - 1].mainGameLevelData.toppingIngredientCode.Count;
                 if (unlockedToppingsCount > 0)
                 {
                     AddToppingIngredient(i);
@@ -268,7 +268,7 @@ public class OrderManager : MonoBehaviour
 
         int randomRecipeIndex = Random.Range(0, recipeUnlockIndex);
 
-        int maxOrderByRecipe = levelDataLists[GameManager.Instance.currentLevel - 1].mainGameLevelData.sO_RecipeList[randomRecipeIndex].ingredientsCodes.Length;
+        int maxOrderByRecipe = levelDataLists[GameManager.Instance.currentLevel - 1].mainGameLevelData.sO_RecipeList[randomRecipeIndex].ingredientsCodes.Count;
 
         productIngredientsCodes = new int[maxOrderByRecipe];
 

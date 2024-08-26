@@ -139,7 +139,7 @@ public class TrashBinController : MonoBehaviour
 
             if (currentClick == 2)
             {
-                deliveryPlate.transform.DOMove(transform.position, 0.2f).SetEase(Ease.OutExpo).OnComplete(() =>
+                deliveryPlate.transform.DOMove(transform.position, 0.4f).SetEase(Ease.OutExpo).OnComplete(() =>
                 {
                     EventHandler.CallResetMainQueueEvent();
                     EventHandler.CallResetPlatePositionEvent();

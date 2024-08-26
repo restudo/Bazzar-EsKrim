@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +10,7 @@ public class UiInventoryPage : MonoBehaviour
     [SerializeField] private Sprite blankSprite;
     [SerializeField] private UiInventorySlot[] inventorySlot = null;
     [SerializeField] private InventoryLocation _inventoryLocation;
-    [SerializeField] private Image imageBlocker;
+    [SerializeField] private Image glowVisual;
     private SO_LevelDataList[] levelDataIngredientCodes;
     private int[] ingredientCodeRecipe;
 
@@ -56,7 +57,12 @@ public class UiInventoryPage : MonoBehaviour
 
         if (_inventoryLocation == InventoryLocation.Base)
         {
-            imageBlocker.gameObject.SetActive(false);
+            glowVisual.gameObject.SetActive(true);
+
+            foreach (var item in inventorySlot)
+            {
+                item.inventorySlotImageBlocker.gameObject.SetActive(false);
+            }
         }
 
         yield return new WaitForEndOfFrame();
@@ -77,7 +83,7 @@ public class UiInventoryPage : MonoBehaviour
 
     private int[] CheckInventoryLocation()
     {
-        IngredientName[] ingredientNames;
+        List<IngredientName> ingredientNames = new List<IngredientName>();
 
         switch (_inventoryLocation)
         {
@@ -96,8 +102,8 @@ public class UiInventoryPage : MonoBehaviour
         }
 
         // Convert IngredientName[] to int[]
-        int[] ingredientCodes = new int[ingredientNames.Length];
-        for (int i = 0; i < ingredientNames.Length; i++)
+        int[] ingredientCodes = new int[ingredientNames.Count];
+        for (int i = 0; i < ingredientNames.Count; i++)
         {
             ingredientCodes[i] = (int)ingredientNames[i];
         }
@@ -126,6 +132,9 @@ public class UiInventoryPage : MonoBehaviour
                         // add images and details to inventory item slot
                         inventorySlot[i].inventorySlotImage.sprite = ingredientDetails.basketIngredientSprite;
                         inventorySlot[i].ingredientDetails = ingredientDetails;
+
+                        inventorySlot[i].inventorySlotImageBlocker.sprite = inventorySlot[i].BlockerRef.sprite;
+                        inventorySlot[i].inventorySlotImageBlocker.transform.localScale = inventorySlot[i].BlockerRef.transform.localScale;
                     }
                 }
             }
@@ -178,7 +187,6 @@ public class UiInventoryPage : MonoBehaviour
         {
             // loop through inventory slots and update with blank sprite
             for (int i = 0; i < inventorySlot.Length; i++)
-
             {
                 inventorySlot[i].inventorySlotImage.sprite = blankSprite;
                 inventorySlot[i].ingredientDetails = null;
@@ -190,7 +198,13 @@ public class UiInventoryPage : MonoBehaviour
     {
         if (index == (int)_inventoryLocation)
         {
-            imageBlocker.gameObject.SetActive(false);
+            glowVisual.gameObject.SetActive(true);
+
+            // loop through inventory slots and deactivate blocker
+            foreach (var item in inventorySlot)
+            {
+                item.inventorySlotImageBlocker.gameObject.SetActive(false);
+            }
 
             // if(index == (int)_inventoryLocation)
             // {
@@ -204,7 +218,13 @@ public class UiInventoryPage : MonoBehaviour
     {
         if (index == (int)_inventoryLocation)
         {
-            imageBlocker.gameObject.SetActive(true);
+            glowVisual.gameObject.SetActive(false);
+
+            // loop through inventory slots and activate blocker
+            foreach (var item in inventorySlot)
+            {
+                item.inventorySlotImageBlocker.gameObject.SetActive(true);
+            }
 
             // if(index == (int)_inventoryLocation)
             // {

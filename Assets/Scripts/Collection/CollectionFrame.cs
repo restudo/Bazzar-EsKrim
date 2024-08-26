@@ -46,7 +46,7 @@ namespace BazarEsKrim
                 lockedIcon.SetActive(false);
             }
 
-            int ingredientLength = recipeList.ingredientsCodes.Length;
+            int ingredientLength = recipeList.ingredientsCodes.Count;
 
             for (int i = 0; i < ingredientLength; i++)
             {

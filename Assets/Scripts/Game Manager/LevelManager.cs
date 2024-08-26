@@ -23,6 +23,11 @@ public class LevelManager : MonoBehaviour
 
     private void Awake()
     {
+        foreach (var level in GameManager.Instance.levelDataLists)
+        {
+            level.mainGameLevelData.Set();
+        }
+
         switch (GameManager.Instance.gameStates)
         {
             case GameStates.MainGame:
@@ -36,11 +41,11 @@ public class LevelManager : MonoBehaviour
             default:
                 Debug.LogError("Current Game State is " + GameManager.Instance.gameStates.ToString());
 
-                if(mainGame.activeSelf)
+                if (mainGame.activeSelf)
                 {
                     GameManager.Instance.gameStates = GameStates.MainGame;
                 }
-                else if(miniGame.activeSelf)
+                else if (miniGame.activeSelf)
                 {
                     GameManager.Instance.gameStates = GameStates.MiniGame;
                 }

@@ -97,6 +97,7 @@ public class MainGameController : MonoBehaviour
         time = TimeSpan.FromSeconds(currentTime);
         timerText.text = string.Format("{0:00}:{1:00}", time.Minutes, time.Seconds);
 
+        //TODO: change with countdown or else
         yield return new WaitForSeconds(2);
 
         GameManager.Instance.isGameActive = true;
@@ -244,34 +245,7 @@ public class MainGameController : MonoBehaviour
 
     public void IncreaseSliderValue(float value)
     {
-        // float newPatience = Mathf.Clamp(progressCount + value, 0, maxPoint);
-
-        // // Get the fill image of the slider
-        // Image fillImage = progressSlider.fillRect.GetComponent<Image>();
-        // if (fillImage == null) return;
-
-        // // Store the original color
-        // Color originalColor = fillImage.color;
-        // Color blinkColor = _blinkColor;
-
-        // // Blink animation: Change color to red and back to the original color
-        // Sequence blinkSequence = DOTween.Sequence();
-        // // Use a loop to blink
-        // for (int i = 0; i < blinkCount; i++)
-        // {
-        //     blinkSequence.Append(fillImage.DOColor(blinkColor, blinkDuration));
-        //     blinkSequence.Append(fillImage.DOColor(originalColor, blinkDuration));
-        // }
-
         // After blinking, update the slider value
         progressSlider.DOValue(progressCount, animationTime).OnUpdate(() => progressCount = (int)progressSlider.value);
-
-        // Start the sequence
-        // blinkSequence.Play();
     }
-
-    // public void LoadToNextLevel()
-    // {
-
-    // }
 }

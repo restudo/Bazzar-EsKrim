@@ -6,6 +6,8 @@ using DG.Tweening;
 public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public Image inventorySlotImage;
+    public Image inventorySlotImageBlocker;
+    public Image BlockerRef;
     [HideInInspector] public IngredientDetails ingredientDetails;
 
     [SerializeField] private GameObject draggedIngredient;
@@ -20,7 +22,7 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     private IngredientHolder ingredientHolder;
     private MainGameController mainGameController;
     private Vector3 worldPosition;
-    private const float flewDuration = 0.2f;
+    private const float flewDuration = 0.3f;
     // private GameObject draggedIngredient;
     // private bool isPointerOverUI;
     // private bool isDragging;
@@ -49,7 +51,7 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (ingredientDetails == null || !GameManager.Instance.isGameActive || GameManager.Instance.gameStates != GameStates.MainGame)
+        if (ingredientDetails == null || !GameManager.Instance.isGameActive || GameManager.Instance.gameStates != GameStates.MainGame || inventorySlotImageBlocker.gameObject.activeSelf)
         {
             return;
         }
