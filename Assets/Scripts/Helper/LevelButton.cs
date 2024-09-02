@@ -6,12 +6,11 @@ namespace BazarEsKrim
     public class LevelButton : MonoBehaviour
     {
         [Space(10)]
-        [SerializeField] private Image originSprite;
-        [SerializeField] private Image darkSprite;
         [SerializeField] private GameObject glowSprite;
+        [SerializeField] private GameObject darkSprite;
+        [SerializeField] private GameObject lockedIcon;
 
         [Space(10)]
-        [SerializeField] private GameObject lockedIcon;
         [SerializeField] private GameObject lvTag;
         [SerializeField] private Button startButton;
 
@@ -28,10 +27,6 @@ namespace BazarEsKrim
             isUnlocked = unlock;
             lvIndex = index;
 
-            darkSprite.sprite = originSprite.sprite;
-            darkSprite.SetNativeSize();
-            darkSprite.transform.position = originSprite.transform.position;
-
             startButton.onClick.AddListener(LoadToLevel);
 
             glowSprite.SetActive(false);
@@ -41,12 +36,12 @@ namespace BazarEsKrim
 
             if (isUnlocked)
             {
-                darkSprite.gameObject.SetActive(false);
+                darkSprite.SetActive(false);
                 lockedIcon.SetActive(false);
             }
             else
             {
-                darkSprite.gameObject.SetActive(true);
+                darkSprite.SetActive(true);
                 lockedIcon.SetActive(true);
             }
         }

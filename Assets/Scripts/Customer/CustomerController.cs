@@ -118,7 +118,6 @@ public class CustomerController : MonoBehaviour
             Debug.Log("random order");
         }
 
-
         // Hide HUD and highlight
         HudPos.SetActive(false);
         transform.GetChild(transform.childCount - 1).gameObject.SetActive(false);
@@ -145,7 +144,7 @@ public class CustomerController : MonoBehaviour
 
         // Stop the yoyo movement and finalize position
         yoyoTween.Kill();
-        yield return new WaitForEndOfFrame();
+        yield return new WaitForSeconds(0.05f);
 
         transform.DOMove(destination, 0.3f).SetEase(Ease.Linear).OnComplete(() =>
         {
@@ -153,6 +152,14 @@ public class CustomerController : MonoBehaviour
             HudPos.SetActive(true);
             patienceBarController.StartDecreasingPatience();
         });
+
+        // double check if its leaving after take a seat
+        if(isLeaving)
+        {
+            isOnSeat = false;
+            HudPos.SetActive(false);
+            patienceBarController.StopDecreasingPatience();
+        }
     }
 
     private void FlipCheck(Vector3 target)
@@ -230,13 +237,13 @@ public class CustomerController : MonoBehaviour
         isLeaving = true;
         isOnSeat = false;
 
-        // Flip the sprite if necessary and set leaving flag
-        FlipCheck(leavePoint);
-
         // Mark the seat as available and hide HUD and highlight
         mainGameController.availableSeatForCustomers[mySeat] = true;
         HudPos.SetActive(false);
         transform.GetChild(transform.childCount - 1).gameObject.SetActive(false);
+
+        // Flip the sprite if necessary and set leaving flag
+        FlipCheck(leavePoint);
 
         yield return new WaitForSeconds(0.15f);
 
@@ -285,9 +292,6 @@ public class CustomerController : MonoBehaviour
 
     private void ChaseCustomer()
     {
-        HudPos.SetActive(false);
-        transform.GetChild(transform.childCount - 1).gameObject.SetActive(false);
-
         StartCoroutine(Leave());
     }
 
