@@ -200,11 +200,12 @@ public class CustomerController : MonoBehaviour
 
     private void OrderIsCorrect()
     {
-        moodIndex = 2;  // Make the customer happy
-
         // Trigger progression events and spawn money
-        EventHandler.CallSetMoneyPosToCustomerPosEvent(transform.position);
+        EventHandler.CallCorrectOrderEvent(isRecipeOrder);
+        EventHandler.CallSetMoneyPosToCustomerPosEvent(transform.position, isRecipeOrder);
         moneySpawner.moneyPool.Get();
+
+        moodIndex = 2;  // Make the customer happy
 
         // Stop decreasing patience and start leaving
         patienceBarController.StopDecreasingPatience();
@@ -213,6 +214,8 @@ public class CustomerController : MonoBehaviour
 
     private void OrderIsIncorrect()
     {
+        EventHandler.CallIncorrectOrderEvent();
+
         moodIndex = 3; // Make the customer angry
 
         // Decrease patience based on a percentage
@@ -270,14 +273,13 @@ public class CustomerController : MonoBehaviour
         }
 
         OrderIsCorrect();
-        EventHandler.CallCorrectOrderEvent(isRecipeOrder);
+        
         return true;
     }
 
     private bool OrderIsIncorrectAndReturnFalse()
     {
         OrderIsIncorrect();
-        EventHandler.CallIncorrectOrderEvent();
         return false;
     }
 

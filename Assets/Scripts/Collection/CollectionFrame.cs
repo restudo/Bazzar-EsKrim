@@ -10,20 +10,36 @@ namespace BazarEsKrim
         [SerializeField] private CollectionManager collectionManager;
         [SerializeField] private RectTransform iceCreamHolder;
         [SerializeField] private TextMeshProUGUI titleText;
-        [SerializeField] private GameObject frameBlocker;
-        [SerializeField] private GameObject tagBlocker;
+        // [SerializeField] private GameObject frameBlocker;
+        // [SerializeField] private GameObject tagBlocker;
         [SerializeField] private GameObject lockedIcon;
+        [SerializeField] private Image frameImg;
+        [SerializeField] private Image tagImg;
+        [SerializeField] private Image iceCreamImg;
+        [SerializeField] private Material grayscaleMat;
+        [SerializeField] private Material darkMat;
+        [SerializeField] private Color darkColor;
 
         private SO_RecipeList recipeList;
         private GameObject lastIngredient = null;
         private bool canCheckHolderYPos;
+        private Color iceColorOrigin;
 
         private void Awake()
         {
-            titleText.text = "???";
+            iceColorOrigin = iceCreamImg.color;
 
-            frameBlocker.SetActive(true);
-            tagBlocker.SetActive(true);
+            titleText.text = "???";
+            titleText.material = grayscaleMat;
+
+            frameImg.material = grayscaleMat;
+            tagImg.material = grayscaleMat;
+
+            iceCreamImg.material = darkMat;
+            iceCreamImg.color = darkColor;
+
+            // frameBlocker.SetActive(true);
+            // tagBlocker.SetActive(true);
             lockedIcon.SetActive(true);
 
             canCheckHolderYPos = true;
@@ -40,11 +56,20 @@ namespace BazarEsKrim
             if (isUnlocked)
             {
                 titleText.text = recipeList.recipeName;
+                titleText.material = null;
 
-                frameBlocker.SetActive(false);
-                tagBlocker.SetActive(false);
+                frameImg.material = null;
+                tagImg.material = null;
+
+                iceCreamImg.material = null;
+                iceCreamImg.color = iceColorOrigin;
+
+                // frameBlocker.SetActive(false);
+                // tagBlocker.SetActive(false);
                 lockedIcon.SetActive(false);
             }
+
+            return;
 
             int ingredientLength = recipeList.ingredientsCodes.Count;
 

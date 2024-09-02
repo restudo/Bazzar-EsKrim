@@ -23,6 +23,12 @@ namespace BazarEsKrim
         [SerializeField] private GameObject ingredientContainer;
         // [SerializeField] private Image mainImage;
         [SerializeField] private TextMeshProUGUI titleText;
+        [SerializeField] private GameObject lockedIcon;
+        [SerializeField] private GameObject lockedIngredient;
+        [SerializeField] private GameObject unlockedIngredient;
+        [SerializeField] private Image mainImg;
+        [SerializeField] private Material darkMat;
+        [SerializeField] private Color darkColor;
         [SerializeField] private CollectionIngredients[] collectionIngredients;
 
         private SO_RecipeList recipeList;
@@ -34,13 +40,20 @@ namespace BazarEsKrim
             // mainImage = null;
             titleText.text = "???";
 
-            for (int i = 0; i < collectionIngredients.Length; i++)
-            {
-                // collectionIngredients[i].ingredientImage = null;
-                collectionIngredients[i].ingredientName.text = "???";
+            mainImg.material = darkMat;
+            mainImg.color = darkColor;
 
-                ingredientContainer.transform.GetChild(i).gameObject.SetActive(false);
-            }
+            lockedIcon.SetActive(true);
+            lockedIngredient.SetActive(true);
+            unlockedIngredient.SetActive(false);
+
+            // for (int i = 0; i < collectionIngredients.Length; i++)
+            // {
+            //     // collectionIngredients[i].ingredientImage = null;
+            //     collectionIngredients[i].ingredientName.text = "???";
+
+            //     ingredientContainer.transform.GetChild(i).gameObject.SetActive(false);
+            // }
 
             canCheckHolderYPos = true;
         }
@@ -71,6 +84,15 @@ namespace BazarEsKrim
             if (recipeList == null || !isUnlocked) return;
 
             titleText.text = recipeList.recipeName;
+
+            mainImg.material = null;
+            mainImg.color = Color.white;
+
+            lockedIcon.SetActive(false);
+            lockedIngredient.SetActive(false);
+            unlockedIngredient.SetActive(true);
+
+            return;
 
             var mergedIngredients = GetMergedIngredients(recipeList);
             int i = 0;

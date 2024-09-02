@@ -5,7 +5,7 @@ using UnityEngine;
 public class SO_RecipeList : ScriptableObject
 {
     [Tooltip("Array of ingredient codes for the recipe. Note that IDs index should be carefully selected from existing ingredients. Duplicate indices are allowed, meaning a recipe can consist of two or more of the same ingredient.")]
-    // [HideInInspector]
+    [HideInInspector]
     public List<IngredientName> ingredientsCodes = new List<IngredientName>();
 
     [Header("Ingredient Codes")]

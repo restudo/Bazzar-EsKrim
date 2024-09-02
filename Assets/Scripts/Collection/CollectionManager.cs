@@ -12,6 +12,7 @@ namespace BazarEsKrim
         public GameObject ingredientPrefab;
 
         [SerializeField] private SimpleScrollSnap simpleScrollSnap;
+        [SerializeField] private GameObject scrollScapBlocker;
 
         [Space(20)]
         [SerializeField] private Button[] collectionDetailButtons;
@@ -26,6 +27,7 @@ namespace BazarEsKrim
         private void Awake()
         {
             simpleScrollSnap.gameObject.SetActive(true);
+            scrollScapBlocker.SetActive(true);
 
             collectionFrames = new CollectionFrame[collectionDetailButtons.Length];
             collectionPanels = new CollectionPanel[collectionPanelContainer.transform.childCount];
@@ -57,6 +59,7 @@ namespace BazarEsKrim
             }
 
             simpleScrollSnap.gameObject.SetActive(false);
+            scrollScapBlocker.SetActive(false);
         }
 
         private void OnCollectionDetailClicked(int index, bool isUnlocked)
@@ -70,6 +73,8 @@ namespace BazarEsKrim
                     // Enable scroll snap with async or caching if necessary
                     simpleScrollSnap.gameObject.SetActive(true);
                     simpleScrollSnap.GoToPanel(index);
+
+                    scrollScapBlocker.SetActive(true);
                 }
                 else
                 {
@@ -81,6 +86,7 @@ namespace BazarEsKrim
         public void CloseCollectionPanel()
         {
             simpleScrollSnap.gameObject.SetActive(false);
+            scrollScapBlocker.SetActive(false);
             GameManager.Instance.gameStates = GameStates.Collection;
         }
     }

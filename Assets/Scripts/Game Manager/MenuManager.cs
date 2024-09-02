@@ -13,9 +13,9 @@ public class MenuManager : MonoBehaviour
 
     [Header("Level Selection")]
     [SerializeField] private GameObject levelSelectionObj;
-    [SerializeField] private GameObject levelButtonContainer;
 
-    private Button[] buttons;
+    [Header("Back Buttons")]
+    [SerializeField] private Button[] backButtons;
 
     private void Awake()
     {
@@ -37,42 +37,9 @@ public class MenuManager : MonoBehaviour
 
         collectionManager = collectionObj.GetComponent<CollectionManager>();
 
-        // Initialize the buttons array with the child buttons of buttonContainer
-        buttons = new Button[levelButtonContainer.transform.childCount];
-    }
-
-    private void Start()
-    {
-        int unlockedLevel = GameManager.Instance.LoadUnlockedLevel();
-
-        for (int i = 0; i < buttons.Length; i++)
+        foreach (Button button in backButtons)
         {
-            int index = i;
-
-            buttons[index] = levelButtonContainer.transform.GetChild(index).GetComponent<Button>();
-
-            // Hide or show the locked icon based on the unlocked level
-            buttons[index].transform.GetChild(buttons[index].transform.childCount - 1).gameObject.SetActive(index + 1 > unlockedLevel);
-            buttons[index].transform.GetChild(buttons[index].transform.childCount - 2).gameObject.SetActive(index + 1 > unlockedLevel);
-
-            buttons[index].onClick.AddListener(() => OnLevelButtonClicked(index, index + 1 <= unlockedLevel));
-        }
-    }
-
-    private void OnLevelButtonClicked(int index, bool isUnlocked)
-    {
-        if (GameManager.Instance.gameStates == GameStates.LevelSelection)
-        {
-            if (isUnlocked)
-            {
-                // Load the level based on the button clicked
-                LoadToLevel(index + 1);
-            }
-            else
-            {
-                // TODO: add something if level still locked
-                Debug.Log("Level " + (index + 1) + " still locked");
-            }
+            button.onClick.AddListener(Back);
         }
     }
 
@@ -81,20 +48,6 @@ public class MenuManager : MonoBehaviour
         mainMenuObj.SetActive(mainMenu);
         collectionObj.SetActive(collection);
         levelSelectionObj.SetActive(levelSelection);
-    }
-
-    public void LoadToLevel(int levelSelected)
-    {
-        // Set game state and current level
-        GameManager.Instance.currentLevel = levelSelected;
-        // GameManager.Instance.UnlockIngredientLevel();
-        GameManager.Instance.isGameActive = true;
-
-        GameManager.Instance.gameStates = GameStates.MainGame;
-
-        // Load the selected level
-        // SceneController.Instance.LoadScene((Scenes)levelSelected - 1);
-        SceneController.Instance.FadeAndLoadScene(Scenes.Level);
     }
 
     public void LoadToMainMenu()
@@ -130,6 +83,8 @@ public class MenuManager : MonoBehaviour
         }
         else
         {
+            Debug.Log("QUIT");
+
             Application.Quit();
         }
     }

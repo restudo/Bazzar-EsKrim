@@ -4,9 +4,12 @@ using UnityEngine.Pool;
 public class MoneySpawner : MonoBehaviour
 {
     public ObjectPool<Money> moneyPool;
+    [SerializeField] private Sprite normalCust;
+    [SerializeField] private Sprite specialCust;
     [SerializeField] private Money moneyObj;
 
     private Vector3 _customerPosition;
+    private Sprite moneySprite;
 
     private void OnEnable()
     {
@@ -40,6 +43,8 @@ public class MoneySpawner : MonoBehaviour
         money.transform.position = _customerPosition;
         // money.transform.eulerAngles = transform.eulerAngles;
 
+        money.GetComponent<SpriteRenderer>().sprite = moneySprite;
+
         // activate
         money.gameObject.SetActive(true);
     }
@@ -57,8 +62,9 @@ public class MoneySpawner : MonoBehaviour
         Destroy(money.gameObject);
     }
 
-    private void SetToCustomerPosition(Vector3 customerPosition)
+    private void SetToCustomerPosition(Vector3 customerPosition, bool isRecipeOrder)
     {
         _customerPosition = customerPosition;
+        moneySprite = isRecipeOrder ? specialCust : normalCust;
     }
 }

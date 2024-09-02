@@ -43,12 +43,15 @@ public class LevelDataMainGame
     [Space(20)]
     [Header("Ingredient Codes")]
     [Tooltip("Codes for base ingredients.")]
+    [HideInInspector]
     public List<IngredientName> baseIngredientCode = new List<IngredientName>();
 
     [Tooltip("Codes for flavor ingredients.")]
+    [HideInInspector]
     public List<IngredientName> flavorIngredientCode = new List<IngredientName>();
 
     [Tooltip("Codes for topping ingredients.")]
+    [HideInInspector]
     public List<IngredientName> toppingIngredientCode = new List<IngredientName>();
 
     [Space(20)]

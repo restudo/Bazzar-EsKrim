@@ -17,14 +17,15 @@ MonoBehaviour:
     spawnSpecialRecipeAfterXCustomer: 5
     customerDelay: 10
     doubleCustomerProbability: 0.4
-    maxPoint: 1300
+    maxPoint: 1200
     pointPerCustomer: 100
     specialRecipePoint: 200
     timer: 180
-    baseIngredientCode: ed030000ec030000ea030000ee030000e9030000
-    flavorIngredientCode: f7030000f5030000f6030000f2030000f4030000
-    toppingIngredientCode: 020400000004000001040000fc030000fe030000
+    baseIngredientCode: ed030000ee030000eb030000e9030000ea030000
+    flavorIngredientCode: ef030000f0030000f4030000f5030000f2030000
+    toppingIngredientCode: fa030000fe030000ff0300000104000000040000
     sO_RecipeList:
+    - {fileID: 11400000, guid: 6ac739c495321514cad3f9d82b8377fc, type: 2}
     - {fileID: 11400000, guid: 5b9a662412ec7a045bb9bd257f4fafe0, type: 2}
   miniGameLevelData:
     timer: 20

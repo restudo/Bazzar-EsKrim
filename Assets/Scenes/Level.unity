@@ -10534,6 +10534,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 032892cf09d27594fa989f9093a8e525, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  normalCust: {fileID: 21300000, guid: 53caa0227b2d34b4c966082b2d1a3376, type: 3}
+  specialCust: {fileID: 21300000, guid: f0357685d102c794486e244a42be3403, type: 3}
   moneyObj: {fileID: 894541813209057298, guid: f961007f5ecf91a48b3b9a04592383c7, type: 3}
 --- !u!1001 &2109047415
 PrefabInstance:

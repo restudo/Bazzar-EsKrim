@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
         // PlayerPrefs.DeleteKey("UnlockedLevel");
 
         isGameActive = false;
-        PlayerPrefs.SetInt("UnlockedLevel", 6);
+        PlayerPrefs.SetInt("UnlockedLevel", 2);
 
         foreach (var level in levelDataLists)
         {            

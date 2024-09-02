@@ -74,11 +74,11 @@ public static class EventHandler
             ChaseCustomer();
     }
     
-    public static event Action<Vector3> SetMoneyPosToCustomerPos;
-    public static void CallSetMoneyPosToCustomerPosEvent(Vector3 customerPos)
+    public static event Action<Vector3, bool> SetMoneyPosToCustomerPos;
+    public static void CallSetMoneyPosToCustomerPosEvent(Vector3 customerPos, bool isRecipeOrder)
     {
         if (SetMoneyPosToCustomerPos != null)
-            SetMoneyPosToCustomerPos(customerPos);
+            SetMoneyPosToCustomerPos(customerPos, isRecipeOrder);
     }
     
     public static event Action AddMiniGameScore;
@@ -121,5 +121,12 @@ public static class EventHandler
     {
         if (MiniGameWin != null)
             MiniGameWin();
+    }
+    
+    public static event Action<int> LoadToLevel;
+    public static void CallLoadToLevelEvent(int lvIndex)
+    {
+        if (LoadToLevel != null)
+            LoadToLevel(lvIndex);
     }
 }
