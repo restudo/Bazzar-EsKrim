@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f6be30cbc7b22f44854229338bdf476, type: 3}
   m_Name: SO_RecipeList 3
   m_EditorClassIdentifier: 
-  ingredientsCodes: ee030000
+  ingredientsCodes: ee030000f4030000f5030000fe030000
   baseIngredientCode: ee030000
   flavorIngredientCode: f4030000f5030000
   toppingIngredientCode: fe030000
   recipeName: Yum Gum
-  recipeSprite: {fileID: 21300000, guid: 9ddd84af6ed9d074a95790ecda3447d2, type: 3}
+  recipeSprite: {fileID: 21300000, guid: 9b221597b6a43cf46b1f29e9b0e30ae0, type: 3}

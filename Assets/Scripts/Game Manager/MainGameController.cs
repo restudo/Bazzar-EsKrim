@@ -13,6 +13,7 @@ public class MainGameController : MonoBehaviour
     [HideInInspector] public int maxSpecialRecipeInThisLevel;
     [HideInInspector] public int customerCounter;
     [HideInInspector] public int deliveryQueueIngredient;
+    [HideInInspector] public bool wasLastOrderByRecipe;
     [HideInInspector] public bool[] availableSeatForCustomers;
     [HideInInspector] public List<int> deliveryQueueIngredientsContent = new List<int>();
 
@@ -35,6 +36,10 @@ public class MainGameController : MonoBehaviour
     private int pointPerCustomer;
     private int specialRecipePoint;
     private int maxPoint;
+
+    [Header("GameOver Panel")]
+    [SerializeField] private GameObject gameOverWinUI;
+    [SerializeField] private GameObject gameOverLoseUI;
 
     private int progressCount;
     private int customerDelay;
@@ -64,6 +69,7 @@ public class MainGameController : MonoBehaviour
         deliveryQueueIngredient = 0;
         deliveryQueueIngredientsContent.Clear();
         canCreateNewCustomer = false;
+        wasLastOrderByRecipe = false;
 
         availableSeatForCustomers = new bool[seatPositions.Length];
         for (int i = 0; i < availableSeatForCustomers.Length; i++)
@@ -132,7 +138,10 @@ public class MainGameController : MonoBehaviour
         if (currentTime <= 0f)
         {
             GameManager.Instance.isGameActive = false;
-            levelManager.Lose();
+
+            EventHandler.CallChaseCustomerEvent();
+
+            StartCoroutine(LoseAnim());
 
             Debug.Log("Countdown time is up!");
         }
@@ -174,11 +183,6 @@ public class MainGameController : MonoBehaviour
         {
             CreateSingleCustomer(seatIndex, 0);
             customerCounter++;
-        }
-
-        if (customerCounter > spawnSpecialRecipeAfterXCustomer)
-        {
-            customerCounter = 0;
         }
 
         yield return new WaitForSeconds(customerDelay);
@@ -234,8 +238,40 @@ public class MainGameController : MonoBehaviour
         if (progressCount >= maxPoint)
         {
             GameManager.Instance.isGameActive = false;
-            levelManager.Win();
+
+            EventHandler.CallChaseCustomerEvent();
+
+            StartCoroutine(WinAnim());
         }
+    }
+
+    private IEnumerator WinAnim()
+    {
+        yield return new WaitForSeconds(1f);
+
+        gameOverWinUI.transform.parent.GetComponent<Image>().color = new Color(0, 0, 0, 0);
+        gameOverWinUI.transform.parent.localScale = Vector3.zero;
+        gameOverWinUI.transform.parent.gameObject.SetActive(true);
+        gameOverWinUI.transform.parent.DOScale(1, 0.4f).SetEase(Ease.OutBounce).SetDelay(0.6f);
+        gameOverWinUI.transform.parent.GetComponent<Image>().DOColor(new Color32(0, 0, 0, 150), 1.5f).SetDelay(1f);
+
+        yield return new WaitForSeconds(1f);
+        gameOverWinUI.transform.GetChild(gameOverWinUI.transform.childCount - 1).gameObject.SetActive(true);
+
+        Debug.Log("Game Over - Win");
+    }
+
+    private IEnumerator LoseAnim()
+    {
+        yield return new WaitForSeconds(1);
+
+        gameOverLoseUI.transform.parent.GetComponent<Image>().color = new Color(0, 0, 0, 0);
+        gameOverLoseUI.transform.parent.localScale = Vector3.zero;
+        gameOverLoseUI.transform.parent.gameObject.SetActive(true);
+        gameOverLoseUI.transform.parent.DOScale(1, 0.4f).SetEase(Ease.OutBounce).SetDelay(0.6f);
+        gameOverLoseUI.transform.parent.GetComponent<Image>().DOColor(new Color32(0, 0, 0, 150), 1.5f).SetDelay(1f);
+
+        Debug.Log("Game Over - Lose");
     }
 
     private void IncorrectOrderEvent()

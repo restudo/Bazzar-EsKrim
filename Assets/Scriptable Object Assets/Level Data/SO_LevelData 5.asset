@@ -14,16 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainGameLevelData:
     maxOrderHeight: 5
-    spawnSpecialRecipeAfterXCustomer: 4
+    spawnSpecialRecipeAfterXCustomer: 5
     customerDelay: 9
     doubleCustomerProbability: 0.6
     maxPoint: 1600
     pointPerCustomer: 100
     specialRecipePoint: 200
     timer: 180
-    baseIngredientCode: ec030000eb030000ea030000ed030000e9030000
+    baseIngredientCode: ec030000eb030000ea030000ee030000e9030000
     flavorIngredientCode: f1030000f7030000f3030000f6030000f2030000f6030000
-    toppingIngredientCode: 01040000fc03000000040000f9030000fe030000
+    toppingIngredientCode: 01040000fc030000fb030000f9030000ff030000
     sO_RecipeList:
     - {fileID: 11400000, guid: 5e211bcb99b58604182065a192ec25ed, type: 2}
     - {fileID: 11400000, guid: 59a330407f411e24b9d70020e3d9fcd4, type: 2}

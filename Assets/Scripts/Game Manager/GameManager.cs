@@ -5,6 +5,7 @@ public class GameManager : MonoBehaviour
     public GameStates gameStates { get; set; }
     // public int randomMaxOrder = 2;
     public SO_LevelDataList[] levelDataLists;
+    public SO_RecipeList[] recipeLists;
     public int currentLevel;
     public bool isGameActive;
     [HideInInspector] public bool isHolding;
@@ -32,7 +33,7 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.DeleteKey("UnlockedLevel");
 
         isGameActive = false;
-        PlayerPrefs.SetInt("UnlockedLevel", 4);
+        PlayerPrefs.SetInt("UnlockedLevel", 5);
 
         foreach (var level in levelDataLists)
         {            

@@ -11,15 +11,22 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private GameObject mainGame;
     [SerializeField] private GameObject miniGame;
 
-    [Header("GameOver Panel")]
-    [SerializeField] private GameObject gameOverWinUI;
-    [SerializeField] private TextMeshProUGUI winDescription;
-    [SerializeField] private Button nextButton;
-    [SerializeField] private GameObject gameOverLoseUI;
+    [Header("Game Controller")]
+    [SerializeField] private MainGameController mainGameController;
+    [SerializeField] private MiniGameController miniGameController;
 
-    [Header("Game Over Desc")]
-    [TextArea][SerializeField] private string mainGameWinDesc;
-    [TextArea][SerializeField] private string miniGameWinDesc;
+    [Space(10)]
+    [Header("Buttons")]
+    [SerializeField] private Button mainGameNextButton;
+    [SerializeField] private Button mainGameResumeButton;
+    [SerializeField] private Button mainGameRestartButton;
+    [SerializeField] private Button[] mainGameHomeButton;
+    [Space(5)]
+    [SerializeField] private Button miniGameNextButton;
+    [SerializeField] private Button miniGameResumeButton;
+    [SerializeField] private Button miniGameOverNextButton;
+    [SerializeField] private Button miniGameHomeButton;
+
 
     private void Awake()
     {
@@ -28,15 +35,24 @@ public class LevelManager : MonoBehaviour
             level.mainGameLevelData.Set();
         }
 
+        mainGameNextButton.onClick.AddListener(LoadToMiniGame);
+        mainGameRestartButton.onClick.AddListener(ReloadScene);
+        foreach (Button button in mainGameHomeButton)
+        {
+            button.onClick.AddListener(LoadToMainMenu);
+        }
+
+        miniGameNextButton.onClick.AddListener(OpenNewRecipePanel);
+        miniGameOverNextButton.onClick.AddListener(LoadToLevelSelection);
+        miniGameHomeButton.onClick.AddListener(LoadToMainMenu);
+
         switch (GameManager.Instance.gameStates)
         {
             case GameStates.MainGame:
                 ActiveGame(main: true, mini: false);
-                nextButton.onClick.AddListener(LoadToMiniGame);
                 break;
             case GameStates.MiniGame:
                 ActiveGame(main: false, mini: true);
-                nextButton.onClick.AddListener(LoadToLevelSelection);
                 break;
             default:
                 Debug.LogError("Current Game State is " + GameManager.Instance.gameStates.ToString());
@@ -61,87 +77,35 @@ public class LevelManager : MonoBehaviour
         miniGame.SetActive(mini);
     }
 
-    private IEnumerator WinAnim()
-    {
-        yield return new WaitForSeconds(1f);
-
-        gameOverWinUI.transform.parent.GetComponent<Image>().color = new Color(0, 0, 0, 0);
-        gameOverWinUI.transform.parent.localScale = Vector3.zero;
-        gameOverWinUI.transform.parent.gameObject.SetActive(true);
-        gameOverWinUI.transform.parent.DOScale(1, 0.4f).SetEase(Ease.OutBounce).SetDelay(0.6f);
-        gameOverWinUI.transform.parent.GetComponent<Image>().DOColor(new Color32(0, 0, 0, 150), 1.5f).SetDelay(1f);
-
-        yield return new WaitForSeconds(1f);
-        gameOverWinUI.transform.GetChild(gameOverWinUI.transform.childCount - 1).gameObject.SetActive(true);
-
-        Debug.Log("Game Over - Win");
-    }
-
-    private IEnumerator LoseAnim()
-    {
-        yield return new WaitForSeconds(1);
-
-        gameOverLoseUI.transform.parent.GetComponent<Image>().color = new Color(0, 0, 0, 0);
-        gameOverLoseUI.transform.parent.localScale = Vector3.zero;
-        gameOverLoseUI.transform.parent.gameObject.SetActive(true);
-        gameOverLoseUI.transform.parent.DOScale(1, 0.4f).SetEase(Ease.OutBounce).SetDelay(0.6f);
-        gameOverLoseUI.transform.parent.GetComponent<Image>().DOColor(new Color32(0, 0, 0, 150), 1.5f).SetDelay(1f);
-
-        Debug.Log("Game Over - Lose");
-    }
-
-    public void Win()
-    {
-        if (GameManager.Instance.gameStates == GameStates.MainGame)
-        {
-            EventHandler.CallChaseCustomerEvent();
-
-            winDescription.text = mainGameWinDesc;
-        }
-        else if (GameManager.Instance.gameStates == GameStates.MiniGame)
-        {
-            winDescription.text = miniGameWinDesc;
-        }
-
-        StartCoroutine(WinAnim());
-    }
-
-    public void Lose()
-    {
-        EventHandler.CallChaseCustomerEvent();
-
-        StartCoroutine(LoseAnim());
-    }
-
-    public void ReloadScene()
+    private void ReloadScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    public void LoadToLevelSelection()
+    private void LoadToLevelSelection()
     {
         GameManager.Instance.gameStates = GameStates.LevelSelection;
 
         SceneController.Instance.FadeAndLoadScene(Scenes.Menu);
     }
 
-    public void LoadToMainMenu()
+    private void LoadToMainMenu()
     {
         GameManager.Instance.gameStates = GameStates.MainMenu;
 
         SceneController.Instance.FadeAndLoadScene(Scenes.Menu);
     }
 
-    public void LoadToMiniGame()
+    private void LoadToMiniGame()
     {
-        gameOverWinUI.transform.parent.gameObject.SetActive(false);
-        gameOverLoseUI.transform.parent.gameObject.SetActive(false);
-
         GameManager.Instance.gameStates = GameStates.MiniGame;
 
         mainGame.SetActive(false);
         miniGame.SetActive(true);
+    }
 
-        nextButton.onClick.AddListener(LoadToLevelSelection);
+    private void OpenNewRecipePanel()
+    {
+        miniGameController.OpenNewRecipePanel();
     }
 }

@@ -20,15 +20,28 @@ public class MiniGameController : MonoBehaviour
 
     [Header("Timer")]
     [SerializeField] private TextMeshProUGUI timerText;
-    [SerializeField] private GameObject gameOverWinUI;
     private float currentTime;
     private TimeSpan time;
+
+    [Header("Game Over")]
+    [SerializeField] private GameObject gameOverWinUI;
+    [SerializeField] private GameObject confettiVFX;
+    [SerializeField] private CanvasGroup recipeUnlockUI;
+    [SerializeField] private Image recipeVisual;
+    [SerializeField] private TextMeshProUGUI recipeText;
+    [Space(5)]
+    // [SerializeField] private RecipeDetails[] recipes;
 
     [Header("Spawner")]
     [SerializeField] private GameObject[] objectSpawners;
 
     private void Awake()
     {
+        gameOverWinUI.transform.parent.gameObject.SetActive(false);
+        gameOverWinUI.gameObject.SetActive(false);
+        confettiVFX.SetActive(false);
+        recipeUnlockUI.gameObject.SetActive(false);
+
         foreach (GameObject spawner in objectSpawners)
         {
             spawner.SetActive(false);
@@ -102,12 +115,13 @@ public class MiniGameController : MonoBehaviour
         gameOverWinUI.transform.parent.GetComponent<Image>().color = new Color(0, 0, 0, 0);
         gameOverWinUI.transform.parent.localScale = Vector3.zero;
         gameOverWinUI.transform.parent.gameObject.SetActive(true);
+        gameOverWinUI.gameObject.SetActive(true);
 
         gameOverWinUI.transform.parent.DOScale(1, 0.4f).SetEase(Ease.OutBounce).SetDelay(0.6f);
         gameOverWinUI.transform.parent.GetComponent<Image>().DOColor(new Color32(0, 0, 0, 150), 1.5f).SetDelay(1f);
 
         yield return new WaitForSeconds(1f);
-        gameOverWinUI.transform.GetChild(gameOverWinUI.transform.childCount - 1).gameObject.SetActive(true);
+        confettiVFX.SetActive(true);
 
         yield return new WaitForSeconds(0.5f);
         while (score < currentScore)
@@ -127,11 +141,59 @@ public class MiniGameController : MonoBehaviour
         if (currentScore % basketVisualMultiplier == 0)
         {
             // Call the score tier event to activate the basket visual
-            EventHandler.CallMiniGameScoreTierEvent(scoreTier); 
+            EventHandler.CallMiniGameScoreTierEvent(scoreTier);
 
             scoreTier++;
         }
     }
+
+    public void OpenNewRecipePanel()
+    {
+        const float gameOverWinCloseDuration = 1f;
+        const float recipeUnlockShowDuration = 2f;
+        const float recipeMoveDuration = 0.8f;
+        const float recipeFadeDuration = 1.5f;
+        const float delayBeforeMove = 0.5f;
+
+        int currentLevel = GameManager.Instance.currentLevel;
+        int recipeIndex = currentLevel - 1;
+        float recipeInitialX = recipeVisual.transform.localPosition.x;
+
+        recipeText.text = GameManager.Instance.recipeLists[recipeIndex].recipeName;
+        recipeVisual.sprite = GameManager.Instance.recipeLists[recipeIndex].recipeSprite;
+        recipeVisual.SetNativeSize();
+
+        // Create a sequence for chaining animations
+        Sequence sequence = DOTween.Sequence();
+
+        // First, close the gameOverWinUI panel
+        sequence.Append(gameOverWinUI.transform.DOScale(0, gameOverWinCloseDuration).SetEase(Ease.OutExpo))
+            .AppendCallback(() =>
+            {
+                gameOverWinUI.gameObject.SetActive(false);
+
+                recipeUnlockUI.transform.localScale = Vector3.zero;
+                recipeUnlockUI.alpha = 0;
+
+                // Set recipe visual to center horizontally
+                recipeVisual.transform.localPosition = new Vector3(0, recipeVisual.transform.localPosition.y, recipeVisual.transform.localPosition.z);
+                recipeUnlockUI.gameObject.SetActive(true);
+            })
+
+            // Show the recipeUnlockUI with scaling animation
+            .Append(recipeUnlockUI.transform.DOScale(1, recipeUnlockShowDuration).SetEase(Ease.OutExpo))
+
+            // Move recipe visual after a delay
+            .AppendInterval(delayBeforeMove)
+            .Append(recipeVisual.transform.DOLocalMoveX(recipeInitialX, recipeMoveDuration).SetEase(Ease.InOutQuad))
+
+            // Fade in the recipeUnlockUI
+            .Append(recipeUnlockUI.DOFade(1, recipeFadeDuration).SetEase(Ease.OutSine));
+
+        // Play the sequence
+        sequence.Play();
+    }
+
 
     public void LoadToLevelSelection()
     {

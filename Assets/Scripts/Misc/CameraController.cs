@@ -3,20 +3,15 @@ using System;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] private float minX = -4.25f; // Minimum x value for the camera
-    [SerializeField] private float maxX = 4.25f;  // Maximum x value for the camera
+    public float minX = -4.25f; // Minimum x value for the camera
+    public float maxX = 4.25f;  // Maximum x value for the camera
 
     private Vector3 touchStart;
     private Camera mainCamera;
 
-    private void Start()
+    private void Awake()
     {
         mainCamera = Camera.main;
-
-        // Initialize the camera's position to the minimum x value
-        Vector3 initialPosition = mainCamera.transform.position;
-        initialPosition.x = minX;
-        mainCamera.transform.position = initialPosition;
     }
 
     private void Update()
@@ -51,9 +46,25 @@ public class CameraController : MonoBehaviour
             {
                 return;
             }
-            
+
             // Trigger the camera move event
             EventHandler.CallCameraMoveEvent(deltaX);
         }
+    }
+
+    public void SetToMin()
+    {
+        // Initialize the camera's position to the minimum x value
+        Vector3 initialPosition = mainCamera.transform.position;
+        initialPosition.x = minX;
+        mainCamera.transform.position = initialPosition;
+    }
+
+    public void SetToMax()
+    {
+        // Initialize the camera's position to the minimum x value
+        Vector3 initialPosition = mainCamera.transform.position;
+        initialPosition.x = maxX;
+        mainCamera.transform.position = initialPosition;
     }
 }

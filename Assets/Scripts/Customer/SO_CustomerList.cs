@@ -15,5 +15,7 @@ public struct CustomerDetails
     public Sprite[] customerMoods;
 
     // for dummy
-    public Color customerColor;
+    // public Color customerColor;
+    // public Sprite idleSprite;
+    // TODO: add more sprite for moods
 }

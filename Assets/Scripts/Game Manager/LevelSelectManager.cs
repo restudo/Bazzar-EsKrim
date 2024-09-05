@@ -8,6 +8,7 @@ namespace BazarEsKrim
     public class LevelSelectManager : MonoBehaviour
     {
         [SerializeField] private GameObject levelButtonContainer;
+        [SerializeField] private CameraController camControl;
 
         private Button[] buttons;
         private LevelButton[] levelbuttons;
@@ -50,7 +51,18 @@ namespace BazarEsKrim
             if (unlockedLevel > 0)
             {
                 // set camera
-                Camera.main.transform.position = new Vector3(buttons[unlockedLevel - 1].transform.position.x, Camera.main.transform.position.y, Camera.main.transform.position.z);
+                if (buttons[unlockedLevel - 1].transform.position.x < camControl.minX)
+                {
+                    camControl.SetToMin();
+                }
+                else if (buttons[unlockedLevel - 1].transform.position.x > camControl.maxX)
+                {
+                    camControl.SetToMax();
+                }
+                else
+                {
+                    Camera.main.transform.position = new Vector3(buttons[unlockedLevel - 1].transform.position.x, Camera.main.transform.position.y, Camera.main.transform.position.z);
+                }
 
                 levelbuttons[unlockedLevel - 1].Selected();
                 lastSelectedButtonIndex = unlockedLevel - 1;

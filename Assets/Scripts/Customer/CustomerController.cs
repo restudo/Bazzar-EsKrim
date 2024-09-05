@@ -90,7 +90,8 @@ public class CustomerController : MonoBehaviour
         int randomCustomer = Random.Range(0, customerList.customerDetails.Count);
         customerPatience = customerList.customerDetails[randomCustomer].customerPatience;
         customerMoods = customerList.customerDetails[randomCustomer].customerMoods;
-        spriteRenderer.color = customerList.customerDetails[randomCustomer].customerColor; // remove later
+        spriteRenderer.sprite = customerMoods[0];
+        // spriteRenderer.color = customerList.customerDetails[randomCustomer].customerColor; // remove later
 
         // Reset flags and variables
         isCloseEnoughToDelivery = false;
@@ -100,23 +101,7 @@ public class CustomerController : MonoBehaviour
         moodIndex = 0;
         maxOrderSize = mainGameController.maxOrderHeight;
 
-        if (mainGameController.maxSpecialRecipeInThisLevel > 0 && mainGameController.customerCounter == mainGameController.spawnSpecialRecipeAfterXCustomer)
-        {
-            // Generate order by recipe
-            orderManager.OrderByRecipe(mainGameController.maxSpecialRecipeInThisLevel);
-            isRecipeOrder = true;
-
-            Debug.Log("order by recipe");
-        }
-        else
-        {
-            // Generate a random order
-            int randomMaxOrder = Random.Range(2, maxOrderSize + 1);
-            orderManager.OrderRandomProduct(randomMaxOrder);
-            isRecipeOrder = false;
-
-            Debug.Log("random order");
-        }
+        Order();
 
         // Hide HUD and highlight
         HudPos.SetActive(false);
@@ -124,6 +109,40 @@ public class CustomerController : MonoBehaviour
 
         // Start moving to the assigned seat
         StartCoroutine(GoToSeat());
+    }
+
+    private void Order()
+    {
+        if (mainGameController.customerCounter == mainGameController.spawnSpecialRecipeAfterXCustomer)
+        {
+            // Ensure to run order by recipe when customer counter is equal to the threshold
+            orderManager.OrderByRecipe(mainGameController.maxSpecialRecipeInThisLevel);
+            isRecipeOrder = true;
+            mainGameController.wasLastOrderByRecipe = true;
+
+            mainGameController.customerCounter = 0;
+        }
+        else
+        {
+            // Randomly decide between OrderByRecipe and OrderRandomProduct
+            if (Random.value > 0.5f && mainGameController.maxSpecialRecipeInThisLevel > 0 && !mainGameController.wasLastOrderByRecipe)
+            {
+                // Generate order by recipe
+                orderManager.OrderByRecipe(mainGameController.maxSpecialRecipeInThisLevel);
+                isRecipeOrder = true;
+                mainGameController.wasLastOrderByRecipe = true;
+
+                mainGameController.customerCounter = 0;
+            }
+            else
+            {
+                // Generate a random order
+                int randomMaxOrder = Random.Range(2, maxOrderSize + 1);
+                orderManager.OrderRandomProduct(randomMaxOrder);
+                isRecipeOrder = false;
+                mainGameController.wasLastOrderByRecipe = false;
+            }
+        }
     }
 
     private IEnumerator GoToSeat()
@@ -148,18 +167,13 @@ public class CustomerController : MonoBehaviour
 
         transform.DOMove(destination, 0.3f).SetEase(Ease.Linear).OnComplete(() =>
         {
-            isOnSeat = true;
-            HudPos.SetActive(true);
-            patienceBarController.StartDecreasingPatience();
+            if (GameManager.Instance.isGameActive)
+            {
+                isOnSeat = true;
+                HudPos.SetActive(true);
+                patienceBarController.StartDecreasingPatience();
+            }
         });
-
-        // double check if its leaving after take a seat
-        if(isLeaving)
-        {
-            isOnSeat = false;
-            HudPos.SetActive(false);
-            patienceBarController.StopDecreasingPatience();
-        }
     }
 
     private void FlipCheck(Vector3 target)
@@ -280,7 +294,7 @@ public class CustomerController : MonoBehaviour
         }
 
         OrderIsCorrect();
-        
+
         return true;
     }
 
