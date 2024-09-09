@@ -48,25 +48,33 @@ public class PatienceBarController : MonoBehaviour
     {
         while (currentPatience > 0)
         {
-            currentPatience -= Time.deltaTime;
-
-            //if customer has waited for half of his/her patience, make him/her bored.
-            if (currentPatience <= patienceDuration / 2)
+            // Check if the game is active
+            if (GameManager.Instance.isGameActive)
             {
-                customerController.UpdateCustomerMood(1); //1 is bored index
+                // Decrease patience over time
+                currentPatience -= Time.deltaTime;
+
+                // If customer has waited for half of their patience, make them bored
+                if (currentPatience <= patienceDuration / 2)
+                {
+                    customerController.UpdateCustomerMood(1); // 1 is bored index
+                }
+
+                // Update the patience slider if it exists
+                if (patienceSlider != null)
+                {
+                    patienceSlider.value = currentPatience;
+                }
             }
 
-            if (patienceSlider != null)
-            {
-                patienceSlider.value = currentPatience;
-            }
-
+            // Wait for the next frame before checking again
             yield return null;
         }
 
         // Handle when patience runs out
         HandlePatienceDepleted();
     }
+
 
     private void HandlePatienceDepleted()
     {

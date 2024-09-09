@@ -17,4 +17,5 @@ MonoBehaviour:
   flavorIngredientCode: ef030000f0030000
   toppingIngredientCode: fa030000
   recipeName: Chocilla
-  recipeSprite: {fileID: 21300000, guid: 5aad3b03ddbd25541922b7eab5b72dcc, type: 3}
+  recipeSprite: {fileID: 21300000, guid: 1f6479b26a57ded479372c41365a674a, type: 3}
+  recipeDetailSprite: {fileID: -251616496, guid: dd4401c5907d69c44a641a1ff539381a, type: 3}

@@ -17,4 +17,5 @@ MonoBehaviour:
   flavorIngredientCode: f1030000f7030000f3030000
   toppingIngredientCode: 01040000
   recipeName: Fruity Frenzy
-  recipeSprite: {fileID: 21300000, guid: 6eaa0b57625342444b471d7896e47c99, type: 3}
+  recipeSprite: {fileID: 21300000, guid: 23a29f3481487bc4cb417c32bc369c52, type: 3}
+  recipeDetailSprite: {fileID: -1818945941, guid: 05f4456173dc7954abdc73fec06c6555, type: 3}

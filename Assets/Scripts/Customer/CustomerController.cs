@@ -150,19 +150,48 @@ public class CustomerController : MonoBehaviour
         // Flip sprite if necessary based on the destination
         FlipCheck(destination);
 
-        // Tween for yoyo movement (up and down) while moving horizontally
-        Tween yoyoTween = transform.DOLocalMoveY(destination.y + 0.35f, 0.35f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.Linear);
+        // Create a yoyo tween, but don't start it immediately
+        Tween yoyoTween = null;
 
-        // Move towards the destination
         while ((transform.position - new Vector3(destination.x, transform.position.y, destination.z)).sqrMagnitude > 0.01f)
         {
-            Vector3 targetPosition = new Vector3(destination.x, transform.position.y, destination.z);
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, customerSpeed * Time.deltaTime);
+            if (GameManager.Instance.isGameActive)
+            {
+                // Check if the tween has been killed by DOTween.KillAll() and recreate it if needed
+                if (yoyoTween == null || !yoyoTween.IsActive())
+                {
+                    yoyoTween = transform.DOLocalMoveY(destination.y + 0.35f, 0.35f)
+                        .SetLoops(-1, LoopType.Yoyo)
+                        .SetEase(Ease.Linear);
+                }
+                else if (!yoyoTween.IsPlaying())
+                {
+                    yoyoTween.Play();
+                }
+
+                // Move towards the destination
+                Vector3 targetPosition = new Vector3(destination.x, transform.position.y, destination.z);
+                transform.position = Vector3.MoveTowards(transform.position, targetPosition, customerSpeed * Time.deltaTime);
+            }
+            else
+            {
+                // Pause the yoyo tween when the game is inactive
+                if (yoyoTween != null && yoyoTween.IsPlaying())
+                {
+                    yoyoTween.Pause();
+                }
+            }
+
             yield return null;
         }
 
         // Stop the yoyo movement and finalize position
-        yoyoTween.Kill();
+        if (yoyoTween != null && yoyoTween.IsActive())
+        {
+            yoyoTween.Kill();
+            yoyoTween = null;  // Set to null after killing to avoid further use
+        }
+
         yield return new WaitForSeconds(0.05f);
 
         transform.DOMove(destination, 0.3f).SetEase(Ease.Linear).OnComplete(() =>

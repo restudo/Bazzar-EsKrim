@@ -20,6 +20,7 @@ public class SO_RecipeList : ScriptableObject
 
     public string recipeName;
     public Sprite recipeSprite;
+    public Sprite recipeDetailSprite;
 
     public void Set()
     {

@@ -1,4 +1,5 @@
 using System.Collections;
+using BazarEsKrim;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -18,8 +19,9 @@ public class LevelManager : MonoBehaviour
     [Space(10)]
     [Header("Buttons")]
     [SerializeField] private Button mainGameNextButton;
-    [SerializeField] private Button mainGameResumeButton;
     [SerializeField] private Button mainGameRestartButton;
+    [SerializeField] private Button mainGamePauseButton;
+    [SerializeField] private Button[] mainGameResumeButton;
     [SerializeField] private Button[] mainGameHomeButton;
     [Space(5)]
     [SerializeField] private Button miniGameNextButton;
@@ -37,9 +39,14 @@ public class LevelManager : MonoBehaviour
 
         mainGameNextButton.onClick.AddListener(LoadToMiniGame);
         mainGameRestartButton.onClick.AddListener(ReloadScene);
+        mainGamePauseButton.onClick.AddListener(Pause);
         foreach (Button button in mainGameHomeButton)
         {
             button.onClick.AddListener(LoadToMainMenu);
+        }
+        foreach (Button button in mainGameResumeButton)
+        {
+            button.onClick.AddListener(Resume);
         }
 
         miniGameNextButton.onClick.AddListener(OpenNewRecipePanel);
@@ -77,13 +84,29 @@ public class LevelManager : MonoBehaviour
         miniGame.SetActive(mini);
     }
 
+    private void Pause()
+    {
+        // TODO: open pause menu
+        mainGameController.OpenPauseMenu();
+    }
+
+    private void Resume()
+    {
+        // TODO: close pause menu
+        mainGameController.ClosePauseMenu();
+    }
+
     private void ReloadScene()
     {
+        DOTween.KillAll();
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     private void LoadToLevelSelection()
     {
+        DOTween.KillAll();
+
         GameManager.Instance.gameStates = GameStates.LevelSelection;
 
         SceneController.Instance.FadeAndLoadScene(Scenes.Menu);
@@ -91,6 +114,8 @@ public class LevelManager : MonoBehaviour
 
     private void LoadToMainMenu()
     {
+        DOTween.KillAll();
+
         GameManager.Instance.gameStates = GameStates.MainMenu;
 
         SceneController.Instance.FadeAndLoadScene(Scenes.Menu);

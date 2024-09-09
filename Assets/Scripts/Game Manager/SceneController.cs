@@ -11,6 +11,8 @@ public class SceneController : MonoBehaviour
     [SerializeField] private Canvas faderCanvas = null;
     [SerializeField] private Image faderImage = null;
 
+    [SerializeField] private Sprite[] faderSprites;
+
     private bool isFading;
 
     public static SceneController Instance;
@@ -31,11 +33,14 @@ public class SceneController : MonoBehaviour
     private void Start()
     {
         faderCanvas.gameObject.SetActive(false);
+
+        RandomFader();
         faderImage.transform.localScale = new Vector3(faderImageMaxScale, faderImageMaxScale, faderImageMaxScale);
     }
 
     private IEnumerator FadeAndSwitchScenes(string sceneName)
     {
+        RandomFader();
 
         isFading = true;
 
@@ -54,6 +59,8 @@ public class SceneController : MonoBehaviour
         yield return StartCoroutine(LoadSceneAndSetActive(sceneName));
 
         yield return new WaitForSeconds(fadeDuration / 2);
+
+        RandomFader();
 
         // Second scaling animation
         faderSequence = DOTween.Sequence();
@@ -83,6 +90,12 @@ public class SceneController : MonoBehaviour
     private void FadeComplete()
     {
         faderCanvas.gameObject.SetActive(false);
+    }
+
+    private void RandomFader()
+    {
+        faderImage.sprite = faderSprites[Random.Range(0, faderSprites.Length)];
+        faderImage.SetNativeSize();
     }
 
     public void FadeAndLoadScene(Scenes sceneName)

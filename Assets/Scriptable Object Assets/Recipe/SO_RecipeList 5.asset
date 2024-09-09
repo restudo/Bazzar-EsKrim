@@ -17,4 +17,5 @@ MonoBehaviour:
   flavorIngredientCode: f6030000f2030000f6030000
   toppingIngredientCode: fc030000
   recipeName: Motcha Cracker
-  recipeSprite: {fileID: 21300000, guid: 8304749d164ee194fbaa4379f4ac4f14, type: 3}
+  recipeSprite: {fileID: 21300000, guid: 1aebd4e87e9c3e348879b38a944cedea, type: 3}
+  recipeDetailSprite: {fileID: 1049306568, guid: 7d9af1cde8140204ca9f65b82c3ea9ce, type: 3}

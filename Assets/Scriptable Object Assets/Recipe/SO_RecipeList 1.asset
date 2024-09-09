@@ -17,4 +17,5 @@ MonoBehaviour:
   flavorIngredientCode: f8030000
   toppingIngredientCode: fd030000
   recipeName: Choco Taro
-  recipeSprite: {fileID: 21300000, guid: d203d9ee4fde6734d9a825ab68cc070c, type: 3}
+  recipeSprite: {fileID: 21300000, guid: ff16856912e4b244d83fb5966a469cc3, type: 3}
+  recipeDetailSprite: {fileID: -812454831, guid: baeede7557d469e46b1fe1d5d465b4b0, type: 3}

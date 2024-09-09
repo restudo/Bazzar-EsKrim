@@ -37,9 +37,11 @@ public class MainGameController : MonoBehaviour
     private int specialRecipePoint;
     private int maxPoint;
 
-    [Header("GameOver Panel")]
+    [Header("Panels")]
     [SerializeField] private GameObject gameOverWinUI;
     [SerializeField] private GameObject gameOverLoseUI;
+    [SerializeField] private GameObject pauseMenuUI;
+    [SerializeField] private GameObject ingredientToday;
 
     private int progressCount;
     private int customerDelay;
@@ -79,6 +81,11 @@ public class MainGameController : MonoBehaviour
 
         progressSlider.maxValue = maxPoint;
         progressSlider.value = 0;
+
+        ingredientToday.SetActive(true);
+        gameOverWinUI.transform.parent.gameObject.SetActive(false);
+        gameOverLoseUI.transform.parent.gameObject.SetActive(false);
+        pauseMenuUI.SetActive(false);
     }
 
     private void OnEnable()
@@ -93,7 +100,7 @@ public class MainGameController : MonoBehaviour
         EventHandler.IncorrectOrder -= IncorrectOrderEvent;
     }
 
-    private IEnumerator Start()
+    private void Start()
     {
         currentTime = timer;
         progressCount = 0;
@@ -104,10 +111,7 @@ public class MainGameController : MonoBehaviour
         timerText.text = string.Format("{0:00}:{1:00}", time.Minutes, time.Seconds);
 
         //TODO: change with countdown or else
-        yield return new WaitForSeconds(2);
-
-        GameManager.Instance.isGameActive = true;
-        canCreateNewCustomer = true;
+        // yield return new WaitForSeconds(2);
     }
 
     private void Update()
@@ -283,5 +287,32 @@ public class MainGameController : MonoBehaviour
     {
         // After blinking, update the slider value
         progressSlider.DOValue(progressCount, animationTime).OnUpdate(() => progressCount = (int)progressSlider.value);
+    }
+
+    public void OpenPauseMenu()
+    {
+        GameManager.Instance.isGameActive = false;
+
+        pauseMenuUI.SetActive(true);
+    }
+
+    public void ClosePauseMenu()
+    {
+        if (ingredientToday.activeSelf)
+        {
+            ingredientToday.SetActive(false);
+
+            // TODO: add timer or countdown
+
+            GameManager.Instance.isGameActive = true;
+            canCreateNewCustomer = true;
+        }
+        else
+        {
+            // TODO pause menu set active false
+            pauseMenuUI.SetActive(false);
+
+            GameManager.Instance.isGameActive = true;
+        }
     }
 }

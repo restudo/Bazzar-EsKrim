@@ -50,9 +50,16 @@ public class MenuManager : MonoBehaviour
         levelSelectionObj.SetActive(levelSelection);
     }
 
+    private void SetCameraToZero()
+    {
+        Camera.main.transform.position = new Vector3(0, Camera.main.transform.position.y, Camera.main.transform.position.z);
+    }
+
     public void LoadToMainMenu()
     {
         GameManager.Instance.gameStates = GameStates.MainMenu;
+
+        SetCameraToZero();
 
         SetActiveMenu(mainMenu: true, collection: false, levelSelection: false);
     }
@@ -61,12 +68,16 @@ public class MenuManager : MonoBehaviour
     {
         GameManager.Instance.gameStates = GameStates.LevelSelection;
 
+        SetCameraToZero();
+
         SetActiveMenu(mainMenu: false, collection: false, levelSelection: true);
     }
 
     public void LoadToCollection()
     {
         GameManager.Instance.gameStates = GameStates.Collection;
+
+        SetCameraToZero();
 
         SetActiveMenu(mainMenu: false, collection: true, levelSelection: false);
     }
@@ -79,6 +90,7 @@ public class MenuManager : MonoBehaviour
         }
         else if (GameManager.Instance.gameStates != GameStates.MainMenu)
         {
+            SetCameraToZero();
             LoadToMainMenu();
         }
         else

@@ -96,7 +96,7 @@ namespace BazarEsKrim
             // Set game state and current level
             GameManager.Instance.currentLevel = levelSelected + 1;
             // GameManager.Instance.UnlockIngredientLevel();
-            GameManager.Instance.isGameActive = true;
+            // GameManager.Instance.isGameActive = true;
 
             GameManager.Instance.gameStates = GameStates.MainGame;
 
