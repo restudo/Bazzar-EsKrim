@@ -160,7 +160,7 @@ public class CustomerController : MonoBehaviour
                 // Check if the tween has been killed by DOTween.KillAll() and recreate it if needed
                 if (yoyoTween == null || !yoyoTween.IsActive())
                 {
-                    yoyoTween = transform.DOLocalMoveY(destination.y + 0.35f, 0.35f)
+                    yoyoTween = transform.DOLocalMoveY(destination.y + 0.2f, 0.35f)
                         .SetLoops(-1, LoopType.Yoyo)
                         .SetEase(Ease.Linear);
                 }

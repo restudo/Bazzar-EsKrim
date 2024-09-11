@@ -1,11 +1,12 @@
+using BazarEsKrim;
 using UnityEngine;
 using UnityEngine.Pool;
 
 public class CustomerPool : MonoBehaviour
 {
     public ObjectPool<CustomerController> customerPool;
-
     [SerializeField] private CustomerController customerPrefabs;
+    [SerializeField] private Transform parent;
     // private LevelManager levelManager;
 
     private void Awake()
@@ -15,7 +16,7 @@ public class CustomerPool : MonoBehaviour
 
     private CustomerController CreateCustomer()
     {
-        CustomerController customer = Instantiate(customerPrefabs, transform.root);
+        CustomerController customer = Instantiate(customerPrefabs, parent);
 
         return customer;
     }

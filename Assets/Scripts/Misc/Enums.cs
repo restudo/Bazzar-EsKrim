@@ -67,8 +67,22 @@ public enum GameStates
 public enum ConeTypes
 {
     NotACone,
-    High, 
-    Medium, 
-    Low, 
+    High,
+    Medium,
+    Low,
     VeryLow
+}
+
+public enum AspectRatio
+{
+    none,
+    Aspect22_9,
+    Aspect21_9,
+    Aspect20_9,
+    Aspect19_9,
+    Aspect18_9,
+    Aspect16_9,
+    Aspect16_10,
+    Aspect5_3,
+    count
 }
