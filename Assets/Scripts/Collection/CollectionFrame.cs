@@ -13,12 +13,15 @@ namespace BazarEsKrim
         // [SerializeField] private GameObject frameBlocker;
         // [SerializeField] private GameObject tagBlocker;
         [SerializeField] private GameObject lockedIcon;
+        [SerializeField] private GameObject infoIcon;
+        [SerializeField] private GameObject[] blockedImages;
         [SerializeField] private Image frameImg;
         [SerializeField] private Image tagImg;
         [SerializeField] private Image iceCreamImg;
         [SerializeField] private Material grayscaleMat;
         [SerializeField] private Material darkMat;
         [SerializeField] private Color darkColor;
+        [SerializeField] private Color textColor;
 
         private SO_RecipeList recipeList;
         private GameObject lastIngredient = null;
@@ -30,7 +33,7 @@ namespace BazarEsKrim
             iceColorOrigin = iceCreamImg.color;
 
             titleText.text = "???";
-            titleText.material = grayscaleMat;
+            titleText.color = darkColor;
 
             frameImg.material = grayscaleMat;
             tagImg.material = grayscaleMat;
@@ -40,7 +43,12 @@ namespace BazarEsKrim
 
             // frameBlocker.SetActive(true);
             // tagBlocker.SetActive(true);
+            infoIcon.SetActive(false);
             lockedIcon.SetActive(true);
+            foreach (GameObject block in blockedImages)
+            {
+                block.SetActive(true);
+            }
 
             canCheckHolderYPos = true;
         }
@@ -56,7 +64,7 @@ namespace BazarEsKrim
             if (isUnlocked)
             {
                 titleText.text = recipeList.recipeName;
-                titleText.material = null;
+                titleText.color = textColor;
 
                 frameImg.material = null;
                 tagImg.material = null;
@@ -66,7 +74,12 @@ namespace BazarEsKrim
 
                 // frameBlocker.SetActive(false);
                 // tagBlocker.SetActive(false);
+                infoIcon.SetActive(true);
                 lockedIcon.SetActive(false);
+                foreach (GameObject block in blockedImages)
+                {
+                    block.SetActive(false);
+                }
             }
 
             return;

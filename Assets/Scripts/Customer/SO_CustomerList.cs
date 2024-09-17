@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Spine.Unity;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "SO_CustomerList", menuName = "Scriptable Objects/Customer List")]
@@ -12,7 +13,11 @@ public class SO_CustomerList : ScriptableObject
 public struct CustomerDetails
 {
     public float customerPatience;
-    public Sprite[] customerMoods;
+    public float customerSpeed;
+    // public Sprite[] customerMoods;
+    public SkeletonDataAsset skeletonDataAsset;
+    public Material material;
+    public float positiveAnimationDuration;
 
     // for dummy
     // public Color customerColor;

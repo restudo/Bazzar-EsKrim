@@ -19,6 +19,7 @@ public class MainGameController : MonoBehaviour
 
     [Header("Level Manager")]
     [SerializeField] private LevelManager levelManager;
+    [SerializeField] private GameObject[] characters;
 
     [Header("Customer Params")]
     [SerializeField] private Transform[] customerEntryPos;
@@ -56,6 +57,11 @@ public class MainGameController : MonoBehaviour
     {
         customerPool = GetComponent<CustomerPool>();
 
+        foreach (GameObject character in characters)
+        {
+            character.SetActive(false);
+        }
+
         LevelDataMainGame levelData = GameManager.Instance.levelDataLists[GameManager.Instance.currentLevel - 1].mainGameLevelData;
         maxOrderHeight = levelData.maxOrderHeight;
         spawnSpecialRecipeAfterXCustomer = levelData.spawnSpecialRecipeAfterXCustomer;
@@ -66,6 +72,7 @@ public class MainGameController : MonoBehaviour
         specialRecipePoint = levelData.specialRecipePoint;
         maxPoint = levelData.maxPoint;
         timer = levelData.timer;
+        characters[(int)levelData.character].SetActive(true);
 
         customerCounter = 0;
         deliveryQueueIngredient = 0;
@@ -116,7 +123,7 @@ public class MainGameController : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.Instance.isGameActive && GameManager.Instance.gameStates == GameStates.MainGame)
+        if (GameManager.Instance.isGameActive && !GameManager.Instance.isGamePaused && GameManager.Instance.gameStates == GameStates.MainGame)
         {
             ManageTimer();
 
@@ -285,14 +292,12 @@ public class MainGameController : MonoBehaviour
 
     public void IncreaseSliderValue(float value)
     {
-        // After blinking, update the slider value
+        // Update the slider value
         progressSlider.DOValue(progressCount, animationTime).OnUpdate(() => progressCount = (int)progressSlider.value);
     }
 
     public void OpenPauseMenu()
     {
-        GameManager.Instance.isGameActive = false;
-
         pauseMenuUI.SetActive(true);
     }
 
@@ -305,14 +310,13 @@ public class MainGameController : MonoBehaviour
             // TODO: add timer or countdown
 
             GameManager.Instance.isGameActive = true;
+            GameManager.Instance.isGamePaused = false;
             canCreateNewCustomer = true;
         }
         else
         {
             // TODO pause menu set active false
             pauseMenuUI.SetActive(false);
-
-            GameManager.Instance.isGameActive = true;
         }
     }
 }

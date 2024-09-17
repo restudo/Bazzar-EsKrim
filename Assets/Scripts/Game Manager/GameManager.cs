@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     public SO_RecipeList[] recipeLists;
     public int currentLevel;
     public bool isGameActive;
+    public bool isGamePaused;
     [HideInInspector] public bool isHolding;
 
     private int unlockedLevel;
@@ -30,10 +31,10 @@ public class GameManager : MonoBehaviour
     // TODO: change to int variable
     private void Start()
     {
-        // PlayerPrefs.DeleteKey("UnlockedLevel");
+        PlayerPrefs.DeleteKey("UnlockedLevel");
 
         isGameActive = false;
-        PlayerPrefs.SetInt("UnlockedLevel", 2);
+        PlayerPrefs.SetInt("UnlockedLevel", 4);
 
         foreach (var level in levelDataLists)
         {            

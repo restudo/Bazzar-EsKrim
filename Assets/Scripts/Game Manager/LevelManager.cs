@@ -86,14 +86,22 @@ public class LevelManager : MonoBehaviour
 
     private void Pause()
     {
+        GameManager.Instance.isGamePaused = true;
+
         // TODO: open pause menu
         mainGameController.OpenPauseMenu();
+
+        EventHandler.CallTogglePauseEvent();
     }
 
     private void Resume()
     {
+        GameManager.Instance.isGamePaused = false;
+
         // TODO: close pause menu
         mainGameController.ClosePauseMenu();
+
+        EventHandler.CallTogglePauseEvent();
     }
 
     private void ReloadScene()

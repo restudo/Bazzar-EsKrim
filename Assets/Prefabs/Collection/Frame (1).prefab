@@ -387,12 +387,17 @@ MonoBehaviour:
   iceCreamHolder: {fileID: 3203168203602113219}
   titleText: {fileID: 349692524104267078}
   lockedIcon: {fileID: 7603661558640268346}
+  infoIcon: {fileID: 982664882046203609}
+  blockedImages:
+  - {fileID: 6485684450342110115}
+  - {fileID: 6068555057183422276}
   frameImg: {fileID: 4942777577655571651}
   tagImg: {fileID: 1388316731493124658}
   iceCreamImg: {fileID: 8212326149628488234}
   grayscaleMat: {fileID: 2100000, guid: 17edfade33003a64299d81f165aa61b1, type: 2}
   darkMat: {fileID: 2100000, guid: a1e17490d0a18fd409129c7f8f72bcad, type: 2}
   darkColor: {r: 0.254717, g: 0.254717, b: 0.254717, a: 1}
+  textColor: {r: 0.53333336, g: 0.3137255, b: 0.14117648, a: 1}
 --- !u!1 &5972700208213539973
 GameObject:
   m_ObjectHideFlags: 0
@@ -503,7 +508,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 324.65, y: 96.809}
+  m_SizeDelta: {x: 410.26, y: 83.83}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &2072651370143430395
 CanvasRenderer:
@@ -526,14 +531,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: c669800ebffa6804280ef53fb1cbffbd, type: 2}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.5882353}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.50980395}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 1271265972c786f4995078d4688927fa, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b88011969c58e8543a0bad69a253d3b5, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -601,7 +606,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: c669800ebffa6804280ef53fb1cbffbd, type: 2}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.5882353}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.50980395}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

@@ -17,7 +17,6 @@ public class IngredientHolder : MonoBehaviour
     {
         plateCollider = GetComponent<Collider2D>();
         canDeliverOrder = false;
-        initialPosition = transform.position;
     }
 
     private void OnEnable()
@@ -30,6 +29,11 @@ public class IngredientHolder : MonoBehaviour
     {
         EventHandler.ResetMainQueue -= ResetMainQueue;
         EventHandler.ResetPlatePosition -= ResetPosition;
+    }
+
+    private void Start()
+    {
+        initialPosition = transform.position;
     }
 
     private void Update()

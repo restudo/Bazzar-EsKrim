@@ -40,6 +40,9 @@ public class LevelDataMainGame
     [Tooltip("Timer for the level.")]
     public int timer;
 
+    [Tooltip("Who is gonna be at stand")]
+    public Characters character;
+
     [Space(20)]
     [Header("Ingredient Codes")]
     [Tooltip("Codes for base ingredients.")]
@@ -153,6 +156,7 @@ public class LevelDataMainGame
 [System.Serializable]
 public struct LevelDataMiniGame
 {
-    public float timer;
+    // public float timer;
+    public int maxScore;
     public int totalObjectSpawner;
 }

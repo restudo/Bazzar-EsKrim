@@ -3,6 +3,7 @@ using System.Collections;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using UnityEngine.UI;
 
 public class MiniGameController : MonoBehaviour
@@ -11,17 +12,20 @@ public class MiniGameController : MonoBehaviour
     [SerializeField] private LevelManager levelManager;
 
     [Header("Score")]
-    [SerializeField] private TextMeshProUGUI scoreText;
-    [SerializeField] private TextMeshProUGUI scoreGameOverText;
-    [SerializeField] private float animSpeed;
+    // [SerializeField] private TextMeshProUGUI scoreText;
+    // [SerializeField] private TextMeshProUGUI scoreGameOverText;
+    // [SerializeField] private float animSpeed;
+    [SerializeField] private Slider progressSlider;
     [SerializeField] private int basketVisualMultiplier = 10;
     private int currentScore;
+    private int maxScore;
     private int scoreTier;
+    private const float animationTime = .15f;
 
-    [Header("Timer")]
-    [SerializeField] private TextMeshProUGUI timerText;
-    private float currentTime;
-    private TimeSpan time;
+    // [Header("Timer")]
+    // [SerializeField] private TextMeshProUGUI timerText;
+    // private float currentTime;
+    // private TimeSpan time;
 
     [Header("Game Over")]
     [SerializeField] private GameObject gameOverWinUI;
@@ -37,10 +41,15 @@ public class MiniGameController : MonoBehaviour
 
     private void Awake()
     {
-        gameOverWinUI.transform.parent.gameObject.SetActive(false);
+        int currentLevel = GameManager.Instance.currentLevel;
+        maxScore = GameManager.Instance.levelDataLists[currentLevel - 1].miniGameLevelData.maxScore;
+
+        progressSlider.maxValue = maxScore;
+        progressSlider.value = 0;
+
         gameOverWinUI.gameObject.SetActive(false);
-        confettiVFX.SetActive(false);
         recipeUnlockUI.gameObject.SetActive(false);
+        confettiVFX.SetActive(false);
 
         foreach (GameObject spawner in objectSpawners)
         {
@@ -52,7 +61,7 @@ public class MiniGameController : MonoBehaviour
             objectSpawners[i].SetActive(true);
         }
 
-        currentTime = GameManager.Instance.levelDataLists[GameManager.Instance.currentLevel - 1].miniGameLevelData.timer;
+        // currentTime = GameManager.Instance.levelDataLists[GameManager.Instance.currentLevel - 1].miniGameLevelData.timer;
     }
 
     private void OnEnable()
@@ -72,71 +81,43 @@ public class MiniGameController : MonoBehaviour
 
         GameManager.Instance.isGameActive = true;
 
-        scoreText.text = currentScore.ToString();
+        // scoreText.text = currentScore.ToString();
     }
 
-    private void Update()
-    {
-        if (GameManager.Instance.isGameActive && GameManager.Instance.gameStates == GameStates.MiniGame)
-        {
-            ManageTimer();
-        }
-    }
+    // private void Update()
+    // {
+    //     if (GameManager.Instance.isGameActive && GameManager.Instance.gameStates == GameStates.MiniGame)
+    //     {
+    //         ManageTimer();
+    //     }
+    // }
 
-    private void ManageTimer()
-    {
-        currentTime -= Time.deltaTime;
-        time = TimeSpan.FromSeconds(currentTime);
+    // private void ManageTimer()
+    // {
+    //     currentTime -= Time.deltaTime;
+    //     time = TimeSpan.FromSeconds(currentTime);
 
-        if (currentTime <= 0f)
-        {
-            GameManager.Instance.isGameActive = false;
-            // levelManager.Win();
-            StartCoroutine(Win());
-            EventHandler.CallminiGameWinEvent();
+    //     if (currentTime <= 0f)
+    //     {
+    //         GameManager.Instance.isGameActive = false;
+    //         // levelManager.Win();
+    //         StartCoroutine(Win());
+    //         EventHandler.CallminiGameWinEvent();
 
-            Debug.Log("Countdown time is up!");
-        }
-        else
-        {
-            timerText.text = time.Seconds.ToString();
-        }
-    }
-
-    private IEnumerator Win()
-    {
-        int score = 0;
-        scoreGameOverText.text = score.ToString();
-
-        // TODO: change with the right gameflow
-        // Unlock level selection
-        GameManager.Instance.UnlockLevel();
-
-        gameOverWinUI.transform.parent.GetComponent<Image>().color = new Color(0, 0, 0, 0);
-        gameOverWinUI.transform.parent.localScale = Vector3.zero;
-        gameOverWinUI.transform.parent.gameObject.SetActive(true);
-        gameOverWinUI.gameObject.SetActive(true);
-
-        gameOverWinUI.transform.parent.DOScale(1, 0.4f).SetEase(Ease.OutBounce).SetDelay(0.6f);
-        gameOverWinUI.transform.parent.GetComponent<Image>().DOColor(new Color32(0, 0, 0, 150), 1.5f).SetDelay(1f);
-
-        yield return new WaitForSeconds(1f);
-        confettiVFX.SetActive(true);
-
-        yield return new WaitForSeconds(0.5f);
-        while (score < currentScore)
-        {
-            score++;
-            scoreGameOverText.text = score.ToString();
-            yield return new WaitForSeconds(animSpeed);
-        }
-    }
+    //         Debug.Log("Countdown time is up!");
+    //     }
+    //     else
+    //     {
+    //         timerText.text = time.Seconds.ToString();
+    //     }
+    // }
 
     private void AddMiniGameScore()
     {
         currentScore++;
 
-        scoreText.text = currentScore.ToString();
+        progressSlider.DOValue(currentScore, animationTime).OnUpdate(() => currentScore = (int)progressSlider.value);
+        // scoreText.text = currentScore.ToString();
 
         if (currentScore % basketVisualMultiplier == 0)
         {
@@ -145,15 +126,54 @@ public class MiniGameController : MonoBehaviour
 
             scoreTier++;
         }
+
+        // if curent score surpase the max score
+        if (currentScore >= maxScore)
+        {
+            GameManager.Instance.isGameActive = false;
+
+            EventHandler.CallminiGameWinEvent();
+            StartCoroutine(Win());
+        }
+    }
+
+    private IEnumerator Win()
+    {
+        // int score = 0;
+        // scoreGameOverText.text = score.ToString();
+
+        // TODO: change with the right gameflow
+        // Unlock level selection
+        GameManager.Instance.UnlockLevel();
+
+        gameOverWinUI.GetComponent<Image>().color = new Color(0, 0, 0, 0);
+        // gameOverWinUI.transform.parent.localScale = Vector3.zero;
+        gameOverWinUI.gameObject.SetActive(true);
+        // gameOverWinUI.gameObject.SetActive(true);
+
+        gameOverWinUI.transform.DOScale(1, 0.4f).SetEase(Ease.OutExpo).SetDelay(0.3f);
+        gameOverWinUI.GetComponent<Image>().DOColor(new Color32(0, 0, 0, 150), 1.5f).SetDelay(1f);
+
+        yield return new WaitForSeconds(1f);
+        confettiVFX.SetActive(true);
+        OpenNewRecipePanel();
+
+        // yield return new WaitForSeconds(0.5f);
+        // while (score < currentScore)
+        // {
+        //     score++;
+        //     scoreGameOverText.text = score.ToString();
+        //     yield return new WaitForSeconds(animSpeed);
+        // }
     }
 
     public void OpenNewRecipePanel()
     {
-        const float gameOverWinCloseDuration = 1f;
+        // const float gameOverWinCloseDuration = 1f;
         const float recipeUnlockShowDuration = 2f;
         const float recipeMoveDuration = 0.8f;
         const float recipeFadeDuration = 1.5f;
-        const float delayBeforeMove = 0.5f;
+        const float delayBeforeMove = 0.8f;
 
         int currentLevel = GameManager.Instance.currentLevel;
         int recipeIndex = currentLevel - 1;
@@ -167,10 +187,9 @@ public class MiniGameController : MonoBehaviour
         Sequence sequence = DOTween.Sequence();
 
         // First, close the gameOverWinUI panel
-        sequence.Append(gameOverWinUI.transform.DOScale(0, gameOverWinCloseDuration).SetEase(Ease.OutExpo))
-            .AppendCallback(() =>
+        sequence.AppendCallback(() =>
             {
-                gameOverWinUI.gameObject.SetActive(false);
+                // gameOverWinUI.gameObject.SetActive(false);
 
                 recipeUnlockUI.transform.localScale = Vector3.zero;
                 recipeUnlockUI.alpha = 0;

@@ -8,6 +8,9 @@ public class MoneySpawner : MonoBehaviour
     [SerializeField] private Sprite specialCust;
     [SerializeField] private Money moneyObj;
 
+    [Space(20)]
+    [SerializeField] private GameObject customerDestinationPoint;
+
     private Vector3 _customerPosition;
     private Sprite moneySprite;
 
@@ -23,6 +26,8 @@ public class MoneySpawner : MonoBehaviour
 
     private void Start()
     {
+        transform.position = customerDestinationPoint.transform.position;
+
         moneyPool = new ObjectPool<Money>(CreateMoney, OnTakeMoneyFromPool, OnReturnMoneyToPool, OnDestroyMoney, true, 3, 5);
     }
 

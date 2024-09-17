@@ -21,6 +21,7 @@ MonoBehaviour:
     pointPerCustomer: 100
     specialRecipePoint: 200
     timer: 180
+    character: 0
     baseIngredientCode: ee030000ec030000ea030000eb030000ed030000
     flavorIngredientCode: f4030000f5030000f1030000f7030000f3030000
     toppingIngredientCode: fe03000001040000f9030000ff030000fd030000
@@ -29,4 +30,5 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 5e211bcb99b58604182065a192ec25ed, type: 2}
   miniGameLevelData:
     timer: 20
+    maxScore: 45
     totalObjectSpawner: 4

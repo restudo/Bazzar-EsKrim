@@ -14,11 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   customerDetails:
   - customerPatience: 30
-    customerMoods:
-    - {fileID: 21300000, guid: 75e49d286ec683c49a76a48aba14bc50, type: 3}
+    customerSpeed: 4
+    skeletonDataAsset: {fileID: 11400000, guid: f74a79d7963e07a47bff886ad59372d3, type: 2}
+    material: {fileID: 2100000, guid: 423554433d4941f4497b3734e648aa79, type: 2}
+    positiveAnimationDuration: 1.5
   - customerPatience: 40
-    customerMoods:
-    - {fileID: 21300000, guid: 85701cfa85c3d9e4b9b3d6cb162ba9c3, type: 3}
+    customerSpeed: 3.5
+    skeletonDataAsset: {fileID: 11400000, guid: 236d565faa18c0746879656513ecf002, type: 2}
+    material: {fileID: 2100000, guid: bc8fe5e13e512544787e84ceafd605be, type: 2}
+    positiveAnimationDuration: 1.5
   - customerPatience: 50
-    customerMoods:
-    - {fileID: 21300000, guid: 673d37b16990d324f8daa0350179ae93, type: 3}
+    customerSpeed: 3
+    skeletonDataAsset: {fileID: 11400000, guid: 7b5d27ba59d3181419548e6c5d9bbbaf, type: 2}
+    material: {fileID: 2100000, guid: 3212a209dcb84074c848cf54552fba7b, type: 2}
+    positiveAnimationDuration: 1.5

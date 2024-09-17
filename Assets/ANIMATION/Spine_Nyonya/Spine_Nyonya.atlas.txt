@@ -1,0 +1,83 @@
+
+Spine_Nyonya.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+nyonya_qf_body
+  rotate: false
+  xy: 309, 701
+  size: 312, 310
+  orig: 312, 310
+  offset: 0, 0
+  index: -1
+nyonya_qf_hairback
+  rotate: false
+  xy: 362, 281
+  size: 336, 306
+  orig: 336, 306
+  offset: 0, 0
+  index: -1
+nyonya_qf_head_happy
+  rotate: true
+  xy: 362, 2
+  size: 277, 281
+  orig: 277, 281
+  offset: 0, 0
+  index: -1
+nyonya_qf_head_neutral
+  rotate: false
+  xy: 623, 730
+  size: 277, 281
+  orig: 277, 281
+  offset: 0, 0
+  index: -1
+nyonya_qf_head_unhappy
+  rotate: true
+  xy: 645, 2
+  size: 277, 281
+  orig: 277, 281
+  offset: 0, 0
+  index: -1
+nyonya_s_armfar
+  rotate: true
+  xy: 309, 589
+  size: 110, 254
+  orig: 110, 254
+  offset: 0, 0
+  index: -1
+nyonya_s_armnear
+  rotate: true
+  xy: 2, 58
+  size: 166, 265
+  orig: 166, 266
+  offset: 0, 1
+  index: -1
+nyonya_s_bag1
+  rotate: false
+  xy: 623, 632
+  size: 146, 96
+  orig: 146, 98
+  offset: 0, 1
+  index: -1
+nyonya_s_bag2
+  rotate: true
+  xy: 269, 126
+  size: 98, 75
+  orig: 99, 75
+  offset: 0, 0
+  index: -1
+nyonya_s_body
+  rotate: false
+  xy: 2, 566
+  size: 305, 445
+  orig: 305, 446
+  offset: 0, 0
+  index: -1
+nyonya_s_head
+  rotate: false
+  xy: 2, 226
+  size: 358, 338
+  orig: 358, 338
+  offset: 0, 0
+  index: -1

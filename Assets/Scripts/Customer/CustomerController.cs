@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.Pool;
+using Spine.Unity;
 
 public class CustomerController : MonoBehaviour
 {
@@ -21,7 +22,16 @@ public class CustomerController : MonoBehaviour
     [SerializeField] private GameObject HudPos;
     [SerializeField] private Sprite[] customerMoods;
 
+    [Space(20)]
+    [SpineAnimation][SerializeField] private string idleAnimationName;
+    [SpineAnimation][SerializeField] private string walkAnimationName;
+    [SpineAnimation][SerializeField] private string positiveAnimationName;
+    [SpineAnimation][SerializeField] private string negativeAnimationName;
+    [SerializeField] private SkeletonAnimation skeletonAnimation;
+    [SerializeField] private MeshRenderer meshRenderer;
+
     // Private variables
+    private float positiveAnimationDuration;
     private int maxOrderSize = 6;
     private int moodIndex;
     private bool isOnSeat;
@@ -42,13 +52,13 @@ public class CustomerController : MonoBehaviour
     private MoneySpawner moneySpawner;
     private CustomerPool customerPool;
 
-    private SpriteRenderer spriteRenderer;
+    // private SpriteRenderer spriteRenderer;
     private Collider2D customerCol;
 
     private void Awake()
     {
         // Cache component references
-        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        // spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         customerCol = GetComponent<Collider2D>();
 
         // Find and cache references to other objects in the scene
@@ -68,11 +78,13 @@ public class CustomerController : MonoBehaviour
     private void OnEnable()
     {
         EventHandler.ChaseCustomer += ChaseCustomer;
+        EventHandler.TogglePause += TogglePauseAnim;
     }
 
     private void OnDisable()
     {
         EventHandler.ChaseCustomer -= ChaseCustomer;
+        EventHandler.TogglePause -= TogglePauseAnim;
     }
 
     private void LateUpdate()
@@ -86,29 +98,74 @@ public class CustomerController : MonoBehaviour
 
     public void Init()
     {
-        // Initialize customer with random details from the customer list
-        int randomCustomer = Random.Range(0, customerList.customerDetails.Count);
-        customerPatience = customerList.customerDetails[randomCustomer].customerPatience;
-        customerMoods = customerList.customerDetails[randomCustomer].customerMoods;
-        spriteRenderer.sprite = customerMoods[0];
-        // spriteRenderer.color = customerList.customerDetails[randomCustomer].customerColor; // remove later
+        // Initialize customer with random details
+        InitializeCustomerDetails();
 
         // Reset flags and variables
+        ResetFlagsAndVariables();
+
+        // Hide the HUD and highlight
+        HideHudAndHighlight();
+
+        // Start the customer movement coroutine
+        StartCoroutine(GoToSeat());
+    }
+
+    private void InitializeCustomerDetails()
+    {
+        // Pick a random customer from the list
+        int randomCustomer = Random.Range(0, customerList.customerDetails.Count);
+
+        // Set customer attributes (patience, speed, etc.)
+        customerPatience = customerList.customerDetails[randomCustomer].customerPatience;
+        customerSpeed = customerList.customerDetails[randomCustomer].customerSpeed;
+
+        // handle customer moods and sprite changes here if necessary
+        // customerMoods = customerList.customerDetails[randomCustomer].customerMoods;
+        // spriteRenderer.sprite = customerMoods[0];
+        // spriteRenderer.color = customerList.customerDetails[randomCustomer].customerColor; // remove later if unneeded
+
+        // Set the SkeletonDataAsset
+        skeletonAnimation.skeletonDataAsset = customerList.customerDetails[randomCustomer].skeletonDataAsset;
+
+        // Reinitialize the skeleton to apply the new SkeletonDataAsset
+        skeletonAnimation.Initialize(true);
+
+        // Set an animation for the newly assigned skeleton
+        skeletonAnimation.AnimationState.SetAnimation(0, walkAnimationName, true);
+
+        // Set the material if applicable
+        if (meshRenderer != null)
+        {
+            meshRenderer.material = customerList.customerDetails[randomCustomer].material;
+        }
+
+        positiveAnimationDuration = customerList.customerDetails[randomCustomer].positiveAnimationDuration;
+    }
+
+    private void ResetFlagsAndVariables()
+    {
+        // Reset all relevant flags
         isCloseEnoughToDelivery = false;
         isOnSeat = false;
         isLeaving = false;
         isRecipeOrder = false;
+
+        // Reset mood and max order size
         moodIndex = 0;
         maxOrderSize = mainGameController.maxOrderHeight;
 
+        // Call the order function (assumed this handles order-related initialization)
         Order();
+    }
 
-        // Hide HUD and highlight
+    private void HideHudAndHighlight()
+    {
+        // Hide the HUD position and any highlight on the customer
         HudPos.SetActive(false);
-        transform.GetChild(transform.childCount - 1).gameObject.SetActive(false);
 
-        // Start moving to the assigned seat
-        StartCoroutine(GoToSeat());
+        // Hide the last child, which seems to be the highlight or indicator
+        transform.GetChild(transform.childCount - 1).gameObject.SetActive(false);
     }
 
     private void Order()
@@ -150,59 +207,30 @@ public class CustomerController : MonoBehaviour
         // Flip sprite if necessary based on the destination
         FlipCheck(destination);
 
-        // Create a yoyo tween, but don't start it immediately
-        Tween yoyoTween = null;
-
         while ((transform.position - new Vector3(destination.x, transform.position.y, destination.z)).sqrMagnitude > 0.01f)
         {
-            if (GameManager.Instance.isGameActive)
+            if (!GameManager.Instance.isGamePaused)
             {
-                // Check if the tween has been killed by DOTween.KillAll() and recreate it if needed
-                if (yoyoTween == null || !yoyoTween.IsActive())
-                {
-                    yoyoTween = transform.DOLocalMoveY(destination.y + 0.2f, 0.35f)
-                        .SetLoops(-1, LoopType.Yoyo)
-                        .SetEase(Ease.Linear);
-                }
-                else if (!yoyoTween.IsPlaying())
-                {
-                    yoyoTween.Play();
-                }
-
                 // Move towards the destination
                 Vector3 targetPosition = new Vector3(destination.x, transform.position.y, destination.z);
                 transform.position = Vector3.MoveTowards(transform.position, targetPosition, customerSpeed * Time.deltaTime);
+
+                skeletonAnimation.timeScale = 1;
             }
             else
             {
-                // Pause the yoyo tween when the game is inactive
-                if (yoyoTween != null && yoyoTween.IsPlaying())
-                {
-                    yoyoTween.Pause();
-                }
+                skeletonAnimation.timeScale = 0;
             }
 
             yield return null;
         }
 
-        // Stop the yoyo movement and finalize position
-        if (yoyoTween != null && yoyoTween.IsActive())
-        {
-            yoyoTween.Kill();
-            yoyoTween = null;  // Set to null after killing to avoid further use
-        }
+        isOnSeat = true;
+        HudPos.SetActive(true);
 
-        yield return new WaitForSeconds(0.05f);
+        skeletonAnimation.AnimationState.SetAnimation(0, idleAnimationName, true);
 
-        transform.DOMove(destination, 0.3f).SetEase(Ease.Linear).OnComplete(() =>
-        {
-            if (GameManager.Instance.isGameActive)
-            {
-                isOnSeat = true;
-                HudPos.SetActive(true);
-                patienceBarController.StartDecreasingPatience();
-            }
-        });
+        patienceBarController.StartDecreasingPatience();
     }
 
     private void FlipCheck(Vector3 target)
@@ -218,7 +246,8 @@ public class CustomerController : MonoBehaviour
     {
         // Rotate the sprite to flip it
         isFacingRight = !isFacingRight;
-        spriteRenderer.transform.Rotate(0, 180, 0);
+        // spriteRenderer.transform.Rotate(0, 180, 0);
+        meshRenderer.transform.Rotate(0, 180, 0);
     }
 
     private void CheckDistanceToDelivery()
@@ -257,6 +286,13 @@ public class CustomerController : MonoBehaviour
 
         moodIndex = 2;  // Make the customer happy
 
+        // set the positive animation and then walk
+        if (!isLeaving)
+        {
+            HudPos.SetActive(false);
+            skeletonAnimation.AnimationState.SetAnimation(0, positiveAnimationName, false);
+        }
+
         // Stop decreasing patience and start leaving
         patienceBarController.StopDecreasingPatience();
         StartCoroutine(Leave());
@@ -267,6 +303,13 @@ public class CustomerController : MonoBehaviour
         EventHandler.CallIncorrectOrderEvent();
 
         moodIndex = 3; // Make the customer angry
+
+        // set the negative animation and idle again
+        if (!isLeaving)
+        {
+            skeletonAnimation.AnimationState.SetAnimation(0, negativeAnimationName, false);
+            skeletonAnimation.AnimationState.AddAnimation(0, idleAnimationName, true, 0);
+        }
 
         // Decrease patience based on a percentage
         float decreaseValue = customerPatience * decreasePatiencePercentage;
@@ -280,6 +323,9 @@ public class CustomerController : MonoBehaviour
         isLeaving = true;
         isOnSeat = false;
 
+        // Check if the positive or negative animation is playing before switching to walk animation
+        yield return StartCoroutine(CheckAndSetWalkAnimation(positiveAnimationDuration));
+
         // Mark the seat as available and hide HUD and highlight
         mainGameController.availableSeatForCustomers[mySeat] = true;
         HudPos.SetActive(false);
@@ -290,24 +336,67 @@ public class CustomerController : MonoBehaviour
 
         yield return new WaitForSeconds(0.15f);
 
-        // Tween for yoyo movement (up and down) while moving horizontally
-        Tween yoyoTween = transform.DOLocalMoveY(destination.y + 0.35f, 0.35f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.Linear);
-
         // Move towards the leave point
         while ((transform.position - new Vector3(leavePoint.x, transform.position.y, leavePoint.z)).sqrMagnitude > 0.01f)
         {
-            Vector3 targetPosition = new Vector3(leavePoint.x, transform.position.y, leavePoint.z);
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, customerSpeed * Time.deltaTime);
+            if (!GameManager.Instance.isGamePaused)
+            {
+                Vector3 targetPosition = new Vector3(leavePoint.x, transform.position.y, leavePoint.z);
+                transform.position = Vector3.MoveTowards(transform.position, targetPosition, customerSpeed * Time.deltaTime);
+
+                skeletonAnimation.timeScale = 1;
+            }
+            else
+            {
+                skeletonAnimation.timeScale = 0;
+            }
+
             yield return null;
         }
 
-        // Stop the yoyo movement and finalize position
-        yoyoTween.Kill();
-        transform.DOMove(leavePoint, 0.3f).SetEase(Ease.Linear).OnComplete(() =>
+        orderManager.ReleaseAllIngredients();
+        customerPool.customerPool.Release(this);  // Return customer to the pool
+    }
+
+    private IEnumerator CheckAndSetWalkAnimation(float positiveAnimationDuration)
+    {
+        // Get the current animation on track 0
+        Spine.TrackEntry currentTrackEntry = skeletonAnimation.AnimationState.GetCurrent(0);
+
+        // Check if the positive or negative animation is playing
+        if (currentTrackEntry != null)
         {
-            orderManager.ReleaseAllIngredients();
-            customerPool.customerPool.Release(this);  // Return customer to the pool
-        });
+            // Check for positive animation
+            if (currentTrackEntry.Animation.Name == positiveAnimationName)
+            {
+                // Play the positive animation for only the specified duration
+                while (currentTrackEntry.TrackTime < positiveAnimationDuration)
+                {
+                    yield return null;
+                }
+
+                // After positive animation, transition to the normal walk animation
+                skeletonAnimation.AnimationState.SetAnimation(0, walkAnimationName, true);
+                Debug.Log("Leaving Happy");
+            }
+            // Check for negative animation
+            else if (currentTrackEntry.Animation.Name == negativeAnimationName)
+            {
+                // Wait until the negative animation is complete
+                yield return new WaitForSpineAnimationComplete(currentTrackEntry);
+
+                // After negative animation, transition to the angry walk animation
+                // TODO: change it to leaving angry
+                skeletonAnimation.AnimationState.SetAnimation(0, walkAnimationName, true);
+                Debug.Log("Leaving Angry");
+            }
+            else
+            {
+                // If no specific animation is playing, just set the walk animation
+                skeletonAnimation.AnimationState.SetAnimation(0, walkAnimationName, true);
+                Debug.Log("Leaving Normally");
+            }
+        }
     }
 
     public bool ReceiveOrder(List<int> myReceivedOrder)
@@ -336,6 +425,18 @@ public class CustomerController : MonoBehaviour
     private void ChaseCustomer()
     {
         StartCoroutine(Leave());
+    }
+
+    private void TogglePauseAnim()
+    {
+        if (skeletonAnimation.timeScale == 0)
+        {
+            skeletonAnimation.timeScale = 1;
+        }
+        else
+        {
+            skeletonAnimation.timeScale = 0;
+        }
     }
 
     public void BaseOnlyServed()

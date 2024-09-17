@@ -129,4 +129,11 @@ public static class EventHandler
         if (LoadToLevel != null)
             LoadToLevel(lvIndex);
     }
+    
+    public static event Action TogglePause;
+    public static void CallTogglePauseEvent()
+    {
+        if (TogglePause != null)
+            TogglePause();
+    }
 }

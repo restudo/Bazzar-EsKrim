@@ -1,70 +1,83 @@
 using UnityEngine;
 using System;
+using System.Collections;
 
 public class CameraController : MonoBehaviour
 {
-    public float minX = -4.25f; // Minimum x value for the camera
-    public float maxX = 4.25f;  // Maximum x value for the camera
+    public float panSpeed = 3f;       // Speed of camera pan based on mouse/touch movement
+    public float smoothTime = 0.3f;     // Time to smoothly ease to a stop
+    public float minX = -10f;           // Minimum X position the camera can move to
+    public float maxX = 10f;            // Maximum X position the camera can move to
 
-    private Vector3 touchStart;
-    private Camera mainCamera;
+    private float velocity = 0f;        // Reference velocity for SmoothDamp
+    private float targetPositionX;      // Target X position for the camera
+    private float previousCameraPositionX; // Previous X position of the camera for parallax calculations
+    private bool isDragging = false;    // Tracks whether the user is dragging the camera
+    private Vector2 lastMousePosition;  // Last position of the mouse or touch
 
-    private void Awake()
+    void Start()
     {
-        mainCamera = Camera.main;
+        // transform.position = Vector2.zero;
+
+        Init();
     }
 
-    private void Update()
+    private void Init()
+    {
+        // Set the initial target position to the current camera position
+        targetPositionX = transform.position.x;
+    }
+
+    void Update()
+    {
+        if (GameManager.Instance.gameStates == GameStates.LevelSelection)
+        {
+            HandleInput();  // Handles both mouse and touch input
+
+            float newPositionX = Mathf.SmoothDamp(transform.position.x, targetPositionX, ref velocity, smoothTime);
+
+            transform.position = new Vector3(newPositionX, transform.position.y, transform.position.z);
+
+            // Notify parallax layers about the camera movement
+            EventHandler.CallCameraMoveEvent(newPositionX - previousCameraPositionX);
+
+            previousCameraPositionX = newPositionX;
+        }
+    }
+
+    void HandleInput()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            // Store the initial touch position in world coordinates
-            touchStart = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            isDragging = true;
+            lastMousePosition = Input.mousePosition;
         }
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) && isDragging)
         {
-            // Get the current touch position in world coordinates
-            Vector3 touchEnd = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 mouseDelta = (Vector2)Input.mousePosition - lastMousePosition;
+            targetPositionX -= mouseDelta.x * panSpeed * Time.deltaTime;
 
-            // Calculate the movement delta
-            float deltaX = touchStart.x - touchEnd.x;
+            targetPositionX = Mathf.Clamp(targetPositionX, minX, maxX);
 
-            // Move the camera
-            Vector3 newPosition = mainCamera.transform.position + new Vector3(deltaX, 0, 0);
+            lastMousePosition = Input.mousePosition;
+        }
 
-            // Clamp the new position's x value between minX and maxX
-            newPosition.x = Mathf.Clamp(newPosition.x, minX, maxX);
-
-            // Set the camera's position to the new clamped position
-            mainCamera.transform.position = newPosition;
-
-            // Update touchStart to the current position for continuous movement
-            touchStart = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-
-            if (newPosition.x >= maxX || newPosition.x <= minX)
-            {
-                return;
-            }
-
-            // Trigger the camera move event
-            EventHandler.CallCameraMoveEvent(deltaX);
+        if (Input.GetMouseButtonUp(0))
+        {
+            isDragging = false;
         }
     }
 
-    public void SetToMin()
+    public void SetToTarget(float targetX)
     {
         // Initialize the camera's position to the minimum x value
-        Vector3 initialPosition = mainCamera.transform.position;
-        initialPosition.x = minX;
-        mainCamera.transform.position = initialPosition;
-    }
+        Vector3 initialPosition = transform.position;
+        initialPosition.x = targetX;
+        transform.position = initialPosition;
 
-    public void SetToMax()
-    {
-        // Initialize the camera's position to the minimum x value
-        Vector3 initialPosition = mainCamera.transform.position;
-        initialPosition.x = maxX;
-        mainCamera.transform.position = initialPosition;
+        Init();
+
+        Debug.Log("Set Camera To Target " + targetX);
     }
 }

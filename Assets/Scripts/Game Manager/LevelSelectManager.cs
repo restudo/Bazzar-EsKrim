@@ -13,24 +13,15 @@ namespace BazarEsKrim
         private Button[] buttons;
         private LevelButton[] levelbuttons;
         private int lastSelectedButtonIndex = -1;
+        private int unlockedLevel;
 
-        private void OnEnable()
+        private void Awake()
         {
-            EventHandler.LoadToLevel += LoadToLevel;
-        }
+            unlockedLevel = GameManager.Instance.LoadUnlockedLevel();
 
-        private void OnDisable()
-        {
-            EventHandler.LoadToLevel -= LoadToLevel;
-        }
-
-        private void Start()
-        {
             // Initialize the buttons array with the child buttons of buttonContainer
             buttons = new Button[levelButtonContainer.transform.childCount];
             levelbuttons = new LevelButton[levelButtonContainer.transform.childCount];
-
-            int unlockedLevel = GameManager.Instance.LoadUnlockedLevel();
 
             for (int i = 0; i < buttons.Length; i++)
             {
@@ -50,23 +41,38 @@ namespace BazarEsKrim
             // init first
             if (unlockedLevel > 0)
             {
-                // set camera
-                if (buttons[unlockedLevel - 1].transform.position.x < camControl.minX)
-                {
-                    camControl.SetToMin();
-                }
-                else if (buttons[unlockedLevel - 1].transform.position.x > camControl.maxX)
-                {
-                    camControl.SetToMax();
-                }
-                else
-                {
-                    Camera.main.transform.position = new Vector3(buttons[unlockedLevel - 1].transform.position.x, Camera.main.transform.position.y, Camera.main.transform.position.z);
-                }
-
                 levelbuttons[unlockedLevel - 1].Selected();
                 lastSelectedButtonIndex = unlockedLevel - 1;
             }
+        }
+
+        private void OnEnable()
+        {
+            EventHandler.LoadToLevel += LoadToLevel;
+
+            // set camera
+            if (buttons[unlockedLevel - 1].transform.position.x < camControl.minX)
+            {
+                camControl.SetToTarget(camControl.minX);
+            }
+            else if (buttons[unlockedLevel - 1].transform.position.x > camControl.maxX)
+            {
+                camControl.SetToTarget(camControl.maxX);
+            }
+            else
+            {
+                camControl.SetToTarget(buttons[unlockedLevel - 1].transform.position.x);
+            }
+        }
+
+        private void OnDisable()
+        {
+            EventHandler.LoadToLevel -= LoadToLevel;
+        }
+
+        private void Start()
+        {
+
         }
 
         private void OnLevelButtonClicked(int index, bool isUnlocked)

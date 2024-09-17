@@ -1,0 +1,97 @@
+
+Spine_Remaja.png
+size: 2048,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+remaja_qf_armfar
+  rotate: false
+  xy: 1058, 312
+  size: 103, 187
+  orig: 103, 187
+  offset: 0, 0
+  index: -1
+remaja_qf_armnear
+  rotate: true
+  xy: 699, 30
+  size: 139, 203
+  orig: 139, 203
+  offset: 0, 0
+  index: -1
+remaja_qf_body
+  rotate: true
+  xy: 2, 2
+  size: 167, 264
+  orig: 167, 264
+  offset: 0, 0
+  index: -1
+remaja_qf_finger
+  rotate: true
+  xy: 1163, 332
+  size: 52, 76
+  orig: 53, 76
+  offset: 0, 0
+  index: -1
+remaja_qf_head_happy
+  rotate: false
+  xy: 2, 171
+  size: 260, 328
+  orig: 260, 328
+  offset: 0, 0
+  index: -1
+remaja_qf_head_neutral
+  rotate: false
+  xy: 264, 171
+  size: 260, 328
+  orig: 260, 328
+  offset: 0, 0
+  index: -1
+remaja_qf_head_unhappy
+  rotate: false
+  xy: 526, 171
+  size: 260, 328
+  orig: 260, 328
+  offset: 0, 0
+  index: -1
+remaja_s_armfar
+  rotate: true
+  xy: 487, 34
+  size: 135, 210
+  orig: 136, 212
+  offset: 0, 1
+  index: -1
+remaja_s_armnear
+  rotate: true
+  xy: 268, 30
+  size: 139, 217
+  orig: 140, 218
+  offset: 1, 0
+  index: -1
+remaja_s_body
+  rotate: true
+  xy: 904, 23
+  size: 185, 256
+  orig: 186, 256
+  offset: 0, 0
+  index: -1
+remaja_s_head
+  rotate: false
+  xy: 788, 210
+  size: 268, 289
+  orig: 268, 289
+  offset: 0, 0
+  index: -1
+remaja_s_legfar
+  rotate: false
+  xy: 1163, 386
+  size: 73, 113
+  orig: 73, 113
+  offset: 0, 0
+  index: -1
+remaja_s_legnear
+  rotate: true
+  xy: 1058, 220
+  size: 90, 132
+  orig: 91, 133
+  offset: 1, 1
+  index: -1

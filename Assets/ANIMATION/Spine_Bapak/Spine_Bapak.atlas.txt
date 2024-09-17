@@ -1,0 +1,83 @@
+
+Spine_Bapak.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bapak_qf_armnear
+  rotate: true
+  xy: 283, 638
+  size: 125, 145
+  orig: 126, 146
+  offset: 1, 1
+  index: -1
+bapak_qf_body
+  rotate: false
+  xy: 2, 380
+  size: 312, 256
+  orig: 312, 257
+  offset: 0, 1
+  index: -1
+bapak_qf_head_happy
+  rotate: true
+  xy: 316, 2
+  size: 310, 312
+  orig: 310, 312
+  offset: 0, 0
+  index: -1
+bapak_qf_head_neutral
+  rotate: true
+  xy: 2, 68
+  size: 310, 312
+  orig: 310, 312
+  offset: 0, 0
+  index: -1
+bapak_qf_head_unhappy
+  rotate: true
+  xy: 630, 2
+  size: 310, 312
+  orig: 310, 312
+  offset: 0, 0
+  index: -1
+bapak_s_armfar
+  rotate: true
+  xy: 676, 604
+  size: 159, 224
+  orig: 159, 225
+  offset: 0, 0
+  index: -1
+bapak_s_armnear
+  rotate: true
+  xy: 430, 624
+  size: 139, 244
+  orig: 140, 244
+  offset: 0, 0
+  index: -1
+bapak_s_body
+  rotate: true
+  xy: 316, 352
+  size: 270, 287
+  orig: 271, 287
+  offset: 0, 0
+  index: -1
+bapak_s_head
+  rotate: true
+  xy: 605, 314
+  size: 288, 295
+  orig: 288, 295
+  offset: 0, 0
+  index: -1
+bapak_s_legfar
+  rotate: true
+  xy: 2, 671
+  size: 92, 123
+  orig: 92, 124
+  offset: 0, 1
+  index: -1
+bapak_s_legnear
+  rotate: true
+  xy: 127, 639
+  size: 124, 154
+  orig: 124, 155
+  offset: 0, 1
+  index: -1

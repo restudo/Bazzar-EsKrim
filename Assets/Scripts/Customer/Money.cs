@@ -8,7 +8,7 @@ public class Money : MonoBehaviour
 
     private void OnEnable()
     {
-        transform.DOMoveY(3.8f, 1f).SetEase(Ease.OutExpo).OnComplete(BackToThePool);
+        transform.DOLocalMoveY(transform.localPosition.y + 1.5f, 1f).SetEase(Ease.OutExpo).OnComplete(BackToThePool);
     }
 
     private void BackToThePool()

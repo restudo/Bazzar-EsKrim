@@ -86,3 +86,9 @@ public enum AspectRatio
     Aspect5_3,
     count
 }
+
+public enum Characters
+{
+    Pariz,
+    Coboz
+}
