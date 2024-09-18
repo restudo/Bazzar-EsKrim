@@ -1,0 +1,132 @@
+
+Cover_BazaarEskrim.png
+size: 2048,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bg
+  rotate: false
+  xy: 2, 154
+  size: 1614, 867
+  orig: 1614, 867
+  offset: 0, 0
+  index: -1
+ciwi_Kakikanan
+  rotate: true
+  xy: 963, 47
+  size: 105, 94
+  orig: 106, 94
+  offset: 0, 0
+  index: -1
+ciwi_Kakikiri
+  rotate: true
+  xy: 2, 72
+  size: 80, 203
+  orig: 80, 203
+  offset: 0, 0
+  index: -1
+ciwi_Kepala
+  rotate: true
+  xy: 1618, 561
+  size: 460, 285
+  orig: 461, 285
+  offset: 0, 0
+  index: -1
+ciwi_Set3
+  rotate: false
+  xy: 317, 80
+  size: 105, 72
+  orig: 106, 72
+  offset: 0, 0
+  index: -1
+ciwi_Set4
+  rotate: true
+  xy: 874, 2
+  size: 33, 35
+  orig: 33, 35
+  offset: 0, 0
+  index: -1
+ciwi_Set5
+  rotate: false
+  xy: 1817, 407
+  size: 164, 152
+  orig: 164, 153
+  offset: 0, 1
+  index: -1
+ciwi_Tangankanan
+  rotate: false
+  xy: 471, 13
+  size: 133, 82
+  orig: 133, 83
+  offset: 0, 0
+  index: -1
+ciwi_bayangan
+  rotate: false
+  xy: 2, 9
+  size: 183, 61
+  orig: 185, 63
+  offset: 1, 1
+  index: -1
+cowo_Badan
+  rotate: true
+  xy: 606, 20
+  size: 99, 163
+  orig: 121, 165
+  offset: 16, 1
+  index: -1
+cowo_Jempol
+  rotate: false
+  xy: 539, 121
+  size: 143, 31
+  orig: 144, 31
+  offset: 0, 0
+  index: -1
+cowo_Kakikanan
+  rotate: false
+  xy: 874, 37
+  size: 87, 115
+  orig: 89, 115
+  offset: 1, 0
+  index: -1
+cowo_Kakikiri
+  rotate: true
+  xy: 207, 72
+  size: 80, 108
+  orig: 81, 110
+  offset: 0, 1
+  index: -1
+cowo_Kepala
+  rotate: false
+  xy: 1618, 383
+  size: 197, 176
+  orig: 197, 176
+  offset: 0, 0
+  index: -1
+cowo_Nampaneskrim
+  rotate: true
+  xy: 771, 13
+  size: 139, 101
+  orig: 139, 102
+  offset: 0, 1
+  index: -1
+cowo_Tangankanan
+  rotate: true
+  xy: 371, 3
+  size: 75, 98
+  orig: 76, 98
+  offset: 0, 0
+  index: -1
+cowo_Tangankiri
+  rotate: true
+  xy: 424, 97
+  size: 55, 113
+  orig: 56, 113
+  offset: 0, 0
+  index: -1
+cowo_bayangan
+  rotate: false
+  xy: 187, 23
+  size: 182, 47
+  orig: 184, 47
+  offset: 1, 0
+  index: -1

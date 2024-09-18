@@ -1,4 +1,5 @@
 using BazarEsKrim;
+using Spine.Unity;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,6 +7,9 @@ public class MenuManager : MonoBehaviour
 {
     [Header("Main Menu")]
     [SerializeField] private GameObject mainMenuObj;
+    [SerializeField] private SkeletonGraphic skeletonGraphicUI;
+    private const string coverIn = "in";
+    private const string coverIdle = "idle";
 
     [Header("Collection Menu")]
     [SerializeField] private GameObject collectionObj;
@@ -19,21 +23,22 @@ public class MenuManager : MonoBehaviour
 
     private void Awake()
     {
-        switch (GameManager.Instance.gameStates)
-        {
-            case GameStates.MainMenu:
-                LoadToMainMenu();
-                break;
-            case GameStates.Collection:
-                LoadToCollection();
-                break;
-            case GameStates.LevelSelection:
-                LoadToLevelSelection();
-                break;
-            default:
-                Debug.LogError("Current Game State = " + GameManager.Instance.gameStates.ToString());
-                break;
-        }
+        // switch (GameManager.Instance.gameStates)
+        // {
+        //     case GameStates.MainMenu:
+        //         LoadToMainMenu();
+        //         break;
+        //     case GameStates.Collection:
+        //         LoadToCollection();
+        //         break;
+        //     case GameStates.LevelSelection:
+        //         LoadToLevelSelection();
+        //         break;
+        //     default:
+        //         Debug.LogError("Current Game State = " + GameManager.Instance.gameStates.ToString());
+        //         break;
+        // }
+        LoadToMainMenu();
 
         collectionManager = collectionObj.GetComponent<CollectionManager>();
 
@@ -62,6 +67,13 @@ public class MenuManager : MonoBehaviour
         SetCameraToZero();
 
         SetActiveMenu(mainMenu: true, collection: false, levelSelection: false);
+
+        // stop anim
+        skeletonGraphicUI.AnimationState.SetEmptyAnimation(0, 0);
+
+        // play anim
+        skeletonGraphicUI.AnimationState.SetAnimation(0, coverIn, false);
+        skeletonGraphicUI.AnimationState.AddAnimation(0, coverIdle, true, 0);
     }
 
     public void LoadToLevelSelection()
