@@ -92,3 +92,10 @@ public enum Characters
     Pariz,
     Coboz
 }
+
+public enum Customers
+{
+    Nyonya,
+    Remaja,
+    Bapak,
+}

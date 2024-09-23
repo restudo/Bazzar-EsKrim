@@ -49,9 +49,7 @@ public class LevelManager : MonoBehaviour
             button.onClick.AddListener(Resume);
         }
 
-        miniGameNextButton.onClick.AddListener(OpenNewRecipePanel);
-        miniGameOverNextButton.onClick.AddListener(LoadToLevelSelection);
-        miniGameHomeButton.onClick.AddListener(LoadToMainMenu);
+        // miniGameNextButton.onClick.AddListener(OpenNewRecipePanel);
 
         switch (GameManager.Instance.gameStates)
         {
@@ -140,5 +138,11 @@ public class LevelManager : MonoBehaviour
     private void OpenNewRecipePanel()
     {
         miniGameController.OpenNewRecipePanel();
+    }
+
+    public void AddMiniGameOverButtonEvent()
+    {
+        miniGameOverNextButton.onClick.AddListener(LoadToLevelSelection);
+        miniGameHomeButton.onClick.AddListener(LoadToMainMenu);
     }
 }

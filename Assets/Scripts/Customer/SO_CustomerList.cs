@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Spine;
 using Spine.Unity;
 using UnityEngine;
 
@@ -14,9 +15,11 @@ public struct CustomerDetails
 {
     public float customerPatience;
     public float customerSpeed;
+    public Customers customers;
     // public Sprite[] customerMoods;
     public SkeletonDataAsset skeletonDataAsset;
     public Material material;
+    public List<string> availableSkins; // List of skin names for each skeleton
     public float positiveAnimationDuration;
 
     // for dummy

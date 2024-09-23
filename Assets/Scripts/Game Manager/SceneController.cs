@@ -48,7 +48,7 @@ public class SceneController : MonoBehaviour
 
         Sequence faderSequence = DOTween.Sequence();
 
-        faderSequence.Append(faderImage.transform.DOScale(0, fadeDuration).SetEase(Ease.InCubic)).OnComplete(() =>
+        faderSequence.Append(faderImage.transform.DOScale(0, fadeDuration).SetEase(Ease.InOutExpo)).OnComplete(() =>
         {
             Debug.Log("FADE IN");
         });
@@ -65,7 +65,7 @@ public class SceneController : MonoBehaviour
         // Second scaling animation
         faderSequence = DOTween.Sequence();
 
-        faderSequence.Append(faderImage.transform.DOScale(faderImageMaxScale, fadeDuration).SetEase(Ease.OutCubic)).OnComplete(() =>
+        faderSequence.Append(faderImage.transform.DOScale(faderImageMaxScale, fadeDuration).SetEase(Ease.InOutExpo)).OnComplete(() =>
         {
             FadeComplete();
             Debug.Log("FADE OUT");

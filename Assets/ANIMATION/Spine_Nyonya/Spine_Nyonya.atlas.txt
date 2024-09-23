@@ -1,82 +1,236 @@
 
 Spine_Nyonya.png
-size: 1024,1024
+size: 2048,2048
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-nyonya_qf_body
+nyonya1/nyonya_qf_body
   rotate: false
-  xy: 309, 701
+  xy: 1463, 342
   size: 312, 310
   orig: 312, 310
   offset: 0, 0
   index: -1
-nyonya_qf_hairback
+nyonya1/nyonya_qf_hairback
   rotate: false
-  xy: 362, 281
+  xy: 449, 430
   size: 336, 306
   orig: 336, 306
   offset: 0, 0
   index: -1
-nyonya_qf_head_happy
+nyonya1/nyonya_qf_head_happy
   rotate: true
-  xy: 362, 2
+  xy: 269, 1031
   size: 277, 281
   orig: 277, 281
   offset: 0, 0
   index: -1
-nyonya_qf_head_neutral
-  rotate: false
-  xy: 623, 730
+nyonya1/nyonya_qf_head_neutral
+  rotate: true
+  xy: 552, 1017
   size: 277, 281
   orig: 277, 281
   offset: 0, 0
   index: -1
-nyonya_qf_head_unhappy
+nyonya1/nyonya_qf_head_unhappy
   rotate: true
-  xy: 645, 2
+  xy: 835, 1017
   size: 277, 281
   orig: 277, 281
   offset: 0, 0
   index: -1
-nyonya_s_armfar
+nyonya1/nyonya_s_armfar
   rotate: true
-  xy: 309, 589
+  xy: 746, 1296
   size: 110, 254
   orig: 110, 254
   offset: 0, 0
   index: -1
-nyonya_s_armnear
+nyonya1/nyonya_s_armnear
   rotate: true
-  xy: 2, 58
+  xy: 1514, 1240
   size: 166, 265
   orig: 166, 266
   offset: 0, 1
   index: -1
-nyonya_s_bag1
+nyonya1/nyonya_s_bag1
   rotate: false
-  xy: 623, 632
+  xy: 302, 1310
   size: 146, 96
   orig: 146, 98
   offset: 0, 1
   index: -1
-nyonya_s_bag2
-  rotate: true
-  xy: 269, 126
+nyonya1/nyonya_s_bag2
+  rotate: false
+  xy: 2, 1331
   size: 98, 75
   orig: 99, 75
   offset: 0, 0
   index: -1
-nyonya_s_body
-  rotate: false
-  xy: 2, 566
+nyonya1/nyonya_s_body
+  rotate: true
+  xy: 851, 710
   size: 305, 445
   orig: 305, 446
   offset: 0, 0
   index: -1
-nyonya_s_head
+nyonya1/nyonya_s_head
   rotate: false
-  xy: 2, 226
+  xy: 630, 62
+  size: 358, 338
+  orig: 358, 338
+  offset: 0, 0
+  index: -1
+nyonya2/nyonya_qf_body
+  rotate: false
+  xy: 2, 119
+  size: 312, 310
+  orig: 312, 310
+  offset: 0, 0
+  index: -1
+nyonya2/nyonya_qf_hairback
+  rotate: false
+  xy: 787, 402
+  size: 336, 306
+  orig: 336, 306
+  offset: 0, 0
+  index: -1
+nyonya2/nyonya_qf_head_happy
+  rotate: true
+  xy: 1118, 1017
+  size: 277, 281
+  orig: 277, 281
+  offset: 0, 0
+  index: -1
+nyonya2/nyonya_qf_head_neutral
+  rotate: true
+  xy: 1401, 961
+  size: 277, 281
+  orig: 277, 281
+  offset: 0, 0
+  index: -1
+nyonya2/nyonya_qf_head_unhappy
+  rotate: true
+  xy: 1684, 961
+  size: 277, 281
+  orig: 277, 281
+  offset: 0, 0
+  index: -1
+nyonya2/nyonya_s_armfar
+  rotate: true
+  xy: 1002, 1296
+  size: 110, 254
+  orig: 110, 254
+  offset: 0, 0
+  index: -1
+nyonya2/nyonya_s_armnear
+  rotate: true
+  xy: 1781, 1240
+  size: 166, 265
+  orig: 166, 266
+  offset: 0, 1
+  index: -1
+nyonya2/nyonya_s_bag1
+  rotate: false
+  xy: 450, 1310
+  size: 146, 96
+  orig: 146, 98
+  offset: 0, 1
+  index: -1
+nyonya2/nyonya_s_bag2
+  rotate: false
+  xy: 102, 1331
+  size: 98, 75
+  orig: 99, 75
+  offset: 0, 0
+  index: -1
+nyonya2/nyonya_s_body
+  rotate: true
+  xy: 1298, 654
+  size: 305, 445
+  orig: 305, 446
+  offset: 0, 0
+  index: -1
+nyonya2/nyonya_s_head
+  rotate: false
+  xy: 990, 6
+  size: 358, 338
+  orig: 358, 338
+  offset: 0, 0
+  index: -1
+nyonya3/nyonya_qf_body
+  rotate: false
+  xy: 316, 118
+  size: 312, 310
+  orig: 312, 310
+  offset: 0, 0
+  index: -1
+nyonya3/nyonya_qf_hairback
+  rotate: false
+  xy: 1125, 346
+  size: 336, 306
+  orig: 336, 306
+  offset: 0, 0
+  index: -1
+nyonya3/nyonya_qf_head_happy
+  rotate: true
+  xy: 2, 752
+  size: 277, 281
+  orig: 277, 281
+  offset: 0, 0
+  index: -1
+nyonya3/nyonya_qf_head_neutral
+  rotate: true
+  xy: 285, 738
+  size: 277, 281
+  orig: 277, 281
+  offset: 0, 0
+  index: -1
+nyonya3/nyonya_qf_head_unhappy
+  rotate: true
+  xy: 568, 738
+  size: 277, 281
+  orig: 277, 281
+  offset: 0, 0
+  index: -1
+nyonya3/nyonya_s_armfar
+  rotate: true
+  xy: 1258, 1296
+  size: 110, 254
+  orig: 110, 254
+  offset: 0, 0
+  index: -1
+nyonya3/nyonya_s_armnear
+  rotate: true
+  xy: 2, 1163
+  size: 166, 265
+  orig: 166, 266
+  offset: 0, 1
+  index: -1
+nyonya3/nyonya_s_bag1
+  rotate: false
+  xy: 598, 1310
+  size: 146, 96
+  orig: 146, 98
+  offset: 0, 1
+  index: -1
+nyonya3/nyonya_s_bag2
+  rotate: false
+  xy: 202, 1331
+  size: 98, 75
+  orig: 99, 75
+  offset: 0, 0
+  index: -1
+nyonya3/nyonya_s_body
+  rotate: true
+  xy: 2, 431
+  size: 305, 445
+  orig: 305, 446
+  offset: 0, 0
+  index: -1
+nyonya3/nyonya_s_head
+  rotate: false
+  xy: 1350, 2
   size: 358, 338
   orig: 358, 338
   offset: 0, 0

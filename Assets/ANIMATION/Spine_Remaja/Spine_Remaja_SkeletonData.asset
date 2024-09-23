@@ -24,14 +24,8 @@ MonoBehaviour:
     multiplyMaterials: []
     screenMaterials: []
   skeletonDataModifiers: []
-  fromAnimation:
-  - 1_walk
-  - 3_positive
-  toAnimation:
-  - 2_idle
-  - 1_walk
-  duration:
-  - 0.4
-  - 0
-  defaultMix: 0.2
+  fromAnimation: []
+  toAnimation: []
+  duration: []
+  defaultMix: 0
   controller: {fileID: 0}

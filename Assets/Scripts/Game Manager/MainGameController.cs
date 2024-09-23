@@ -14,7 +14,8 @@ public class MainGameController : MonoBehaviour
     [HideInInspector] public int customerCounter;
     [HideInInspector] public int deliveryQueueIngredient;
     [HideInInspector] public bool wasLastOrderByRecipe;
-    [HideInInspector] public bool[] availableSeatForCustomers;
+    // [HideInInspector] public bool[] availableSeatForCustomers;
+    public Dictionary<int, (CustomerController customer, bool isAvailable)> availableSeatForCustomers; // Use int for seat index, and tuple (CustomerController, bool) for storing customer and availability
     [HideInInspector] public List<int> deliveryQueueIngredientsContent = new List<int>();
 
     [Header("Level Manager")]
@@ -80,10 +81,10 @@ public class MainGameController : MonoBehaviour
         canCreateNewCustomer = false;
         wasLastOrderByRecipe = false;
 
-        availableSeatForCustomers = new bool[seatPositions.Length];
-        for (int i = 0; i < availableSeatForCustomers.Length; i++)
+        availableSeatForCustomers = new Dictionary<int, (CustomerController, bool)>();
+        for (int i = 0; i < seatPositions.Length; i++)
         {
-            availableSeatForCustomers[i] = true;
+            availableSeatForCustomers.Add(i, (null, true));  // Seat is available with no customer assigned
         }
 
         progressSlider.maxValue = maxPoint;
@@ -129,13 +130,11 @@ public class MainGameController : MonoBehaviour
 
             if (canCreateNewCustomer)
             {
-                int seatIndex = UnityEngine.Random.Range(0, availableSeatForCustomers.Length);
-
-                if (availableSeatForCustomers[seatIndex])
+                int availableSeatIndex = GetAvailableSeatIndex();
+                if (availableSeatIndex != -1)
                 {
                     bool isDoubleCustomer = IsDoubleCustomer(doubleCustomerProbability);
-
-                    StartCoroutine(CreateCustomer(seatIndex, isDoubleCustomer));
+                    StartCoroutine(CreateCustomer(availableSeatIndex, isDoubleCustomer));
                 }
             }
         }
@@ -162,82 +161,88 @@ public class MainGameController : MonoBehaviour
         }
     }
 
-    private bool IsDoubleCustomer(float trueProbability)
+    private int GetAvailableSeatIndex()
     {
-        float randomValue = UnityEngine.Random.Range(0f, 1f);
-        return randomValue < trueProbability;
+        foreach (var seat in availableSeatForCustomers)
+        {
+            if (seat.Value.isAvailable)
+            {
+                return seat.Key;
+            }
+        }
+        return -1;
     }
 
-    private IEnumerator CreateCustomer(int seatIndex, bool isDoubleCustomer)
+    private bool IsDoubleCustomer(float probability)
+    {
+        return UnityEngine.Random.value < probability;
+    }
+
+    private IEnumerator CreateCustomer(int availableSeat, bool isDoubleCustomer)
     {
         canCreateNewCustomer = false;
 
         if (isDoubleCustomer)
         {
-            int[] selectedSeats = GetTwoAvailableSeats(seatIndex);
-            if (selectedSeats == null)
+            // Ensure you have two available seats
+            var selectedSeats = GetTwoAvailableSeats();
+            if (selectedSeats.Count == 0)
             {
-                CreateSingleCustomer(seatIndex, 0);
-                customerCounter++;
+                // Only one seat available, create a single customer
+                CreateSingleCustomer(availableSeat, customerEntryPos[0].position);  // Default to first entry position
             }
             else
             {
-                for (int i = 0; i < 2; i++)
-                {
-                    CreateSingleCustomer(selectedSeats[i], i);
-                    customerCounter++;
-                    yield return new WaitForSeconds(0.1f);
-                }
+                // Create two customers at two different entry positions
+                CreateSingleCustomer(selectedSeats[0], customerEntryPos[0].position);  // First customer at first entry
+                yield return new WaitForSeconds(0.1f);  // Small delay between customers
+
+                CreateSingleCustomer(selectedSeats[1], customerEntryPos[1].position);  // Second customer at second entry
             }
         }
         else
         {
-            CreateSingleCustomer(seatIndex, 0);
-            customerCounter++;
+            // Single customer case
+            CreateSingleCustomer(availableSeat, customerEntryPos[0].position);  // Default to first entry position
         }
 
         yield return new WaitForSeconds(customerDelay);
         canCreateNewCustomer = true;
     }
 
-    private int[] GetTwoAvailableSeats(int firstSeatIndex)
-    {
-        if (!availableSeatForCustomers[firstSeatIndex]) return null;
 
+    private List<int> GetTwoAvailableSeats()
+    {
         List<int> availableSeats = new List<int>();
-        for (int i = 0; i < availableSeatForCustomers.Length; i++)
+        foreach (var seat in availableSeatForCustomers)
         {
-            if (i != firstSeatIndex && availableSeatForCustomers[i])
+            if (seat.Value.isAvailable)
             {
-                availableSeats.Add(i);
+                availableSeats.Add(seat.Key);
             }
         }
 
-        if (availableSeats.Count == 0) return null;
-
-        int secondSeatIndex = availableSeats[UnityEngine.Random.Range(0, availableSeats.Count)];
-        return new int[] { firstSeatIndex, secondSeatIndex };
+        if (availableSeats.Count < 2) return new List<int>();
+        return availableSeats.GetRange(0, 2);
     }
 
-    private void CreateSingleCustomer(int seatIndex, int entryIndex)
+    private void CreateSingleCustomer(int seatIndex, Vector3 entryPosition)
     {
         CustomerController newCustomer = customerPool.customerPool.Get();
+        Vector3 seatPosition = seatPositions[seatIndex].position;
 
-        Vector3 seat = seatPositions[seatIndex].position;
-        availableSeatForCustomers[seatIndex] = false;
+        availableSeatForCustomers[seatIndex] = (newCustomer, false);
 
-        int entryPosIndex = entryIndex < customerEntryPos.Length ? entryIndex : UnityEngine.Random.Range(0, customerEntryPos.Length);
-        newCustomer.transform.position = new Vector2(customerEntryPos[entryPosIndex].position.x, seat.y);
-
-        // CustomerController customerController = newCustomer.GetComponent<CustomerController>();
+        // Set customer starting position from the entry point
+        newCustomer.transform.position = new Vector2(entryPosition.x, seatPosition.y);
         newCustomer.mySeat = seatIndex;
-        newCustomer.destination = seat;
-
-        int leavePosIndex = UnityEngine.Random.Range(0, customerLeavePoint.Length);
-        newCustomer.leavePoint = new Vector3(customerLeavePoint[leavePosIndex].position.x, seat.y, customerLeavePoint[leavePosIndex].position.z);
+        newCustomer.destination = seatPosition;
+        newCustomer.leavePoint = customerLeavePoint[UnityEngine.Random.Range(0, customerLeavePoint.Length)].position;
 
         newCustomer.Init();
     }
+
+
 
     private void CorrectOrderEvent(bool isRecipeOrder)
     {

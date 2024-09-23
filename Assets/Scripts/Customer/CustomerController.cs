@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
-using UnityEngine.Pool;
 using Spine.Unity;
 
 public class CustomerController : MonoBehaviour
@@ -27,8 +25,9 @@ public class CustomerController : MonoBehaviour
     [SpineAnimation][SerializeField] private string walkAnimationName;
     [SpineAnimation][SerializeField] private string positiveAnimationName;
     [SpineAnimation][SerializeField] private string negativeAnimationName;
-    [SerializeField] private SkeletonAnimation skeletonAnimation;
-    [SerializeField] private MeshRenderer meshRenderer;
+    [SerializeField] private SkeletonAnimation ladyCustomer;
+    [SerializeField] private SkeletonAnimation teenCustomer;
+    [SerializeField] private SkeletonAnimation manCustomer;
 
     // Private variables
     private float positiveAnimationDuration;
@@ -51,6 +50,9 @@ public class CustomerController : MonoBehaviour
     private PatienceBarController patienceBarController;
     private MoneySpawner moneySpawner;
     private CustomerPool customerPool;
+    private Customers customers;
+    private SkeletonAnimation skeletonAnimation;
+    private MeshRenderer meshRenderer;
 
     // private SpriteRenderer spriteRenderer;
     private Collider2D customerCol;
@@ -73,6 +75,10 @@ public class CustomerController : MonoBehaviour
         moneySpawner = FindObjectOfType<MoneySpawner>();
 
         isFacingRight = true;
+
+        ladyCustomer.gameObject.SetActive(false);
+        teenCustomer.gameObject.SetActive(false);
+        manCustomer.gameObject.SetActive(false);
     }
 
     private void OnEnable()
@@ -113,32 +119,106 @@ public class CustomerController : MonoBehaviour
 
     private void InitializeCustomerDetails()
     {
+        isFacingRight = true;
+        skeletonAnimation = null;
+        meshRenderer = null;
+
         // Pick a random customer from the list
-        int randomCustomer = Random.Range(0, customerList.customerDetails.Count);
+        int randomCustomerIndex = Random.Range(0, customerList.customerDetails.Count);
+        var randomCustomer = customerList.customerDetails[randomCustomerIndex];
 
-        // Set customer attributes (patience, speed, etc.)
-        customerPatience = customerList.customerDetails[randomCustomer].customerPatience;
-        customerSpeed = customerList.customerDetails[randomCustomer].customerSpeed;
+        // Set customer attributes
+        customerPatience = randomCustomer.customerPatience;
+        customerSpeed = randomCustomer.customerSpeed;
 
-        // handle customer moods and sprite changes here if necessary
-        // customerMoods = customerList.customerDetails[randomCustomer].customerMoods;
-        // spriteRenderer.sprite = customerMoods[0];
-        // spriteRenderer.color = customerList.customerDetails[randomCustomer].customerColor; // remove later if unneeded
+        SetCustomerAppearance(randomCustomer.customers);
 
-        // Set the SkeletonDataAsset
-        skeletonAnimation.skeletonDataAsset = customerList.customerDetails[randomCustomer].skeletonDataAsset;
+        // Reinitialize the skeleton with the new SkeletonDataAsset
+        InitializeSkeletonWithNewData(randomCustomer);
 
-        // Reinitialize the skeleton to apply the new SkeletonDataAsset
-        skeletonAnimation.Initialize(true);
+        // Apply the skeleton skin
+        EnsureUniqueSkin(randomCustomer);
 
+        // Set the animation based on the selected random customer
+        SetAnimation(randomCustomerIndex);
+    }
+
+    private void SetCustomerAppearance(Customers customerType)
+    {
+        // Disable all customers initially
+        ladyCustomer.gameObject.SetActive(false);
+        teenCustomer.gameObject.SetActive(false);
+        manCustomer.gameObject.SetActive(false);
+
+        // Activate the selected customer type and cache the references
+        switch (customerType)
+        {
+            case Customers.Nyonya:
+                ladyCustomer.gameObject.SetActive(true);
+                skeletonAnimation = ladyCustomer;
+                meshRenderer = ladyCustomer.GetComponent<MeshRenderer>();
+                break;
+            case Customers.Remaja:
+                teenCustomer.gameObject.SetActive(true);
+                skeletonAnimation = teenCustomer;
+                meshRenderer = teenCustomer.GetComponent<MeshRenderer>();
+                break;
+            case Customers.Bapak:
+                manCustomer.gameObject.SetActive(true);
+                skeletonAnimation = manCustomer;
+                meshRenderer = manCustomer.GetComponent<MeshRenderer>();
+                break;
+            default:
+                Debug.LogWarning("Unknown customer type!");
+                break;
+        }
+    }
+
+    private void InitializeSkeletonWithNewData(CustomerDetails customerDetail)
+    {
+        // Destroy the current skeleton animation to allow reinitialization
+        skeletonAnimation.skeletonDataAsset.Clear();  // Clear existing skeleton data
+        skeletonAnimation.skeletonDataAsset = customerDetail.skeletonDataAsset;  // Reassign new SkeletonDataAsset
+
+        skeletonAnimation.Initialize(true);  // Reinitialize the skeleton with the new data
+        meshRenderer.material = customerDetail.material;  // Update the material
+    }
+
+    private void EnsureUniqueSkin(CustomerDetails customerDetail)
+    {
+        var skeleton = skeletonAnimation.Skeleton;
+        var availableSkins = customerDetail.availableSkins;
+        string selectedSkin;
+
+        do
+        {
+            selectedSkin = availableSkins[Random.Range(0, availableSkins.Count)];
+        } while (IsSkinAlreadyUsed(selectedSkin));
+
+        skeleton.SetSkin(selectedSkin);
+        skeleton.SetSlotsToSetupPose();
+    }
+
+    private bool IsSkinAlreadyUsed(string skin)
+    {
+        foreach (var seatEntry in mainGameController.availableSeatForCustomers)
+        {
+            if (seatEntry.Value.customer != null)
+            {
+                var existingCustomer = seatEntry.Value.customer.skeletonAnimation.Skeleton;
+                if (existingCustomer.Skin.Name == skin)
+                {
+                    return true;  // Skin is already used by another customer
+                }
+            }
+        }
+        return false;
+    }
+
+    private void SetAnimation(int randomCustomer)
+    {
         // Set an animation for the newly assigned skeleton
         skeletonAnimation.AnimationState.SetAnimation(0, walkAnimationName, true);
-
-        // Set the material if applicable
-        if (meshRenderer != null)
-        {
-            meshRenderer.material = customerList.customerDetails[randomCustomer].material;
-        }
 
         positiveAnimationDuration = customerList.customerDetails[randomCustomer].positiveAnimationDuration;
     }
@@ -236,7 +316,7 @@ public class CustomerController : MonoBehaviour
     private void FlipCheck(Vector3 target)
     {
         // Flip the sprite to face the correct direction
-        if ((transform.position.x > target.x && isFacingRight) || (transform.position.x < target.x && !isFacingRight))
+        if ((meshRenderer.transform.position.x > target.x && isFacingRight) || (meshRenderer.transform.position.x < target.x && !isFacingRight))
         {
             Flip();
         }
@@ -326,8 +406,8 @@ public class CustomerController : MonoBehaviour
         // Check if the positive or negative animation is playing before switching to walk animation
         yield return StartCoroutine(CheckAndSetWalkAnimation(positiveAnimationDuration));
 
-        // Mark the seat as available and hide HUD and highlight
-        mainGameController.availableSeatForCustomers[mySeat] = true;
+        // Ensure the seat is marked available after leaving and hide HUD and highlight
+        mainGameController.availableSeatForCustomers[mySeat] = (null, true);  // Release seat
         HudPos.SetActive(false);
         transform.GetChild(transform.childCount - 1).gameObject.SetActive(false);
 
@@ -353,6 +433,8 @@ public class CustomerController : MonoBehaviour
 
             yield return null;
         }
+
+        meshRenderer.transform.eulerAngles = Vector3.zero;
 
         orderManager.ReleaseAllIngredients();
         customerPool.customerPool.Release(this);  // Return customer to the pool

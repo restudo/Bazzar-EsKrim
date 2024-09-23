@@ -1,83 +1,237 @@
 
 Spine_Bapak.png
-size: 1024,1024
+size: 2048,2048
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-bapak_qf_armnear
-  rotate: true
-  xy: 283, 638
+bapak1/bapak_qf_armnear
+  rotate: false
+  xy: 804, 583
   size: 125, 145
   orig: 126, 146
   offset: 1, 1
   index: -1
-bapak_qf_body
-  rotate: false
-  xy: 2, 380
+bapak1/bapak_qf_body
+  rotate: true
+  xy: 546, 416
   size: 312, 256
   orig: 312, 257
   offset: 0, 1
   index: -1
-bapak_qf_head_happy
-  rotate: true
-  xy: 316, 2
+bapak1/bapak_qf_head_happy
+  rotate: false
+  xy: 2, 1354
   size: 310, 312
   orig: 310, 312
   offset: 0, 0
   index: -1
-bapak_qf_head_neutral
+bapak1/bapak_qf_head_neutral
   rotate: true
-  xy: 2, 68
+  xy: 2, 1042
   size: 310, 312
   orig: 310, 312
   offset: 0, 0
   index: -1
-bapak_qf_head_unhappy
+bapak1/bapak_qf_head_unhappy
   rotate: true
-  xy: 630, 2
+  xy: 314, 1356
   size: 310, 312
   orig: 310, 312
   offset: 0, 0
   index: -1
-bapak_s_armfar
+bapak1/bapak_s_armfar
   rotate: true
-  xy: 676, 604
+  xy: 931, 327
   size: 159, 224
   orig: 159, 225
   offset: 0, 0
   index: -1
-bapak_s_armnear
+bapak1/bapak_s_armnear
   rotate: true
-  xy: 430, 624
+  xy: 1157, 347
   size: 139, 244
   orig: 140, 244
   offset: 0, 0
   index: -1
-bapak_s_body
-  rotate: true
-  xy: 316, 352
+bapak1/bapak_s_body
+  rotate: false
+  xy: 942, 488
   size: 270, 287
   orig: 271, 287
   offset: 0, 0
   index: -1
-bapak_s_head
-  rotate: true
-  xy: 605, 314
+bapak1/bapak_s_head
+  rotate: false
+  xy: 942, 1371
   size: 288, 295
   orig: 288, 295
   offset: 0, 0
   index: -1
-bapak_s_legfar
-  rotate: true
-  xy: 2, 671
+bapak1/bapak_s_legfar
+  rotate: false
+  xy: 518, 65
   size: 92, 123
   orig: 92, 124
   offset: 0, 1
   index: -1
-bapak_s_legnear
-  rotate: true
-  xy: 127, 639
+bapak1/bapak_s_legnear
+  rotate: false
+  xy: 1403, 192
   size: 124, 154
   orig: 124, 155
+  offset: 0, 1
+  index: -1
+bapak3/bapak_s_legnear
+  rotate: false
+  xy: 1403, 192
+  size: 124, 154
+  orig: 124, 155
+  offset: 0, 1
+  index: -1
+bapak2/bapak_qf_armnear
+  rotate: false
+  xy: 804, 436
+  size: 125, 145
+  orig: 126, 146
+  offset: 1, 1
+  index: -1
+bapak2/bapak_qf_body
+  rotate: true
+  xy: 2, 127
+  size: 312, 256
+  orig: 312, 257
+  offset: 0, 1
+  index: -1
+bapak2/bapak_qf_head_happy
+  rotate: false
+  xy: 316, 1042
+  size: 310, 312
+  orig: 310, 312
+  offset: 0, 0
+  index: -1
+bapak2/bapak_qf_head_neutral
+  rotate: true
+  xy: 2, 730
+  size: 310, 312
+  orig: 310, 312
+  offset: 0, 0
+  index: -1
+bapak2/bapak_qf_head_unhappy
+  rotate: true
+  xy: 316, 730
+  size: 310, 312
+  orig: 310, 312
+  offset: 0, 0
+  index: -1
+bapak2/bapak_s_armfar
+  rotate: false
+  xy: 518, 190
+  size: 159, 224
+  orig: 159, 225
+  offset: 0, 0
+  index: -1
+bapak2/bapak_s_armnear
+  rotate: true
+  xy: 1214, 636
+  size: 139, 244
+  orig: 140, 244
+  offset: 0, 0
+  index: -1
+bapak2/bapak_s_body
+  rotate: false
+  xy: 2, 441
+  size: 270, 287
+  orig: 271, 287
+  offset: 0, 0
+  index: -1
+bapak2/bapak_s_head
+  rotate: false
+  xy: 942, 1074
+  size: 288, 295
+  orig: 288, 295
+  offset: 0, 0
+  index: -1
+bapak2/bapak_s_legfar
+  rotate: true
+  xy: 2, 33
+  size: 92, 123
+  orig: 92, 124
+  offset: 0, 1
+  index: -1
+bapak2/bapak_s_legnear
+  rotate: false
+  xy: 840, 171
+  size: 124, 154
+  orig: 124, 155
+  offset: 0, 1
+  index: -1
+bapak3/bapak_qf_armnear
+  rotate: false
+  xy: 1403, 348
+  size: 125, 145
+  orig: 126, 146
+  offset: 1, 1
+  index: -1
+bapak3/bapak_qf_body
+  rotate: true
+  xy: 260, 127
+  size: 312, 256
+  orig: 312, 257
+  offset: 0, 1
+  index: -1
+bapak3/bapak_qf_head_happy
+  rotate: true
+  xy: 628, 1356
+  size: 310, 312
+  orig: 310, 312
+  offset: 0, 0
+  index: -1
+bapak3/bapak_qf_head_neutral
+  rotate: true
+  xy: 628, 1044
+  size: 310, 312
+  orig: 310, 312
+  offset: 0, 0
+  index: -1
+bapak3/bapak_qf_head_unhappy
+  rotate: false
+  xy: 630, 730
+  size: 310, 312
+  orig: 310, 312
+  offset: 0, 0
+  index: -1
+bapak3/bapak_s_armfar
+  rotate: false
+  xy: 679, 190
+  size: 159, 224
+  orig: 159, 225
+  offset: 0, 0
+  index: -1
+bapak3/bapak_s_armnear
+  rotate: true
+  xy: 1214, 495
+  size: 139, 244
+  orig: 140, 244
+  offset: 0, 0
+  index: -1
+bapak3/bapak_s_body
+  rotate: false
+  xy: 274, 441
+  size: 270, 287
+  orig: 271, 287
+  offset: 0, 0
+  index: -1
+bapak3/bapak_s_head
+  rotate: false
+  xy: 942, 777
+  size: 288, 295
+  orig: 288, 295
+  offset: 0, 0
+  index: -1
+bapak3/bapak_s_legfar
+  rotate: false
+  xy: 127, 2
+  size: 92, 123
+  orig: 92, 124
   offset: 0, 1
   index: -1

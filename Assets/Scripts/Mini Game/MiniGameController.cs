@@ -183,6 +183,9 @@ public class MiniGameController : MonoBehaviour
         recipeVisual.sprite = GameManager.Instance.recipeLists[recipeIndex].recipeSprite;
         recipeVisual.SetNativeSize();
 
+        recipeUnlockUI.transform.localScale = Vector3.zero;
+        recipeUnlockUI.alpha = 0;
+
         // Create a sequence for chaining animations
         Sequence sequence = DOTween.Sequence();
 
@@ -190,9 +193,6 @@ public class MiniGameController : MonoBehaviour
         sequence.AppendCallback(() =>
             {
                 // gameOverWinUI.gameObject.SetActive(false);
-
-                recipeUnlockUI.transform.localScale = Vector3.zero;
-                recipeUnlockUI.alpha = 0;
 
                 // Set recipe visual to center horizontally
                 recipeVisual.transform.localPosition = new Vector3(0, recipeVisual.transform.localPosition.y, recipeVisual.transform.localPosition.z);
@@ -207,7 +207,11 @@ public class MiniGameController : MonoBehaviour
             .Append(recipeVisual.transform.DOLocalMoveX(recipeInitialX, recipeMoveDuration).SetEase(Ease.InOutQuad))
 
             // Fade in the recipeUnlockUI
-            .Append(recipeUnlockUI.DOFade(1, recipeFadeDuration).SetEase(Ease.OutSine));
+            .Append(recipeUnlockUI.DOFade(1, recipeFadeDuration).SetEase(Ease.OutSine))
+            .AppendCallback(() =>
+            {
+                levelManager.AddMiniGameOverButtonEvent();
+            });
 
         // Play the sequence
         sequence.Play();

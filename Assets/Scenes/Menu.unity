@@ -3903,6 +3903,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -75
       objectReference: {fileID: 0}
+    - target: {fileID: 6028561323070058026, guid: bec02ab2bfb64c74fa1541b8c61c947c, type: 3}
+      propertyPath: m_text
+      value: Truck Ice Cone
+      objectReference: {fileID: 0}
     - target: {fileID: 6295666480172678069, guid: bec02ab2bfb64c74fa1541b8c61c947c, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -4078,10 +4082,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 358d9ed71fc4ec142ba61bf29dbeb210, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panSpeed: 4
-  smoothTime: 0.2
+  panSpeed: 120
+  smoothTime: 0.3
   minX: 0
   maxX: 31.2
+  dragThreshold: 0.6
 --- !u!1001 &615570272
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7239,7 +7244,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1238324780
 Transform:
   m_ObjectHideFlags: 0
@@ -9184,6 +9189,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -28
       objectReference: {fileID: 0}
+    - target: {fileID: 6028561323070058026, guid: bec02ab2bfb64c74fa1541b8c61c947c, type: 3}
+      propertyPath: m_text
+      value: Kios Dingin
+      objectReference: {fileID: 0}
     - target: {fileID: 7228371909372620238, guid: bec02ab2bfb64c74fa1541b8c61c947c, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -9851,7 +9860,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -542, y: -288.86}
+  m_AnchoredPosition: {x: -542, y: -315.7}
   m_SizeDelta: {x: 288.51, y: 102.581}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1684222025
@@ -10766,7 +10775,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1958835035
 Transform:
   m_ObjectHideFlags: 0
@@ -11206,6 +11215,10 @@ PrefabInstance:
     - target: {fileID: 5382295217343483640, guid: bec02ab2bfb64c74fa1541b8c61c947c, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -12
+      objectReference: {fileID: 0}
+    - target: {fileID: 6028561323070058026, guid: bec02ab2bfb64c74fa1541b8c61c947c, type: 3}
+      propertyPath: m_text
+      value: Mobil Scoop
       objectReference: {fileID: 0}
     - target: {fileID: 7228371909372620238, guid: bec02ab2bfb64c74fa1541b8c61c947c, type: 3}
       propertyPath: m_Sprite
@@ -11832,6 +11845,10 @@ PrefabInstance:
       propertyPath: lockedIcon
       value: 
       objectReference: {fileID: 2101923678}
+    - target: {fileID: 3683182030941700499, guid: bec02ab2bfb64c74fa1541b8c61c947c, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -174.25
+      objectReference: {fileID: 0}
     - target: {fileID: 4005739558141120154, guid: bec02ab2bfb64c74fa1541b8c61c947c, type: 3}
       propertyPath: m_TargetGraphic
       value: 
@@ -11935,6 +11952,10 @@ PrefabInstance:
     - target: {fileID: 5382295217343483640, guid: bec02ab2bfb64c74fa1541b8c61c947c, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -108
+      objectReference: {fileID: 0}
+    - target: {fileID: 6028561323070058026, guid: bec02ab2bfb64c74fa1541b8c61c947c, type: 3}
+      propertyPath: m_text
+      value: Sweet Cafe
       objectReference: {fileID: 0}
     - target: {fileID: 6295666480172678069, guid: bec02ab2bfb64c74fa1541b8c61c947c, type: 3}
       propertyPath: m_Sprite
@@ -12725,6 +12746,10 @@ PrefabInstance:
     - target: {fileID: 5275000777058863456, guid: bec02ab2bfb64c74fa1541b8c61c947c, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6028561323070058026, guid: bec02ab2bfb64c74fa1541b8c61c947c, type: 3}
+      propertyPath: m_text
+      value: Es Keliling
       objectReference: {fileID: 0}
     - target: {fileID: 7473073609037394779, guid: bec02ab2bfb64c74fa1541b8c61c947c, type: 3}
       propertyPath: m_AnchoredPosition.x

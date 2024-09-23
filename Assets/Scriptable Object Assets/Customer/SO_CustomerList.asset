@@ -15,16 +15,31 @@ MonoBehaviour:
   customerDetails:
   - customerPatience: 30
     customerSpeed: 4
+    customers: 0
     skeletonDataAsset: {fileID: 11400000, guid: f74a79d7963e07a47bff886ad59372d3, type: 2}
     material: {fileID: 2100000, guid: 423554433d4941f4497b3734e648aa79, type: 2}
+    availableSkins:
+    - nyonya1
+    - nyonya2
+    - nyonya3
     positiveAnimationDuration: 1.5
   - customerPatience: 40
     customerSpeed: 3.5
+    customers: 1
     skeletonDataAsset: {fileID: 11400000, guid: 236d565faa18c0746879656513ecf002, type: 2}
     material: {fileID: 2100000, guid: bc8fe5e13e512544787e84ceafd605be, type: 2}
+    availableSkins:
+    - remaja1
+    - remaja2
+    - remaja3
     positiveAnimationDuration: 1.5
   - customerPatience: 50
     customerSpeed: 3
+    customers: 2
     skeletonDataAsset: {fileID: 11400000, guid: 7b5d27ba59d3181419548e6c5d9bbbaf, type: 2}
     material: {fileID: 2100000, guid: 3212a209dcb84074c848cf54552fba7b, type: 2}
+    availableSkins:
+    - bapak1
+    - bapak2
+    - bapak3
     positiveAnimationDuration: 1.5

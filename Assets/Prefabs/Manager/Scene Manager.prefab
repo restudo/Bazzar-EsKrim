@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f1ad0e4fc9d8894cbb7cf37414108e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeDuration: 1.7
+  fadeDuration: 1.3
   faderImageMaxScale: 13
   faderCanvas: {fileID: 5355316813544196730}
   faderImage: {fileID: 1827027521625924813}

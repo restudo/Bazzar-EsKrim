@@ -40,6 +40,8 @@ public class IngredientPool : MonoBehaviour
 
     private void OnReturnIngredientToPool(Ingredient ingredient)
     {
+        lastIngredient = null;
+
         // set back to normal
         ingredient.transform.localPosition = Vector3.zero;
         ingredient.IngredientCode = 0;

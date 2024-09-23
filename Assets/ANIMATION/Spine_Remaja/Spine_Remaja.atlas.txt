@@ -1,96 +1,278 @@
 
 Spine_Remaja.png
-size: 2048,512
+size: 2048,1024
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-remaja_qf_armfar
-  rotate: false
-  xy: 1058, 312
+remaja1/remaja_qf_armfar
+  rotate: true
+  xy: 905, 862
   size: 103, 187
   orig: 103, 187
   offset: 0, 0
   index: -1
-remaja_qf_armnear
-  rotate: true
-  xy: 699, 30
+remaja1/remaja_qf_armnear
+  rotate: false
+  xy: 1896, 762
   size: 139, 203
   orig: 139, 203
   offset: 0, 0
   index: -1
-remaja_qf_body
+remaja1/remaja_qf_body
   rotate: true
-  xy: 2, 2
+  xy: 1281, 661
   size: 167, 264
   orig: 167, 264
   offset: 0, 0
   index: -1
-remaja_qf_finger
+remaja1/remaja_qf_finger
   rotate: true
-  xy: 1163, 332
+  xy: 2, 913
   size: 52, 76
   orig: 53, 76
   offset: 0, 0
   index: -1
-remaja_qf_head_happy
-  rotate: false
-  xy: 2, 171
-  size: 260, 328
-  orig: 260, 328
-  offset: 0, 0
-  index: -1
-remaja_qf_head_neutral
-  rotate: false
-  xy: 264, 171
-  size: 260, 328
-  orig: 260, 328
-  offset: 0, 0
-  index: -1
-remaja_qf_head_unhappy
-  rotate: false
-  xy: 526, 171
-  size: 260, 328
-  orig: 260, 328
-  offset: 0, 0
-  index: -1
-remaja_s_armfar
+remaja3/remaja_qf_finger
   rotate: true
-  xy: 487, 34
+  xy: 2, 913
+  size: 52, 76
+  orig: 53, 76
+  offset: 0, 0
+  index: -1
+remaja1/remaja_qf_head_happy
+  rotate: true
+  xy: 1042, 399
+  size: 260, 328
+  orig: 260, 328
+  offset: 0, 0
+  index: -1
+remaja1/remaja_qf_head_neutral
+  rotate: true
+  xy: 1372, 399
+  size: 260, 328
+  orig: 260, 328
+  offset: 0, 0
+  index: -1
+remaja1/remaja_qf_head_unhappy
+  rotate: true
+  xy: 1702, 399
+  size: 260, 328
+  orig: 260, 328
+  offset: 0, 0
+  index: -1
+remaja1/remaja_s_armfar
+  rotate: true
+  xy: 1472, 830
   size: 135, 210
   orig: 136, 212
   offset: 0, 1
   index: -1
-remaja_s_armnear
+remaja1/remaja_s_armnear
   rotate: true
-  xy: 268, 30
+  xy: 214, 751
   size: 139, 217
   orig: 140, 218
   offset: 1, 0
   index: -1
-remaja_s_body
+remaja1/remaja_s_body
   rotate: true
-  xy: 904, 23
+  xy: 268, 547
   size: 185, 256
   orig: 186, 256
   offset: 0, 0
   index: -1
-remaja_s_head
-  rotate: false
-  xy: 788, 210
+remaja1/remaja_s_head
+  rotate: true
+  xy: 2, 15
   size: 268, 289
   orig: 268, 289
   offset: 0, 0
   index: -1
-remaja_s_legfar
-  rotate: false
-  xy: 1163, 386
+remaja1/remaja_s_legfar
+  rotate: true
+  xy: 158, 892
   size: 73, 113
   orig: 73, 113
   offset: 0, 0
   index: -1
-remaja_s_legnear
+remaja1/remaja_s_legnear
   rotate: true
-  xy: 1058, 220
+  xy: 503, 875
+  size: 90, 132
+  orig: 91, 133
+  offset: 1, 1
+  index: -1
+remaja2/remaja_qf_armfar
+  rotate: true
+  xy: 1094, 862
+  size: 103, 187
+  orig: 103, 187
+  offset: 0, 0
+  index: -1
+remaja2/remaja_qf_armnear
+  rotate: true
+  xy: 433, 734
+  size: 139, 203
+  orig: 139, 203
+  offset: 0, 0
+  index: -1
+remaja2/remaja_qf_body
+  rotate: true
+  xy: 1547, 661
+  size: 167, 264
+  orig: 167, 264
+  offset: 0, 0
+  index: -1
+remaja2/remaja_qf_finger
+  rotate: true
+  xy: 80, 913
+  size: 52, 76
+  orig: 53, 76
+  offset: 0, 0
+  index: -1
+remaja2/remaja_qf_head_happy
+  rotate: true
+  xy: 2, 285
+  size: 260, 328
+  orig: 260, 328
+  offset: 0, 0
+  index: -1
+remaja2/remaja_qf_head_neutral
+  rotate: true
+  xy: 332, 285
+  size: 260, 328
+  orig: 260, 328
+  offset: 0, 0
+  index: -1
+remaja2/remaja_qf_head_unhappy
+  rotate: true
+  xy: 662, 272
+  size: 260, 328
+  orig: 260, 328
+  offset: 0, 0
+  index: -1
+remaja2/remaja_s_armfar
+  rotate: true
+  xy: 1684, 830
+  size: 135, 210
+  orig: 136, 212
+  offset: 0, 1
+  index: -1
+remaja2/remaja_s_armnear
+  rotate: true
+  xy: 638, 734
+  size: 139, 217
+  orig: 140, 218
+  offset: 1, 0
+  index: -1
+remaja2/remaja_s_body
+  rotate: true
+  xy: 526, 547
+  size: 185, 256
+  orig: 186, 256
+  offset: 0, 0
+  index: -1
+remaja2/remaja_s_head
+  rotate: true
+  xy: 293, 15
+  size: 268, 289
+  orig: 268, 289
+  offset: 0, 0
+  index: -1
+remaja2/remaja_s_legfar
+  rotate: true
+  xy: 273, 892
+  size: 73, 113
+  orig: 73, 113
+  offset: 0, 0
+  index: -1
+remaja2/remaja_s_legnear
+  rotate: true
+  xy: 637, 875
+  size: 90, 132
+  orig: 91, 133
+  offset: 1, 1
+  index: -1
+remaja3/remaja_qf_armfar
+  rotate: true
+  xy: 1283, 862
+  size: 103, 187
+  orig: 103, 187
+  offset: 0, 0
+  index: -1
+remaja3/remaja_qf_armnear
+  rotate: true
+  xy: 857, 721
+  size: 139, 203
+  orig: 139, 203
+  offset: 0, 0
+  index: -1
+remaja3/remaja_qf_body
+  rotate: true
+  xy: 2, 582
+  size: 167, 264
+  orig: 167, 264
+  offset: 0, 0
+  index: -1
+remaja3/remaja_qf_head_happy
+  rotate: true
+  xy: 992, 137
+  size: 260, 328
+  orig: 260, 328
+  offset: 0, 0
+  index: -1
+remaja3/remaja_qf_head_neutral
+  rotate: true
+  xy: 1322, 137
+  size: 260, 328
+  orig: 260, 328
+  offset: 0, 0
+  index: -1
+remaja3/remaja_qf_head_unhappy
+  rotate: true
+  xy: 1652, 137
+  size: 260, 328
+  orig: 260, 328
+  offset: 0, 0
+  index: -1
+remaja3/remaja_s_armfar
+  rotate: true
+  xy: 2, 755
+  size: 135, 210
+  orig: 136, 212
+  offset: 0, 1
+  index: -1
+remaja3/remaja_s_armnear
+  rotate: true
+  xy: 1062, 721
+  size: 139, 217
+  orig: 140, 218
+  offset: 1, 0
+  index: -1
+remaja3/remaja_s_body
+  rotate: true
+  xy: 784, 534
+  size: 185, 256
+  orig: 186, 256
+  offset: 0, 0
+  index: -1
+remaja3/remaja_s_head
+  rotate: true
+  xy: 584, 2
+  size: 268, 289
+  orig: 268, 289
+  offset: 0, 0
+  index: -1
+remaja3/remaja_s_legfar
+  rotate: true
+  xy: 388, 892
+  size: 73, 113
+  orig: 73, 113
+  offset: 0, 0
+  index: -1
+remaja3/remaja_s_legnear
+  rotate: true
+  xy: 771, 875
   size: 90, 132
   orig: 91, 133
   offset: 1, 1

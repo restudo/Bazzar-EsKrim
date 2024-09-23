@@ -258,13 +258,12 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     private bool IsInvalidIngredientPlacement(GameObject ingredientHolderObj, Transform lastIngredient)
     {
-        if (lastIngredient != null && lastIngredient.gameObject.activeSelf)
+        if (lastIngredient == null && ingredientDetails.ingredientType != IngredientType.Base)
         {
-            if (lastIngredient == null && ingredientDetails.ingredientType != IngredientType.Base)
-            {
-                return true;
-            }
-
+            return true;
+        }
+        else if (lastIngredient != null && lastIngredient.gameObject.activeSelf)
+        {
             if (lastIngredient != null && lastIngredient.childCount > 0)
             {
                 if (mainGameController.deliveryQueueIngredient >= mainGameController.maxOrderHeight)

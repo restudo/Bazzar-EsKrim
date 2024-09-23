@@ -263,6 +263,11 @@ public class OrderManager : MonoBehaviour
 
         productIngredientsCodes = new int[maxOrderByRecipe];
 
+        for (int i = 0; i < maxOrderByRecipe; i++)
+        {
+            productIngredientsCodes[i] = (int)levelDataLists[GameManager.Instance.currentLevel - 1].mainGameLevelData.sO_RecipeList[randomRecipeIndex].ingredientsCodes[i];
+        }
+
         Invoke("DisplayOrder", 0.5f);
     }
 
