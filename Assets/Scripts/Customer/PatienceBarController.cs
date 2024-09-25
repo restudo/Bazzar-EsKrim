@@ -78,7 +78,7 @@ public class PatienceBarController : MonoBehaviour
 
     private void HandlePatienceDepleted()
     {
-        StartCoroutine(customerController.Leave());
+        customerController.StartLeaving();
     }
 
     // Optional: To stop decreasing patience at any point

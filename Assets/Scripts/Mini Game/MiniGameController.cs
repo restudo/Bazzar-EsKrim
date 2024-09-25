@@ -33,6 +33,12 @@ public class MiniGameController : MonoBehaviour
     [SerializeField] private CanvasGroup recipeUnlockUI;
     [SerializeField] private Image recipeVisual;
     [SerializeField] private TextMeshProUGUI recipeText;
+    private const float recipeUnlockShowDuration = 2f;
+    private const float recipeMoveDuration = 0.8f;
+    private const float recipeFadeDuration = 1.5f;
+    private const float delayBeforeMove = 0.8f;
+    // private const float gameOverWinCloseDuration = 1f;
+
     [Space(5)]
     // [SerializeField] private RecipeDetails[] recipes;
 
@@ -132,7 +138,7 @@ public class MiniGameController : MonoBehaviour
         {
             GameManager.Instance.isGameActive = false;
 
-            EventHandler.CallminiGameWinEvent();
+            // EventHandler.CallminiGameWinEvent();
             StartCoroutine(Win());
         }
     }
@@ -169,12 +175,6 @@ public class MiniGameController : MonoBehaviour
 
     public void OpenNewRecipePanel()
     {
-        // const float gameOverWinCloseDuration = 1f;
-        const float recipeUnlockShowDuration = 2f;
-        const float recipeMoveDuration = 0.8f;
-        const float recipeFadeDuration = 1.5f;
-        const float delayBeforeMove = 0.8f;
-
         int currentLevel = GameManager.Instance.currentLevel;
         int recipeIndex = currentLevel - 1;
         float recipeInitialX = recipeVisual.transform.localPosition.x;

@@ -8,7 +8,7 @@ namespace BazarEsKrim
         // The aspect ratio data for this GameObject
         public List<AspectRatioData> aspectRatios = new List<AspectRatioData>();
 
-        private const float tolerance = 0.05f; // 5% tolerance;
+        private const float tolerance = 0.1f; // 10% tolerance;
 
         private void Start()
         {

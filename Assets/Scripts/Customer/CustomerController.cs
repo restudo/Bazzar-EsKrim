@@ -6,7 +6,7 @@ using Spine.Unity;
 public class CustomerController : MonoBehaviour
 {
     // Public properties
-    public float customerPatience = 30.0f;  // seconds 
+    public float customerPatience = 30.0f;  // seconds
 
     [HideInInspector] public int mySeat;
     [HideInInspector] public Vector3 destination;
@@ -42,40 +42,32 @@ public class CustomerController : MonoBehaviour
 
     private Vector2 mousePosition;
     private GameObject deliveryPlate;
-    private GameObject mainGameControllerObj;
-    private Collider2D deliveryPlateCol;
     private MainGameController mainGameController;
+    private Collider2D deliveryPlateCol;
     private OrderManager orderManager;
     private IngredientHolder ingredientHolder;
     private PatienceBarController patienceBarController;
     private MoneySpawner moneySpawner;
     private CustomerPool customerPool;
-    private Customers customers;
     private SkeletonAnimation skeletonAnimation;
     private MeshRenderer meshRenderer;
-
-    // private SpriteRenderer spriteRenderer;
     private Collider2D customerCol;
 
     private void Awake()
     {
         // Cache component references
-        // spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         customerCol = GetComponent<Collider2D>();
 
         // Find and cache references to other objects in the scene
-        mainGameControllerObj = FindObjectOfType<MainGameController>().gameObject;
-        mainGameController = mainGameControllerObj.GetComponent<MainGameController>();
+        mainGameController = FindObjectOfType<MainGameController>();
         customerPool = mainGameController.GetComponent<CustomerPool>();
         orderManager = GetComponent<OrderManager>();
-        deliveryPlate = FindObjectOfType<IngredientHolder>().gameObject;
-        ingredientHolder = deliveryPlate.GetComponent<IngredientHolder>();
-        deliveryPlateCol = deliveryPlate.GetComponent<Collider2D>();
+        ingredientHolder = FindObjectOfType<IngredientHolder>();
+        deliveryPlateCol = ingredientHolder.GetComponent<Collider2D>();
         patienceBarController = GetComponent<PatienceBarController>();
         moneySpawner = FindObjectOfType<MoneySpawner>();
 
-        isFacingRight = true;
-
+        // Ensure all customer objects are initially disabled
         ladyCustomer.gameObject.SetActive(false);
         teenCustomer.gameObject.SetActive(false);
         manCustomer.gameObject.SetActive(false);
@@ -83,20 +75,20 @@ public class CustomerController : MonoBehaviour
 
     private void OnEnable()
     {
-        EventHandler.ChaseCustomer += ChaseCustomer;
+        EventHandler.ChaseCustomer += StartLeaving;
         EventHandler.TogglePause += TogglePauseAnim;
     }
 
     private void OnDisable()
     {
-        EventHandler.ChaseCustomer -= ChaseCustomer;
+        EventHandler.ChaseCustomer -= StartLeaving;
         EventHandler.TogglePause -= TogglePauseAnim;
     }
 
     private void LateUpdate()
     {
-        // Check if the customer is close enough to the delivery plate to receive the order
-        if (ingredientHolder.canDeliverOrder)
+        // Check distance to the delivery only if the customer is on the seat and not leaving
+        if (isOnSeat && !isLeaving && ingredientHolder.canDeliverOrder)
         {
             CheckDistanceToDelivery();
         }
@@ -104,16 +96,9 @@ public class CustomerController : MonoBehaviour
 
     public void Init()
     {
-        // Initialize customer with random details
         InitializeCustomerDetails();
-
-        // Reset flags and variables
         ResetFlagsAndVariables();
-
-        // Hide the HUD and highlight
         HideHudAndHighlight();
-
-        // Start the customer movement coroutine
         StartCoroutine(GoToSeat());
     }
 
@@ -124,23 +109,14 @@ public class CustomerController : MonoBehaviour
         meshRenderer = null;
 
         // Pick a random customer from the list
-        int randomCustomerIndex = Random.Range(0, customerList.customerDetails.Count);
-        var randomCustomer = customerList.customerDetails[randomCustomerIndex];
-
-        // Set customer attributes
+        var randomCustomer = customerList.customerDetails[Random.Range(0, customerList.customerDetails.Count)];
         customerPatience = randomCustomer.customerPatience;
         customerSpeed = randomCustomer.customerSpeed;
 
         SetCustomerAppearance(randomCustomer.customers);
-
-        // Reinitialize the skeleton with the new SkeletonDataAsset
         InitializeSkeletonWithNewData(randomCustomer);
-
-        // Apply the skeleton skin
         EnsureUniqueSkin(randomCustomer);
-
-        // Set the animation based on the selected random customer
-        SetAnimation(randomCustomerIndex);
+        SetAnimation(randomCustomer);
     }
 
     private void SetCustomerAppearance(Customers customerType)
@@ -150,7 +126,7 @@ public class CustomerController : MonoBehaviour
         teenCustomer.gameObject.SetActive(false);
         manCustomer.gameObject.SetActive(false);
 
-        // Activate the selected customer type and cache the references
+        // Enable the selected customer and cache references
         switch (customerType)
         {
             case Customers.Nyonya:
@@ -168,20 +144,15 @@ public class CustomerController : MonoBehaviour
                 skeletonAnimation = manCustomer;
                 meshRenderer = manCustomer.GetComponent<MeshRenderer>();
                 break;
-            default:
-                Debug.LogWarning("Unknown customer type!");
-                break;
         }
     }
 
     private void InitializeSkeletonWithNewData(CustomerDetails customerDetail)
     {
-        // Destroy the current skeleton animation to allow reinitialization
-        skeletonAnimation.skeletonDataAsset.Clear();  // Clear existing skeleton data
-        skeletonAnimation.skeletonDataAsset = customerDetail.skeletonDataAsset;  // Reassign new SkeletonDataAsset
-
-        skeletonAnimation.Initialize(true);  // Reinitialize the skeleton with the new data
-        meshRenderer.material = customerDetail.material;  // Update the material
+        skeletonAnimation.skeletonDataAsset.Clear();
+        skeletonAnimation.skeletonDataAsset = customerDetail.skeletonDataAsset;
+        skeletonAnimation.Initialize(true);
+        meshRenderer.material = customerDetail.material;
     }
 
     private void EnsureUniqueSkin(CustomerDetails customerDetail)
@@ -203,48 +174,35 @@ public class CustomerController : MonoBehaviour
     {
         foreach (var seatEntry in mainGameController.availableSeatForCustomers)
         {
-            if (seatEntry.Value.customer != null)
+            if (seatEntry.Value.customer != null &&
+                seatEntry.Value.customer.skeletonAnimation.Skeleton.Skin.Name == skin)
             {
-                var existingCustomer = seatEntry.Value.customer.skeletonAnimation.Skeleton;
-                if (existingCustomer.Skin.Name == skin)
-                {
-                    return true;  // Skin is already used by another customer
-                }
+                return true;
             }
         }
         return false;
     }
 
-    private void SetAnimation(int randomCustomer)
+    private void SetAnimation(CustomerDetails customerDetail)
     {
-        // Set an animation for the newly assigned skeleton
         skeletonAnimation.AnimationState.SetAnimation(0, walkAnimationName, true);
-
-        positiveAnimationDuration = customerList.customerDetails[randomCustomer].positiveAnimationDuration;
+        positiveAnimationDuration = customerDetail.positiveAnimationDuration;
     }
 
     private void ResetFlagsAndVariables()
     {
-        // Reset all relevant flags
         isCloseEnoughToDelivery = false;
         isOnSeat = false;
         isLeaving = false;
         isRecipeOrder = false;
-
-        // Reset mood and max order size
         moodIndex = 0;
         maxOrderSize = mainGameController.maxOrderHeight;
-
-        // Call the order function (assumed this handles order-related initialization)
         Order();
     }
 
     private void HideHudAndHighlight()
     {
-        // Hide the HUD position and any highlight on the customer
         HudPos.SetActive(false);
-
-        // Hide the last child, which seems to be the highlight or indicator
         transform.GetChild(transform.childCount - 1).gameObject.SetActive(false);
     }
 
@@ -252,30 +210,23 @@ public class CustomerController : MonoBehaviour
     {
         if (mainGameController.customerCounter == mainGameController.spawnSpecialRecipeAfterXCustomer)
         {
-            // Ensure to run order by recipe when customer counter is equal to the threshold
             orderManager.OrderByRecipe(mainGameController.maxSpecialRecipeInThisLevel);
             isRecipeOrder = true;
             mainGameController.wasLastOrderByRecipe = true;
-
             mainGameController.customerCounter = 0;
         }
         else
         {
-            // Randomly decide between OrderByRecipe and OrderRandomProduct
             if (Random.value > 0.5f && mainGameController.maxSpecialRecipeInThisLevel > 0 && !mainGameController.wasLastOrderByRecipe)
             {
-                // Generate order by recipe
                 orderManager.OrderByRecipe(mainGameController.maxSpecialRecipeInThisLevel);
                 isRecipeOrder = true;
                 mainGameController.wasLastOrderByRecipe = true;
-
                 mainGameController.customerCounter = 0;
             }
             else
             {
-                // Generate a random order
-                int randomMaxOrder = Random.Range(2, maxOrderSize + 1);
-                orderManager.OrderRandomProduct(randomMaxOrder);
+                orderManager.OrderRandomProduct(Random.Range(2, maxOrderSize + 1));
                 isRecipeOrder = false;
                 mainGameController.wasLastOrderByRecipe = false;
             }
@@ -284,17 +235,14 @@ public class CustomerController : MonoBehaviour
 
     private IEnumerator GoToSeat()
     {
-        // Flip sprite if necessary based on the destination
         FlipCheck(destination);
 
-        while ((transform.position - new Vector3(destination.x, transform.position.y, destination.z)).sqrMagnitude > 0.01f)
+        Vector3 targetPosition = new Vector3(destination.x, transform.position.y, destination.z);
+        while ((transform.position - targetPosition).sqrMagnitude > 0.01f)
         {
             if (!GameManager.Instance.isGamePaused)
             {
-                // Move towards the destination
-                Vector3 targetPosition = new Vector3(destination.x, transform.position.y, destination.z);
                 transform.position = Vector3.MoveTowards(transform.position, targetPosition, customerSpeed * Time.deltaTime);
-
                 skeletonAnimation.timeScale = 1;
             }
             else
@@ -307,15 +255,12 @@ public class CustomerController : MonoBehaviour
 
         isOnSeat = true;
         HudPos.SetActive(true);
-
         skeletonAnimation.AnimationState.SetAnimation(0, idleAnimationName, true);
-
         patienceBarController.StartDecreasingPatience();
     }
 
     private void FlipCheck(Vector3 target)
     {
-        // Flip the sprite to face the correct direction
         if ((meshRenderer.transform.position.x > target.x && isFacingRight) || (meshRenderer.transform.position.x < target.x && !isFacingRight))
         {
             Flip();
@@ -324,106 +269,47 @@ public class CustomerController : MonoBehaviour
 
     private void Flip()
     {
-        // Rotate the sprite to flip it
         isFacingRight = !isFacingRight;
-        // spriteRenderer.transform.Rotate(0, 180, 0);
         meshRenderer.transform.Rotate(0, 180, 0);
     }
 
     private void CheckDistanceToDelivery()
     {
-        if (customerCol == null || deliveryPlateCol == null || !isOnSeat || isLeaving)
-        {
-            isCloseEnoughToDelivery = false;
-            return;
-        }
-
-        // Get the mouse position in world coordinates
         mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-        // Check if the delivery plate bounds intersect with the customer bounds
         isDeliveryPlateColliding = customerCol.bounds.Intersects(deliveryPlateCol.bounds);
-
-        // Check if the mouse position is within the bounds of the customer collider
         isMousePositionColliding = customerCol.bounds.Contains(mousePosition);
-
-        // Set the flag if both conditions are true
         isCloseEnoughToDelivery = isDeliveryPlateColliding && isMousePositionColliding;
     }
 
     public void UpdateCustomerMood(int moodIndex)
     {
-        // Update the customer's mood sprite (currently commented out)
-        // spriteRenderer.sprite = customerMoods[moodIndex];
+        // spriteRenderer.sprite = customerMoods[moodIndex]; // Not used currently, implement if needed
     }
 
-    private void OrderIsCorrect()
+    public void StartLeaving()
     {
-        // Trigger progression events and spawn money
-        EventHandler.CallCorrectOrderEvent(isRecipeOrder);
-        EventHandler.CallSetMoneyPosToCustomerPosEvent(transform.position, isRecipeOrder);
-        moneySpawner.moneyPool.Get();
-
-        moodIndex = 2;  // Make the customer happy
-
-        // set the positive animation and then walk
         if (!isLeaving)
         {
-            HudPos.SetActive(false);
-            skeletonAnimation.AnimationState.SetAnimation(0, positiveAnimationName, false);
+            StartCoroutine(Leave());
         }
-
-        // Stop decreasing patience and start leaving
-        patienceBarController.StopDecreasingPatience();
-        StartCoroutine(Leave());
-    }
-
-    private void OrderIsIncorrect()
-    {
-        EventHandler.CallIncorrectOrderEvent();
-
-        moodIndex = 3; // Make the customer angry
-
-        // set the negative animation and idle again
-        if (!isLeaving)
-        {
-            skeletonAnimation.AnimationState.SetAnimation(0, negativeAnimationName, false);
-            skeletonAnimation.AnimationState.AddAnimation(0, idleAnimationName, true, 0);
-        }
-
-        // Decrease patience based on a percentage
-        float decreaseValue = customerPatience * decreasePatiencePercentage;
-        patienceBarController.DecreaseWithValue(decreaseValue);
     }
 
     public IEnumerator Leave()
     {
-        if (isLeaving) yield break;
-
         isLeaving = true;
         isOnSeat = false;
-
-        // Check if the positive or negative animation is playing before switching to walk animation
         yield return StartCoroutine(CheckAndSetWalkAnimation(positiveAnimationDuration));
-
-        // Ensure the seat is marked available after leaving and hide HUD and highlight
-        mainGameController.availableSeatForCustomers[mySeat] = (null, true);  // Release seat
+        mainGameController.availableSeatForCustomers[mySeat] = (null, true);
         HudPos.SetActive(false);
         transform.GetChild(transform.childCount - 1).gameObject.SetActive(false);
-
-        // Flip the sprite if necessary and set leaving flag
         FlipCheck(leavePoint);
 
-        yield return new WaitForSeconds(0.15f);
-
-        // Move towards the leave point
-        while ((transform.position - new Vector3(leavePoint.x, transform.position.y, leavePoint.z)).sqrMagnitude > 0.01f)
+        Vector3 targetPosition = new Vector3(leavePoint.x, transform.position.y, leavePoint.z);
+        while ((transform.position - targetPosition).sqrMagnitude > 0.01f)
         {
             if (!GameManager.Instance.isGamePaused)
             {
-                Vector3 targetPosition = new Vector3(leavePoint.x, transform.position.y, leavePoint.z);
                 transform.position = Vector3.MoveTowards(transform.position, targetPosition, customerSpeed * Time.deltaTime);
-
                 skeletonAnimation.timeScale = 1;
             }
             else
@@ -435,48 +321,32 @@ public class CustomerController : MonoBehaviour
         }
 
         meshRenderer.transform.eulerAngles = Vector3.zero;
-
         orderManager.ReleaseAllIngredients();
-        customerPool.customerPool.Release(this);  // Return customer to the pool
+        customerPool.customerPool.Release(this);
+        isLeaving = false;
     }
 
     private IEnumerator CheckAndSetWalkAnimation(float positiveAnimationDuration)
     {
-        // Get the current animation on track 0
         Spine.TrackEntry currentTrackEntry = skeletonAnimation.AnimationState.GetCurrent(0);
-
-        // Check if the positive or negative animation is playing
         if (currentTrackEntry != null)
         {
-            // Check for positive animation
             if (currentTrackEntry.Animation.Name == positiveAnimationName)
             {
-                // Play the positive animation for only the specified duration
                 while (currentTrackEntry.TrackTime < positiveAnimationDuration)
                 {
                     yield return null;
                 }
-
-                // After positive animation, transition to the normal walk animation
                 skeletonAnimation.AnimationState.SetAnimation(0, walkAnimationName, true);
-                Debug.Log("Leaving Happy");
             }
-            // Check for negative animation
             else if (currentTrackEntry.Animation.Name == negativeAnimationName)
             {
-                // Wait until the negative animation is complete
                 yield return new WaitForSpineAnimationComplete(currentTrackEntry);
-
-                // After negative animation, transition to the angry walk animation
-                // TODO: change it to leaving angry
                 skeletonAnimation.AnimationState.SetAnimation(0, walkAnimationName, true);
-                Debug.Log("Leaving Angry");
             }
             else
             {
-                // If no specific animation is playing, just set the walk animation
                 skeletonAnimation.AnimationState.SetAnimation(0, walkAnimationName, true);
-                Debug.Log("Leaving Normally");
             }
         }
     }
@@ -484,50 +354,59 @@ public class CustomerController : MonoBehaviour
     public bool ReceiveOrder(List<int> myReceivedOrder)
     {
         int[] myOriginalOrder = orderManager.productIngredientsCodes;
-
-        // Check if the received order matches the original order
-        if (myOriginalOrder.Length != myReceivedOrder.Count) return OrderIsIncorrectAndReturnFalse();
+        if (myOriginalOrder.Length != myReceivedOrder.Count)
+        {
+            OrderIsIncorrect();
+            return false;
+        }
 
         for (int i = 0; i < myOriginalOrder.Length; i++)
         {
-            if (myOriginalOrder[i] != myReceivedOrder[i]) return OrderIsIncorrectAndReturnFalse();
+            if (myOriginalOrder[i] != myReceivedOrder[i])
+            {
+                OrderIsIncorrect();
+                return false;
+            }
         }
 
         OrderIsCorrect();
-
         return true;
     }
 
-    private bool OrderIsIncorrectAndReturnFalse()
+    private void OrderIsCorrect()
     {
-        OrderIsIncorrect();
-        return false;
+        moodIndex = 2;
+        HudPos.SetActive(false);
+        skeletonAnimation.AnimationState.SetAnimation(0, positiveAnimationName, false);
+        patienceBarController.StopDecreasingPatience();
+        StartLeaving();
+        EventHandler.CallCorrectOrderEvent(isRecipeOrder);
+        EventHandler.CallSetMoneyPosToCustomerPosEvent(transform.position, isRecipeOrder);
+        moneySpawner.moneyPool.Get();
     }
 
-    private void ChaseCustomer()
+    private void OrderIsIncorrect()
     {
-        StartCoroutine(Leave());
+        moodIndex = 3;
+        skeletonAnimation.AnimationState.SetAnimation(0, negativeAnimationName, false);
+        skeletonAnimation.AnimationState.AddAnimation(0, idleAnimationName, true, 0);
+        float decreaseValue = customerPatience * decreasePatiencePercentage;
+        patienceBarController.DecreaseWithValue(decreaseValue);
+        EventHandler.CallIncorrectOrderEvent();
     }
 
     private void TogglePauseAnim()
     {
-        if (skeletonAnimation.timeScale == 0)
-        {
-            skeletonAnimation.timeScale = 1;
-        }
-        else
-        {
-            skeletonAnimation.timeScale = 0;
-        }
-    }
-
-    public void BaseOnlyServed()
-    {
-        OrderIsIncorrect();
+        skeletonAnimation.timeScale = skeletonAnimation.timeScale == 0 ? 1 : 0;
     }
 
     public bool IsOnSeat()
     {
         return isOnSeat;
+    }
+
+    public void BaseOnlyServed()
+    {
+        OrderIsIncorrect();
     }
 }

@@ -4082,11 +4082,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 358d9ed71fc4ec142ba61bf29dbeb210, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panSpeed: 120
+  panSpeed: 1.1
   smoothTime: 0.3
   minX: 0
   maxX: 31.2
-  dragThreshold: 0.6
+  dragThreshold: 0.1
+  holdSmoothTime: 0.2
 --- !u!1001 &615570272
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -113,6 +113,8 @@ public class LevelManager : MonoBehaviour
     {
         DOTween.KillAll();
 
+        Debug.Log("LOAD TO LEVEL SELECT");
+
         GameManager.Instance.gameStates = GameStates.LevelSelection;
 
         SceneController.Instance.FadeAndLoadScene(Scenes.Menu);

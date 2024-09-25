@@ -23,22 +23,21 @@ public class MenuManager : MonoBehaviour
 
     private void Awake()
     {
-        // switch (GameManager.Instance.gameStates)
-        // {
-        //     case GameStates.MainMenu:
-        //         LoadToMainMenu();
-        //         break;
-        //     case GameStates.Collection:
-        //         LoadToCollection();
-        //         break;
-        //     case GameStates.LevelSelection:
-        //         LoadToLevelSelection();
-        //         break;
-        //     default:
-        //         Debug.LogError("Current Game State = " + GameManager.Instance.gameStates.ToString());
-        //         break;
-        // }
-        LoadToMainMenu();
+        switch (GameManager.Instance.gameStates)
+        {
+            case GameStates.MainMenu:
+                LoadToMainMenu();
+                break;
+            case GameStates.Collection:
+                LoadToCollection();
+                break;
+            case GameStates.LevelSelection:
+                LoadToLevelSelection();
+                break;
+            default:
+                Debug.LogError("Current Game State = " + GameManager.Instance.gameStates.ToString());
+                break;
+        }
 
         collectionManager = collectionObj.GetComponent<CollectionManager>();
 

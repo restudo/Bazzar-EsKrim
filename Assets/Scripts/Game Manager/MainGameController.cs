@@ -14,8 +14,11 @@ public class MainGameController : MonoBehaviour
     [HideInInspector] public int customerCounter;
     [HideInInspector] public int deliveryQueueIngredient;
     [HideInInspector] public bool wasLastOrderByRecipe;
-    // [HideInInspector] public bool[] availableSeatForCustomers;
-    public Dictionary<int, (CustomerController customer, bool isAvailable)> availableSeatForCustomers; // Use int for seat index, and tuple (CustomerController, bool) for storing customer and availability
+
+    public Dictionary<int, (CustomerController customer, bool isAvailable)> availableSeatForCustomers;
+    private List<int> availableSeats = new List<int>(); // Cache available seats to avoid dictionary lookups
+    private List<int> cachedAvailableSeats = new List<int>(); // Cached list for available seats
+
     [HideInInspector] public List<int> deliveryQueueIngredientsContent = new List<int>();
 
     [Header("Level Manager")]
@@ -54,6 +57,9 @@ public class MainGameController : MonoBehaviour
     private CustomerPool customerPool; // Reference to the CustomerPool
     private const float animationTime = .15f;
 
+    // Cache WaitForSeconds to avoid memory allocation spikes
+    private WaitForSeconds customerDelayWait;
+
     private void Awake()
     {
         customerPool = GetComponent<CustomerPool>();
@@ -68,6 +74,7 @@ public class MainGameController : MonoBehaviour
         spawnSpecialRecipeAfterXCustomer = levelData.spawnSpecialRecipeAfterXCustomer;
         maxSpecialRecipeInThisLevel = levelData.sO_RecipeList.Length;
         customerDelay = levelData.customerDelay;
+        customerDelayWait = new WaitForSeconds(customerDelay); // Cache WaitForSeconds object
         doubleCustomerProbability = levelData.doubleCustomerProbability;
         pointPerCustomer = levelData.pointPerCustomer;
         specialRecipePoint = levelData.specialRecipePoint;
@@ -82,10 +89,7 @@ public class MainGameController : MonoBehaviour
         wasLastOrderByRecipe = false;
 
         availableSeatForCustomers = new Dictionary<int, (CustomerController, bool)>();
-        for (int i = 0; i < seatPositions.Length; i++)
-        {
-            availableSeatForCustomers.Add(i, (null, true));  // Seat is available with no customer assigned
-        }
+        InitializeAvailableSeats();
 
         progressSlider.maxValue = maxPoint;
         progressSlider.value = 0;
@@ -94,6 +98,15 @@ public class MainGameController : MonoBehaviour
         gameOverWinUI.transform.parent.gameObject.SetActive(false);
         gameOverLoseUI.transform.parent.gameObject.SetActive(false);
         pauseMenuUI.SetActive(false);
+    }
+
+    private void InitializeAvailableSeats()
+    {
+        for (int i = 0; i < seatPositions.Length; i++)
+        {
+            availableSeatForCustomers.Add(i, (null, true));  // Seat is available with no customer assigned
+            availableSeats.Add(i); // Add all seats to available seats list
+        }
     }
 
     private void OnEnable()
@@ -118,8 +131,7 @@ public class MainGameController : MonoBehaviour
         time = TimeSpan.FromSeconds(currentTime);
         timerText.text = string.Format("{0:00}:{1:00}", time.Minutes, time.Seconds);
 
-        //TODO: change with countdown or else
-        // yield return new WaitForSeconds(2);
+        canCreateNewCustomer = true; // Start customer creation
     }
 
     private void Update()
@@ -148,11 +160,8 @@ public class MainGameController : MonoBehaviour
         if (currentTime <= 0f)
         {
             GameManager.Instance.isGameActive = false;
-
             EventHandler.CallChaseCustomerEvent();
-
             StartCoroutine(LoseAnim());
-
             Debug.Log("Countdown time is up!");
         }
         else
@@ -163,14 +172,27 @@ public class MainGameController : MonoBehaviour
 
     private int GetAvailableSeatIndex()
     {
+        // Clear the list instead of creating a new one
+        cachedAvailableSeats.Clear();
+
+        // Collect all available seats
         foreach (var seat in availableSeatForCustomers)
         {
             if (seat.Value.isAvailable)
             {
-                return seat.Key;
+                cachedAvailableSeats.Add(seat.Key);
             }
         }
-        return -1;
+
+        // If there are no available seats, return -1
+        if (cachedAvailableSeats.Count == 0)
+        {
+            return -1;
+        }
+
+        // Return a random seat from the available ones
+        int randomIndex = UnityEngine.Random.Range(0, cachedAvailableSeats.Count);
+        return cachedAvailableSeats[randomIndex];
     }
 
     private bool IsDoubleCustomer(float probability)
@@ -182,48 +204,56 @@ public class MainGameController : MonoBehaviour
     {
         canCreateNewCustomer = false;
 
+        if (!GameManager.Instance.isGameActive) // Early exit if game is not active
+            yield break;
+
         if (isDoubleCustomer)
         {
-            // Ensure you have two available seats
-            var selectedSeats = GetTwoAvailableSeats();
-            if (selectedSeats.Count == 0)
+            var (seat1, seat2) = GetTwoAvailableSeats();
+            if (seat1 != -1 && seat2 != -1) // Two seats available
             {
-                // Only one seat available, create a single customer
-                CreateSingleCustomer(availableSeat, customerEntryPos[0].position);  // Default to first entry position
-            }
-            else
-            {
-                // Create two customers at two different entry positions
-                CreateSingleCustomer(selectedSeats[0], customerEntryPos[0].position);  // First customer at first entry
-                yield return new WaitForSeconds(0.1f);  // Small delay between customers
+                Vector3 entry1 = customerEntryPos[UnityEngine.Random.Range(0, customerEntryPos.Length)].position;
+                Vector3 entry2 = customerEntryPos[UnityEngine.Random.Range(0, customerEntryPos.Length)].position;
 
-                CreateSingleCustomer(selectedSeats[1], customerEntryPos[1].position);  // Second customer at second entry
+                CreateSingleCustomer(seat1, entry1);
+                yield return new WaitForSeconds(0.1f);
+                CreateSingleCustomer(seat2, entry2);
+            }
+            else if (seat1 != -1)
+            {
+                Vector3 entry = customerEntryPos[UnityEngine.Random.Range(0, customerEntryPos.Length)].position;
+                CreateSingleCustomer(seat1, entry);
             }
         }
         else
         {
-            // Single customer case
-            CreateSingleCustomer(availableSeat, customerEntryPos[0].position);  // Default to first entry position
+            Vector3 entry = customerEntryPos[UnityEngine.Random.Range(0, customerEntryPos.Length)].position;
+            CreateSingleCustomer(availableSeat, entry);
         }
 
-        yield return new WaitForSeconds(customerDelay);
+        yield return customerDelayWait; // Reuse cached WaitForSeconds object
         canCreateNewCustomer = true;
     }
 
-
-    private List<int> GetTwoAvailableSeats()
+    private (int firstSeat, int secondSeat) GetTwoAvailableSeats()
     {
-        List<int> availableSeats = new List<int>();
+        int firstSeat = -1, secondSeat = -1;
         foreach (var seat in availableSeatForCustomers)
         {
             if (seat.Value.isAvailable)
             {
-                availableSeats.Add(seat.Key);
+                if (firstSeat == -1)
+                {
+                    firstSeat = seat.Key;
+                }
+                else
+                {
+                    secondSeat = seat.Key;
+                    break; // Found two available seats
+                }
             }
         }
-
-        if (availableSeats.Count < 2) return new List<int>();
-        return availableSeats.GetRange(0, 2);
+        return (firstSeat, secondSeat);
     }
 
     private void CreateSingleCustomer(int seatIndex, Vector3 entryPosition)
@@ -231,9 +261,9 @@ public class MainGameController : MonoBehaviour
         CustomerController newCustomer = customerPool.customerPool.Get();
         Vector3 seatPosition = seatPositions[seatIndex].position;
 
-        availableSeatForCustomers[seatIndex] = (newCustomer, false);
+        availableSeatForCustomers[seatIndex] = (newCustomer, false); // Mark seat as occupied
+        availableSeats.Remove(seatIndex); // Update available seats
 
-        // Set customer starting position from the entry point
         newCustomer.transform.position = new Vector2(entryPosition.x, seatPosition.y);
         newCustomer.mySeat = seatIndex;
         newCustomer.destination = seatPosition;
@@ -242,52 +272,18 @@ public class MainGameController : MonoBehaviour
         newCustomer.Init();
     }
 
-
-
     private void CorrectOrderEvent(bool isRecipeOrder)
     {
         progressCount += isRecipeOrder ? specialRecipePoint : pointPerCustomer;
         pointText.text = progressCount.ToString();
-
-        IncreaseSliderValue(pointPerCustomer);
+        IncreaseSliderValue(progressCount);
 
         if (progressCount >= maxPoint)
         {
             GameManager.Instance.isGameActive = false;
-
             EventHandler.CallChaseCustomerEvent();
-
             StartCoroutine(WinAnim());
         }
-    }
-
-    private IEnumerator WinAnim()
-    {
-        yield return new WaitForSeconds(1f);
-
-        gameOverWinUI.transform.parent.GetComponent<Image>().color = new Color(0, 0, 0, 0);
-        gameOverWinUI.transform.parent.localScale = Vector3.zero;
-        gameOverWinUI.transform.parent.gameObject.SetActive(true);
-        gameOverWinUI.transform.parent.DOScale(1, 0.4f).SetEase(Ease.OutBounce).SetDelay(0.6f);
-        gameOverWinUI.transform.parent.GetComponent<Image>().DOColor(new Color32(0, 0, 0, 150), 1.5f).SetDelay(1f);
-
-        yield return new WaitForSeconds(1f);
-        gameOverWinUI.transform.GetChild(gameOverWinUI.transform.childCount - 1).gameObject.SetActive(true);
-
-        Debug.Log("Game Over - Win");
-    }
-
-    private IEnumerator LoseAnim()
-    {
-        yield return new WaitForSeconds(1);
-
-        gameOverLoseUI.transform.parent.GetComponent<Image>().color = new Color(0, 0, 0, 0);
-        gameOverLoseUI.transform.parent.localScale = Vector3.zero;
-        gameOverLoseUI.transform.parent.gameObject.SetActive(true);
-        gameOverLoseUI.transform.parent.DOScale(1, 0.4f).SetEase(Ease.OutBounce).SetDelay(0.6f);
-        gameOverLoseUI.transform.parent.GetComponent<Image>().DOColor(new Color32(0, 0, 0, 150), 1.5f).SetDelay(1f);
-
-        Debug.Log("Game Over - Lose");
     }
 
     private void IncorrectOrderEvent()
@@ -295,10 +291,30 @@ public class MainGameController : MonoBehaviour
         // Handle incorrect order logic here
     }
 
+    private IEnumerator WinAnim()
+    {
+        yield return new WaitForSeconds(1f);
+        gameOverWinUI.transform.parent.localScale = Vector3.zero;
+        gameOverWinUI.transform.parent.gameObject.SetActive(true);
+        gameOverWinUI.transform.parent.DOScale(1, 0.4f).SetEase(Ease.OutBounce).SetDelay(0.6f);
+        yield return new WaitForSeconds(1f);
+        gameOverWinUI.transform.GetChild(gameOverWinUI.transform.childCount - 1).gameObject.SetActive(true);
+    }
+
+    private IEnumerator LoseAnim()
+    {
+        yield return new WaitForSeconds(1);
+        gameOverLoseUI.transform.parent.localScale = Vector3.zero;
+        gameOverLoseUI.transform.parent.gameObject.SetActive(true);
+        gameOverLoseUI.transform.parent.DOScale(1, 0.4f).SetEase(Ease.OutBounce).SetDelay(0.6f);
+    }
+
     public void IncreaseSliderValue(float value)
     {
-        // Update the slider value
-        progressSlider.DOValue(progressCount, animationTime).OnUpdate(() => progressCount = (int)progressSlider.value);
+        if (Mathf.Abs(progressSlider.value - value) > 0.01f) // Update only when there's a noticeable change
+        {
+            progressSlider.DOValue(value, animationTime);
+        }
     }
 
     public void OpenPauseMenu()
@@ -311,16 +327,12 @@ public class MainGameController : MonoBehaviour
         if (ingredientToday.activeSelf)
         {
             ingredientToday.SetActive(false);
-
-            // TODO: add timer or countdown
-
             GameManager.Instance.isGameActive = true;
             GameManager.Instance.isGamePaused = false;
             canCreateNewCustomer = true;
         }
         else
         {
-            // TODO pause menu set active false
             pauseMenuUI.SetActive(false);
         }
     }
