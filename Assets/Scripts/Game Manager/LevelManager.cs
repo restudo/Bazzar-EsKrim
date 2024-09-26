@@ -133,8 +133,7 @@ public class LevelManager : MonoBehaviour
     {
         GameManager.Instance.gameStates = GameStates.MiniGame;
 
-        mainGame.SetActive(false);
-        miniGame.SetActive(true);
+        SceneController.Instance.FadeAndSetActiveGameobject(mainGame, miniGame);
     }
 
     private void OpenNewRecipePanel()

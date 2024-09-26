@@ -1,10 +1,12 @@
 using System.Collections;
 using UnityEngine;
 using DG.Tweening;
+using System.Collections.Generic;
 
 public class IngredientHolder : MonoBehaviour
 {
     [HideInInspector] public bool canDeliverOrder;
+    [HideInInspector] public List<CustomerController> availableCustomers;
 
     [SerializeField] MainGameController mainGameController;
     [SerializeField] TrashBinController trashBin;
@@ -12,11 +14,10 @@ public class IngredientHolder : MonoBehaviour
 
     private Vector3 initialPosition;
     private Collider2D plateCollider;
-    private GameObject[] cachedCustomers; // Cache the customers to avoid calling FindGameObjectsWithTag repeatedly
-    private Vector3 platePosition; // Cache the mouse position
 
     void Awake()
     {
+        availableCustomers = new List<CustomerController>();
         plateCollider = GetComponent<Collider2D>();
         canDeliverOrder = false;
     }
@@ -36,7 +37,6 @@ public class IngredientHolder : MonoBehaviour
     private void Start()
     {
         initialPosition = transform.position;
-        CacheCustomers(); // Cache customers at the start
     }
 
     private void Update()
@@ -49,71 +49,78 @@ public class IngredientHolder : MonoBehaviour
 
     private void ManageDeliveryDrag()
     {
-        // Handle input only if the plate is clicked or moved
-        if (!IsDragging()) return;
-
-        // Update plate position and check if it's within bounds
-        platePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z));
-
-        if (plateCollider.bounds.Contains(platePosition))
+        if (!(Input.touches.Length > 0 && Input.touches[0].phase == TouchPhase.Moved) && !Input.GetMouseButtonDown(0))
         {
-            StartCoroutine(CreateDeliveryPackage());
+            return;
         }
-    }
 
-    // Simplified input handling
-    private bool IsDragging()
-    {
-        return (Input.touches.Length > 0 && Input.touches[0].phase == TouchPhase.Moved) || Input.GetMouseButtonDown(0);
+        if (plateCollider != null)
+        {
+            Vector3 platePos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z));
+            if (plateCollider.bounds.Contains(platePos))
+            {
+                StartCoroutine(CreateDeliveryPackage());
+            }
+        }
     }
 
     private IEnumerator CreateDeliveryPackage()
     {
         while (canDeliverOrder && mainGameController.deliveryQueueIngredient > 0)
         {
-            // Move plate position to mouse
-            transform.position = platePosition;
+            transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z));
 
-            // Show HUD for all customers
-            ShowCustomerHud(true);
+            foreach (CustomerController customer in availableCustomers)
+            {
+                if (customer.IsOnSeat())
+                {
+                    int lastChildIndex = customer.transform.childCount - 1;
+                    customer.transform.GetChild(lastChildIndex).gameObject.SetActive(true);
+                }
+            }
 
             trashBinHighlight.SetActive(true);
             trashBin.OpenTrashBin();
 
-            // Check if delivery is done (touches end or mouse released)
             if (Input.touches.Length < 1 && !Input.GetMouseButton(0))
             {
-                HandleDelivery();
-                yield break; // Exit loop after delivery
+                HandleDelivery(availableCustomers);
+                yield break;
             }
 
-            yield return null; // Yield to prevent infinite looping
+            yield return null;
         }
     }
 
-    private void HandleDelivery()
+    private void HandleDelivery(List<CustomerController> availableCustomers)
     {
-        bool delivered = false;
-        CustomerController targetCustomer = null;
-
-        foreach (GameObject customerObj in cachedCustomers) // Use cached customers
+        if (availableCustomers.Count < 1)
         {
-            CustomerController customer = customerObj.GetComponent<CustomerController>();
+            ResetPosition();
+            return;
+        }
+
+        bool delivered = false;
+        CustomerController theCustomer = null;
+
+        foreach (CustomerController customer in availableCustomers)
+        {
             if (customer.isCloseEnoughToDelivery)
             {
-                targetCustomer = customer;
+                theCustomer = customer;
                 delivered = mainGameController.deliveryQueueIngredient > 1;
                 if (!delivered)
                 {
                     customer.BaseOnlyServed();
                 }
-                break; // Exit once we deliver to one customer
+                break;
             }
         }
 
-        if (delivered && targetCustomer != null)
+        if (delivered)
         {
-            bool isOrderCorrect = targetCustomer.ReceiveOrder(mainGameController.deliveryQueueIngredientsContent);
+            // DebugDelivery();
+            bool isOrderCorrect = theCustomer.ReceiveOrder(mainGameController.deliveryQueueIngredientsContent);
 
             if (isOrderCorrect)
             {
@@ -122,28 +129,24 @@ public class IngredientHolder : MonoBehaviour
         }
 
         ResetPosition();
-        ShowCustomerHud(false); // Deactivate customer HUD
+        DeactivateCustomers(availableCustomers);
         trashBinHighlight.SetActive(false);
         trashBin.CloseTrashBin();
     }
 
-    // Caching customers to avoid repetitive calls to FindGameObjectsWithTag
-    private void CacheCustomers()
+    private void DebugDelivery()
     {
-        cachedCustomers = GameObject.FindGameObjectsWithTag("Customer");
+        for (int i = 0; i < mainGameController.deliveryQueueIngredientsContent.Count; i++)
+        {
+            print($"Delivery Items ID {i} = {mainGameController.deliveryQueueIngredientsContent[i]}");
+        }
     }
 
-    // Show or hide HUD for customers
-    private void ShowCustomerHud(bool show)
+    private void DeactivateCustomers(List<CustomerController> availableCustomers)
     {
-        foreach (GameObject customer in cachedCustomers)
+        foreach (CustomerController customer in availableCustomers)
         {
-            CustomerController customerController = customer.GetComponent<CustomerController>();
-            if (customerController.IsOnSeat())
-            {
-                int lastChildIndex = customer.transform.childCount - 1;
-                customer.transform.GetChild(lastChildIndex).gameObject.SetActive(show);
-            }
+            customer.transform.GetChild(customer.transform.childCount - 1).gameObject.SetActive(false);
         }
     }
 
@@ -152,7 +155,7 @@ public class IngredientHolder : MonoBehaviour
         mainGameController.deliveryQueueIngredient = 0;
         mainGameController.deliveryQueueIngredientsContent.Clear();
 
-        // Release ingredients from pool
+        // release ingredient pool
         foreach (Transform child in transform)
         {
             if (child.TryGetComponent<Ingredient>(out Ingredient ingredient))

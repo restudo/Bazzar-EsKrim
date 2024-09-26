@@ -85,7 +85,7 @@ public class MiniGameController : MonoBehaviour
         currentScore = 0;
         scoreTier = 0;
 
-        GameManager.Instance.isGameActive = true;
+        // GameManager.Instance.isGameActive = true;
 
         // scoreText.text = currentScore.ToString();
     }
@@ -145,32 +145,18 @@ public class MiniGameController : MonoBehaviour
 
     private IEnumerator Win()
     {
-        // int score = 0;
-        // scoreGameOverText.text = score.ToString();
-
-        // TODO: change with the right gameflow
-        // Unlock level selection
         GameManager.Instance.UnlockLevel();
 
         gameOverWinUI.GetComponent<Image>().color = new Color(0, 0, 0, 0);
-        // gameOverWinUI.transform.parent.localScale = Vector3.zero;
         gameOverWinUI.gameObject.SetActive(true);
-        // gameOverWinUI.gameObject.SetActive(true);
-
         gameOverWinUI.transform.DOScale(1, 0.4f).SetEase(Ease.OutExpo).SetDelay(0.3f);
-        gameOverWinUI.GetComponent<Image>().DOColor(new Color32(0, 0, 0, 150), 1.5f).SetDelay(1f);
+        gameOverWinUI.GetComponent<Image>().DOColor(new Color32(0, 0, 0, 150), 1.5f).SetDelay(1f).OnComplete(() => {
+            DOTween.Kill(gameOverWinUI);
+        });
 
         yield return new WaitForSeconds(1f);
         confettiVFX.SetActive(true);
         OpenNewRecipePanel();
-
-        // yield return new WaitForSeconds(0.5f);
-        // while (score < currentScore)
-        // {
-        //     score++;
-        //     scoreGameOverText.text = score.ToString();
-        //     yield return new WaitForSeconds(animSpeed);
-        // }
     }
 
     public void OpenNewRecipePanel()
@@ -215,15 +201,5 @@ public class MiniGameController : MonoBehaviour
 
         // Play the sequence
         sequence.Play();
-    }
-
-
-    public void LoadToLevelSelection()
-    {
-        GameManager.Instance.gameStates = GameStates.LevelSelection;
-        GameManager.Instance.isGameActive = false;
-        DOTween.KillAll();
-
-        SceneController.Instance.FadeAndLoadScene(Scenes.Menu);
     }
 }

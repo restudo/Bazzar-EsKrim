@@ -23,6 +23,8 @@ public class MenuManager : MonoBehaviour
 
     private void Awake()
     {
+        GameManager.Instance.isGameActive = false;
+
         switch (GameManager.Instance.gameStates)
         {
             case GameStates.MainMenu:
@@ -61,6 +63,8 @@ public class MenuManager : MonoBehaviour
 
     public void LoadToMainMenu()
     {
+        GameManager.Instance.isGameActive = false;
+
         GameManager.Instance.gameStates = GameStates.MainMenu;
 
         SetCameraToZero();
@@ -77,6 +81,8 @@ public class MenuManager : MonoBehaviour
 
     public void LoadToLevelSelection()
     {
+        GameManager.Instance.isGameActive = false;
+
         GameManager.Instance.gameStates = GameStates.LevelSelection;
 
         SetCameraToZero();
@@ -86,6 +92,8 @@ public class MenuManager : MonoBehaviour
 
     public void LoadToCollection()
     {
+        GameManager.Instance.isGameActive = false;
+
         GameManager.Instance.gameStates = GameStates.Collection;
 
         SetCameraToZero();
@@ -95,6 +103,8 @@ public class MenuManager : MonoBehaviour
 
     public void Back()
     {
+        GameManager.Instance.isGameActive = false;
+        
         if (GameManager.Instance.gameStates == GameStates.CollectionPanel)
         {
             collectionManager.CloseCollectionPanel();

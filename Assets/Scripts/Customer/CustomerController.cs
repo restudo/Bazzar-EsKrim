@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Spine.Unity;
+using System.Linq;
 
 public class CustomerController : MonoBehaviour
 {
@@ -159,12 +160,19 @@ public class CustomerController : MonoBehaviour
     {
         var skeleton = skeletonAnimation.Skeleton;
         var availableSkins = customerDetail.availableSkins;
-        string selectedSkin;
 
-        do
+        // Filter out already used skins
+        var unusedSkins = availableSkins.Where(skin => !IsSkinAlreadyUsed(skin)).ToList();
+
+        // Check if there are any unused skins available
+        if (unusedSkins.Count == 0)
         {
-            selectedSkin = availableSkins[Random.Range(0, availableSkins.Count)];
-        } while (IsSkinAlreadyUsed(selectedSkin));
+            Debug.LogWarning("No unused skins available. Resetting the skin pool.");
+            return; // Optionally handle this case as per your game's needs
+        }
+
+        // Select a random skin from the unused ones
+        string selectedSkin = unusedSkins[Random.Range(0, unusedSkins.Count)];
 
         skeleton.SetSkin(selectedSkin);
         skeleton.SetSlotsToSetupPose();
@@ -191,6 +199,7 @@ public class CustomerController : MonoBehaviour
 
     private void ResetFlagsAndVariables()
     {
+        customerCol.enabled = false;
         isCloseEnoughToDelivery = false;
         isOnSeat = false;
         isLeaving = false;
@@ -238,12 +247,19 @@ public class CustomerController : MonoBehaviour
         FlipCheck(destination);
 
         Vector3 targetPosition = new Vector3(destination.x, transform.position.y, destination.z);
-        while ((transform.position - targetPosition).sqrMagnitude > 0.01f)
+        while (Vector2.Distance(transform.position, targetPosition) > 0.01f)
         {
             if (!GameManager.Instance.isGamePaused)
             {
-                transform.position = Vector3.MoveTowards(transform.position, targetPosition, customerSpeed * Time.deltaTime);
-                skeletonAnimation.timeScale = 1;
+                if (!isLeaving)
+                {
+                    transform.position = Vector3.MoveTowards(transform.position, targetPosition, customerSpeed * Time.deltaTime);
+                    skeletonAnimation.timeScale = 1;
+                }
+                else
+                {
+                    yield break;
+                }
             }
             else
             {
@@ -253,10 +269,14 @@ public class CustomerController : MonoBehaviour
             yield return null;
         }
 
-        isOnSeat = true;
-        HudPos.SetActive(true);
-        skeletonAnimation.AnimationState.SetAnimation(0, idleAnimationName, true);
-        patienceBarController.StartDecreasingPatience();
+        if (!isLeaving)
+        {
+            customerCol.enabled = true;
+            isOnSeat = true;
+            HudPos.SetActive(true);
+            skeletonAnimation.AnimationState.SetAnimation(0, idleAnimationName, true);
+            patienceBarController.StartDecreasingPatience();
+        }
     }
 
     private void FlipCheck(Vector3 target)
@@ -296,6 +316,7 @@ public class CustomerController : MonoBehaviour
 
     public IEnumerator Leave()
     {
+        customerCol.enabled = false;
         isLeaving = true;
         isOnSeat = false;
         yield return StartCoroutine(CheckAndSetWalkAnimation(positiveAnimationDuration));
@@ -305,12 +326,19 @@ public class CustomerController : MonoBehaviour
         FlipCheck(leavePoint);
 
         Vector3 targetPosition = new Vector3(leavePoint.x, transform.position.y, leavePoint.z);
-        while ((transform.position - targetPosition).sqrMagnitude > 0.01f)
+        while (Vector2.Distance(transform.position, targetPosition) > 0.01f)
         {
             if (!GameManager.Instance.isGamePaused)
             {
-                transform.position = Vector3.MoveTowards(transform.position, targetPosition, customerSpeed * Time.deltaTime);
-                skeletonAnimation.timeScale = 1;
+                if (isLeaving)
+                {
+                    transform.position = Vector3.MoveTowards(transform.position, targetPosition, customerSpeed * Time.deltaTime);
+                    skeletonAnimation.timeScale = 1;
+                }
+                else
+                {
+                    yield break;
+                }
             }
             else
             {
@@ -323,6 +351,7 @@ public class CustomerController : MonoBehaviour
         meshRenderer.transform.eulerAngles = Vector3.zero;
         orderManager.ReleaseAllIngredients();
         customerPool.customerPool.Release(this);
+        ingredientHolder.availableCustomers.Remove(this);
         isLeaving = false;
     }
 
@@ -376,8 +405,13 @@ public class CustomerController : MonoBehaviour
     private void OrderIsCorrect()
     {
         moodIndex = 2;
-        HudPos.SetActive(false);
-        skeletonAnimation.AnimationState.SetAnimation(0, positiveAnimationName, false);
+
+        if (!isLeaving)
+        {
+            HudPos.SetActive(false);
+            skeletonAnimation.AnimationState.SetAnimation(0, positiveAnimationName, false);
+        }
+
         patienceBarController.StopDecreasingPatience();
         StartLeaving();
         EventHandler.CallCorrectOrderEvent(isRecipeOrder);
@@ -388,8 +422,13 @@ public class CustomerController : MonoBehaviour
     private void OrderIsIncorrect()
     {
         moodIndex = 3;
-        skeletonAnimation.AnimationState.SetAnimation(0, negativeAnimationName, false);
-        skeletonAnimation.AnimationState.AddAnimation(0, idleAnimationName, true, 0);
+
+        if (!isLeaving)
+        {
+            skeletonAnimation.AnimationState.SetAnimation(0, negativeAnimationName, false);
+            skeletonAnimation.AnimationState.AddAnimation(0, idleAnimationName, true, 0);
+        }
+
         float decreaseValue = customerPatience * decreasePatiencePercentage;
         patienceBarController.DecreaseWithValue(decreaseValue);
         EventHandler.CallIncorrectOrderEvent();

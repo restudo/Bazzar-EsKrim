@@ -21,8 +21,9 @@ public class MainGameController : MonoBehaviour
 
     [HideInInspector] public List<int> deliveryQueueIngredientsContent = new List<int>();
 
-    [Header("Level Manager")]
-    [SerializeField] private LevelManager levelManager;
+    [Header("Gameplay Params")]
+    [SerializeField] private IngredientHolder ingredientHolder;
+    [SerializeField] private SpriteRenderer[] bgSprite;
     [SerializeField] private GameObject[] characters;
 
     [Header("Customer Params")]
@@ -47,11 +48,13 @@ public class MainGameController : MonoBehaviour
     [SerializeField] private GameObject gameOverLoseUI;
     [SerializeField] private GameObject pauseMenuUI;
     [SerializeField] private GameObject ingredientToday;
+    [SerializeField] private GameObject confettiVFX;
 
     private int progressCount;
     private int customerDelay;
     private TimeSpan time;
     private float currentTime;
+    private float[] bgSpriteAlphas; // Cache alpha values for the sprites
     private float doubleCustomerProbability;
     private bool canCreateNewCustomer;
     private CustomerPool customerPool; // Reference to the CustomerPool
@@ -88,9 +91,6 @@ public class MainGameController : MonoBehaviour
         canCreateNewCustomer = false;
         wasLastOrderByRecipe = false;
 
-        availableSeatForCustomers = new Dictionary<int, (CustomerController, bool)>();
-        InitializeAvailableSeats();
-
         progressSlider.maxValue = maxPoint;
         progressSlider.value = 0;
 
@@ -98,6 +98,12 @@ public class MainGameController : MonoBehaviour
         gameOverWinUI.transform.parent.gameObject.SetActive(false);
         gameOverLoseUI.transform.parent.gameObject.SetActive(false);
         pauseMenuUI.SetActive(false);
+        confettiVFX.SetActive(false);
+
+        availableSeatForCustomers = new Dictionary<int, (CustomerController, bool)>();
+        InitializeAvailableSeats();
+
+        SetInitialBgVisibility();
     }
 
     private void InitializeAvailableSeats()
@@ -106,6 +112,23 @@ public class MainGameController : MonoBehaviour
         {
             availableSeatForCustomers.Add(i, (null, true));  // Seat is available with no customer assigned
             availableSeats.Add(i); // Add all seats to available seats list
+        }
+    }
+
+    private void SetInitialBgVisibility()
+    {
+        bgSprite[0].color = new Color(1f, 1f, 1f, 1f); // Sprite 1 fully visible at start
+        bgSprite[1].color = new Color(1f, 1f, 1f, 0f); // Sprite 2 fully transparent at start
+        bgSprite[2].color = new Color(1f, 1f, 1f, 0f); // Sprite 3 fully transparent at start
+    }
+
+    private void SetClosedBgVisibility(float[] spriteAlphas)
+    {
+        for (int i = 0; i < bgSprite.Length; i++)
+        {
+            Color color = bgSprite[i].color;
+            color.a = spriteAlphas[i];  // Set the alpha to the cached value
+            bgSprite[i].color = color;  // Apply the updated color back to the sprite
         }
     }
 
@@ -161,6 +184,7 @@ public class MainGameController : MonoBehaviour
         {
             GameManager.Instance.isGameActive = false;
             EventHandler.CallChaseCustomerEvent();
+            SetClosedBgVisibility(bgSpriteAlphas);
             StartCoroutine(LoseAnim());
             Debug.Log("Countdown time is up!");
         }
@@ -213,22 +237,27 @@ public class MainGameController : MonoBehaviour
             if (seat1 != -1 && seat2 != -1) // Two seats available
             {
                 Vector3 entry1 = customerEntryPos[UnityEngine.Random.Range(0, customerEntryPos.Length)].position;
-                Vector3 entry2 = customerEntryPos[UnityEngine.Random.Range(0, customerEntryPos.Length)].position;
 
-                CreateSingleCustomer(seat1, entry1);
-                yield return new WaitForSeconds(0.1f);
-                CreateSingleCustomer(seat2, entry2);
+                // Get a different entry position for the second customer
+                Vector3 entry2;
+                do
+                {
+                    entry2 = customerEntryPos[UnityEngine.Random.Range(0, customerEntryPos.Length)].position;
+                } while (entry1 == entry2);  // Ensure entry2 is not the same as entry1
+
+                yield return CreateSingleCustomer(seat1, entry1);
+                yield return CreateSingleCustomer(seat2, entry2);
             }
             else if (seat1 != -1)
             {
                 Vector3 entry = customerEntryPos[UnityEngine.Random.Range(0, customerEntryPos.Length)].position;
-                CreateSingleCustomer(seat1, entry);
+                yield return CreateSingleCustomer(seat1, entry);
             }
         }
         else
         {
             Vector3 entry = customerEntryPos[UnityEngine.Random.Range(0, customerEntryPos.Length)].position;
-            CreateSingleCustomer(availableSeat, entry);
+            yield return CreateSingleCustomer(availableSeat, entry);
         }
 
         yield return customerDelayWait; // Reuse cached WaitForSeconds object
@@ -256,20 +285,24 @@ public class MainGameController : MonoBehaviour
         return (firstSeat, secondSeat);
     }
 
-    private void CreateSingleCustomer(int seatIndex, Vector3 entryPosition)
+    private IEnumerator CreateSingleCustomer(int seatIndex, Vector3 entryPosition)
     {
         CustomerController newCustomer = customerPool.customerPool.Get();
+        ingredientHolder.availableCustomers.Add(newCustomer);
+
         Vector3 seatPosition = seatPositions[seatIndex].position;
-
-        availableSeatForCustomers[seatIndex] = (newCustomer, false); // Mark seat as occupied
-        availableSeats.Remove(seatIndex); // Update available seats
-
         newCustomer.transform.position = new Vector2(entryPosition.x, seatPosition.y);
+
         newCustomer.mySeat = seatIndex;
         newCustomer.destination = seatPosition;
         newCustomer.leavePoint = customerLeavePoint[UnityEngine.Random.Range(0, customerLeavePoint.Length)].position;
 
         newCustomer.Init();
+
+        availableSeatForCustomers[seatIndex] = (newCustomer, false); // Mark seat as occupied
+        availableSeats.Remove(seatIndex); // Update available seats
+
+        yield return null;
     }
 
     private void CorrectOrderEvent(bool isRecipeOrder)
@@ -282,6 +315,7 @@ public class MainGameController : MonoBehaviour
         {
             GameManager.Instance.isGameActive = false;
             EventHandler.CallChaseCustomerEvent();
+            SetClosedBgVisibility(bgSpriteAlphas);
             StartCoroutine(WinAnim());
         }
     }
@@ -294,11 +328,13 @@ public class MainGameController : MonoBehaviour
     private IEnumerator WinAnim()
     {
         yield return new WaitForSeconds(1f);
+        gameOverWinUI.transform.parent.GetComponent<Image>().color = new Color(0, 0, 0, 0);
         gameOverWinUI.transform.parent.localScale = Vector3.zero;
         gameOverWinUI.transform.parent.gameObject.SetActive(true);
         gameOverWinUI.transform.parent.DOScale(1, 0.4f).SetEase(Ease.OutBounce).SetDelay(0.6f);
+        gameOverWinUI.transform.parent.GetComponent<Image>().DOColor(new Color32(0, 0, 0, 150), 1.5f).SetDelay(1f);
         yield return new WaitForSeconds(1f);
-        gameOverWinUI.transform.GetChild(gameOverWinUI.transform.childCount - 1).gameObject.SetActive(true);
+        confettiVFX.SetActive(true);
     }
 
     private IEnumerator LoseAnim()
@@ -307,6 +343,50 @@ public class MainGameController : MonoBehaviour
         gameOverLoseUI.transform.parent.localScale = Vector3.zero;
         gameOverLoseUI.transform.parent.gameObject.SetActive(true);
         gameOverLoseUI.transform.parent.DOScale(1, 0.4f).SetEase(Ease.OutBounce).SetDelay(0.6f);
+    }
+
+    private void FadeSprites()
+    {
+        int numberOfSprites = bgSprite.Length; // Number of sprites
+
+        // Divide the total time evenly across all sprites, minus the time needed for the fades
+        float totalFadeTime = timer * (bgSprite.Length / 10f); // Reserve 30% of the total timer for fades
+        float visibleDurationForEachBgSprite = (timer - totalFadeTime) / numberOfSprites;
+
+        // Calculate the duration for each fade transition based on the remaining time
+        float bgFadeDuration = totalFadeTime / (numberOfSprites - 1); // For 3 sprites, there are 2 fades
+
+        // Cache the current alpha values of the sprites
+        bgSpriteAlphas = new float[numberOfSprites];
+        for (int i = 0; i < numberOfSprites; i++)
+        {
+            bgSpriteAlphas[i] = bgSprite[i].color.a; // Assuming you are fading SpriteRenderer color alpha
+        }
+
+        // Chain DOTween sequence to fade between sprites
+        Sequence sequence = DOTween.Sequence();
+
+        // Sprite 1: visible for calculated duration, then fade to Sprite 2
+        sequence.Append(bgSprite[0].DOFade(1f, 0f))  // Ensure Sprite 1 starts fully visible
+                .AppendInterval(visibleDurationForEachBgSprite)     // Wait for the calculated visible time
+                .Append(bgSprite[0].DOFade(0f, bgFadeDuration)) // Fade out sprite 1
+                .Join(bgSprite[1].DOFade(1f, bgFadeDuration))   // Fade in sprite 2
+
+                // Sprite 2: visible for calculated duration, then fade to Sprite 3
+                .AppendInterval(visibleDurationForEachBgSprite)     // Wait for the calculated visible time
+                .Append(bgSprite[1].DOFade(0f, bgFadeDuration)) // Fade out sprite 2
+                .Join(bgSprite[2].DOFade(1f, bgFadeDuration))   // Fade in sprite 3
+
+                // Sprite 3: visible for the final calculated duration (no fade after)
+                .AppendInterval(visibleDurationForEachBgSprite)
+                .OnUpdate(() =>
+                {
+                    // Cache the current alpha value of each sprite when the sequence is killed
+                    for (int i = 0; i < numberOfSprites; i++)
+                    {
+                        bgSpriteAlphas[i] = bgSprite[i].color.a;
+                    }
+                });
     }
 
     public void IncreaseSliderValue(float value)
@@ -330,6 +410,9 @@ public class MainGameController : MonoBehaviour
             GameManager.Instance.isGameActive = true;
             GameManager.Instance.isGamePaused = false;
             canCreateNewCustomer = true;
+
+            // Start the fade sequence
+            FadeSprites();
         }
         else
         {
