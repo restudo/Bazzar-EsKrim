@@ -131,7 +131,7 @@ public class SceneController : MonoBehaviour
         Sequence faderSequence = DOTween.Sequence();
 
         // acnhor on bottom, y=0
-        faderSequence.Append(rollingDoor.DOAnchorPosY(initialRollingDoorPos.y / 2, fadeDuration / 2).SetEase(Ease.OutBack));
+        faderSequence.Append(rollingDoor.DOAnchorPosY(initialRollingDoorPos.y / 2, fadeDuration / 1.5f).SetEase(Ease.OutBack));
         faderSequence.Append(rollingDoor.DOAnchorPosY(0, fadeDuration / 2).SetEase(Ease.InOutSine)).OnComplete(() =>
         {
 
@@ -144,7 +144,7 @@ public class SceneController : MonoBehaviour
         deactivate.SetActive(false);
         activate.SetActive(true);
 
-        yield return new WaitForSeconds(fadeDuration / 2);
+        yield return new WaitForSeconds(fadeDuration / 4f);
 
         // Second scaling animation
         faderSequence = DOTween.Sequence();

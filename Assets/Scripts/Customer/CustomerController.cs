@@ -316,14 +316,16 @@ public class CustomerController : MonoBehaviour
 
     public IEnumerator Leave()
     {
-        customerCol.enabled = false;
         isLeaving = true;
         isOnSeat = false;
+        customerCol.enabled = false;
         yield return StartCoroutine(CheckAndSetWalkAnimation(positiveAnimationDuration));
         mainGameController.availableSeatForCustomers[mySeat] = (null, true);
         HudPos.SetActive(false);
         transform.GetChild(transform.childCount - 1).gameObject.SetActive(false);
         FlipCheck(leavePoint);
+
+        ingredientHolder.availableCustomers.Remove(this);
 
         Vector3 targetPosition = new Vector3(leavePoint.x, transform.position.y, leavePoint.z);
         while (Vector2.Distance(transform.position, targetPosition) > 0.01f)
@@ -334,10 +336,6 @@ public class CustomerController : MonoBehaviour
                 {
                     transform.position = Vector3.MoveTowards(transform.position, targetPosition, customerSpeed * Time.deltaTime);
                     skeletonAnimation.timeScale = 1;
-                }
-                else
-                {
-                    yield break;
                 }
             }
             else
@@ -351,7 +349,6 @@ public class CustomerController : MonoBehaviour
         meshRenderer.transform.eulerAngles = Vector3.zero;
         orderManager.ReleaseAllIngredients();
         customerPool.customerPool.Release(this);
-        ingredientHolder.availableCustomers.Remove(this);
         isLeaving = false;
     }
 

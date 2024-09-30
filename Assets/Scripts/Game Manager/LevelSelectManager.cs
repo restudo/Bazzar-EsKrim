@@ -39,7 +39,7 @@ namespace BazarEsKrim
             }
 
             // init first
-            if (unlockedLevel > 0 && unlockedLevel < 5)
+            if (unlockedLevel > 0 && unlockedLevel <= 5)
             {
                 levelbuttons[unlockedLevel - 1].Selected();
                 lastSelectedButtonIndex = unlockedLevel - 1;
@@ -50,7 +50,7 @@ namespace BazarEsKrim
         {
             EventHandler.LoadToLevel += LoadToLevel;
 
-            if (unlockedLevel > 0 && unlockedLevel < 5)
+            if (unlockedLevel > 0 && unlockedLevel <= 5)
             {
                 // set camera
                 if (buttons[unlockedLevel - 1].transform.position.x < camControl.minX)

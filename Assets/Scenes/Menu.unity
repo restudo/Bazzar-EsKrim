@@ -274,7 +274,6 @@ GameObject:
   m_Component:
   - component: {fileID: 37866257}
   - component: {fileID: 37866258}
-  - component: {fileID: 37866259}
   m_Layer: 0
   m_Name: Semak-02
   m_TagString: Untagged
@@ -349,19 +348,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &37866259
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 37866256}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a4ebf7e84c374144a670ac2626e4ed8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  parallaxFactor: -0.5
 --- !u!1 &46997806
 GameObject:
   m_ObjectHideFlags: 0
@@ -3401,6 +3387,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 478103018}
+  - component: {fileID: 478103019}
   m_Layer: 0
   m_Name: Semak
   m_TagString: Untagged
@@ -3430,6 +3417,19 @@ Transform:
   - {fileID: 2065528454}
   m_Father: {fileID: 1238324780}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &478103019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 478103017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a4ebf7e84c374144a670ac2626e4ed8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parallaxFactor: -0.5
 --- !u!1 &527894615
 GameObject:
   m_ObjectHideFlags: 0
@@ -4088,6 +4088,8 @@ MonoBehaviour:
   maxX: 31.2
   dragThreshold: 0.1
   holdSmoothTime: 0.2
+  moveSpeed: 20
+  smoothThreshold: 2.5
 --- !u!1001 &615570272
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4231,7 +4233,6 @@ GameObject:
   m_Component:
   - component: {fileID: 663138148}
   - component: {fileID: 663138150}
-  - component: {fileID: 663138149}
   m_Layer: 0
   m_Name: Semak-03
   m_TagString: Untagged
@@ -4254,19 +4255,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 478103018}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &663138149
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 663138147}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a4ebf7e84c374144a670ac2626e4ed8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  parallaxFactor: -0.5
 --- !u!212 &663138150
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5769,7 +5757,6 @@ GameObject:
   m_Component:
   - component: {fileID: 926895712}
   - component: {fileID: 926895714}
-  - component: {fileID: 926895713}
   m_Layer: 0
   m_Name: Semak-04
   m_TagString: Untagged
@@ -5792,19 +5779,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 478103018}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &926895713
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 926895711}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a4ebf7e84c374144a670ac2626e4ed8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  parallaxFactor: -0.5
 --- !u!212 &926895714
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -6864,7 +6838,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1165039619}
   - component: {fileID: 1165039621}
-  - component: {fileID: 1165039620}
   m_Layer: 0
   m_Name: Semak-01
   m_TagString: Untagged
@@ -6887,19 +6860,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 478103018}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1165039620
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1165039618}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a4ebf7e84c374144a670ac2626e4ed8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  parallaxFactor: -0.5
 --- !u!212 &1165039621
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -7245,7 +7205,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1238324780
 Transform:
   m_ObjectHideFlags: 0
@@ -8704,7 +8664,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1367319600}
   - component: {fileID: 1367319602}
-  - component: {fileID: 1367319601}
   m_Layer: 0
   m_Name: Semak-01
   m_TagString: Untagged
@@ -8727,19 +8686,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 478103018}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1367319601
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1367319599}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a4ebf7e84c374144a670ac2626e4ed8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  parallaxFactor: -0.5
 --- !u!212 &1367319602
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -10052,7 +9998,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1786380954}
   - component: {fileID: 1786380956}
-  - component: {fileID: 1786380955}
   m_Layer: 0
   m_Name: Semak-02
   m_TagString: Untagged
@@ -10075,19 +10020,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 478103018}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1786380955
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1786380953}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a4ebf7e84c374144a670ac2626e4ed8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  parallaxFactor: -0.5
 --- !u!212 &1786380956
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -10776,7 +10708,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1958835035
 Transform:
   m_ObjectHideFlags: 0
@@ -11429,7 +11361,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2065528454}
   - component: {fileID: 2065528456}
-  - component: {fileID: 2065528455}
   m_Layer: 0
   m_Name: Semak-04
   m_TagString: Untagged
@@ -11452,19 +11383,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 478103018}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2065528455
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2065528453}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a4ebf7e84c374144a670ac2626e4ed8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  parallaxFactor: -0.5
 --- !u!212 &2065528456
 SpriteRenderer:
   m_ObjectHideFlags: 0

@@ -4,11 +4,13 @@ public class ParallaxLayer : MonoBehaviour
 {
     [SerializeField] private float parallaxFactor; // Parallax factor for this layer
 
-    private float previousLayerPositionX;
+    private Vector3 previousLayerPosition;
 
     private void OnEnable()
     {
         EventHandler.CameraMove += ApplyParallax;
+
+        SetTransformToInitial();
     }
 
     private void OnDisable()
@@ -16,10 +18,10 @@ public class ParallaxLayer : MonoBehaviour
         EventHandler.CameraMove -= ApplyParallax;
     }
 
-    void Start()
+    void Awake()
     {
         // Initialize previousLayerPositionX to current layer position
-        previousLayerPositionX = transform.position.x;
+        previousLayerPosition = transform.position;
     }
 
     private void ApplyParallax(float deltaX)
@@ -28,8 +30,10 @@ public class ParallaxLayer : MonoBehaviour
         Vector3 newLayerPosition = transform.position;
         newLayerPosition.x += deltaX * parallaxFactor;
         transform.position = newLayerPosition;
+    }
 
-        // Update the previousLayerPositionX for the next frame
-        previousLayerPositionX = transform.position.x;
+    private void SetTransformToInitial()
+    {
+        transform.position = previousLayerPosition;
     }
 }

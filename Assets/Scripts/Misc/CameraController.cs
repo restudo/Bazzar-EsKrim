@@ -1,9 +1,11 @@
+using System.Collections;
 using UnityEngine;
 
 namespace BazarEsKrim
 {
     public class CameraController : MonoBehaviour
     {
+        [Header("Control Params")]
         public float panSpeed = 3f;       // Speed of camera pan based on mouse/touch movement
         public float smoothTime = 0.3f;   // Time to smoothly ease to a stop
         public float minX = -10f;         // Minimum X position the camera can move to
@@ -11,17 +13,33 @@ namespace BazarEsKrim
         public float dragThreshold = 0.1f; // Tolerance for dragging before moving the camera
         public float holdSmoothTime = 0.1f; // Reduced smooth time when holding after drag
 
+        [Space(20)]
+        [Header("Animation Params")]
+        public float moveSpeed = 20f;
+        public float smoothThreshold = 3f;
+
         private float currentSmoothTime;
         private float velocity = 0f;        // Reference velocity for SmoothDamp
         private float targetPositionX;      // Target X position for the camera
         private float previousCameraPositionX; // Previous X position of the camera for parallax calculations
         private bool isDragging = false;    // Tracks whether the user is dragging the camera
-        private Vector2 lastMousePosition;  // Last position of the mouse or touch
         private bool isHolding = false;     // Tracks whether the user is holding the mouse after dragging
+        private bool isAnim = false; // Tracks wheter is it an set to target
+        private Vector2 lastMousePosition;  // Last position of the mouse or touch
+        private Coroutine moveAnimCoroutine; // Store the coroutine reference
 
-        void Start()
+        void Awake()
         {
             Init();
+        }
+
+        private void OnDisable()
+        {
+            if (moveAnimCoroutine != null)
+            {
+                StopCoroutine(moveAnimCoroutine);
+                moveAnimCoroutine = null; // Clear the reference
+            }
         }
 
         private void Init()
@@ -35,7 +53,7 @@ namespace BazarEsKrim
 
         void Update()
         {
-            if (GameManager.Instance.gameStates == GameStates.LevelSelection)
+            if (GameManager.Instance.gameStates == GameStates.LevelSelection && !isAnim)
             {
                 HandleInput();  // Handles both mouse and touch input
 
@@ -99,27 +117,67 @@ namespace BazarEsKrim
             }
         }
 
+        private IEnumerator SetAfterDelay(float targetX)
+        {
+            // Wait for a delay before starting the movement
+            yield return new WaitForSeconds(0.2f);
+
+            float distanceToTarget;
+
+            // move towards the target position
+            while (true)
+            {
+                distanceToTarget = Mathf.Abs(transform.position.x - targetX);
+
+                if (distanceToTarget <= smoothThreshold)
+                    break; // Stop the fast move when close to the target
+
+                // Move directly towards the target without smoothing
+                Vector3 moveStep = Vector3.MoveTowards(transform.position, new Vector3(targetX, transform.position.y, transform.position.z), moveSpeed * Time.deltaTime);
+                transform.position = moveStep;
+
+                EventHandler.CallCameraMoveEvent(transform.position.x - previousCameraPositionX);
+
+                previousCameraPositionX = transform.position.x;
+
+                yield return null;
+            }
+
+            // smoothly move the camera to the target position using SmoothDamp
+            while (distanceToTarget > 0.01f) // Continue smoothing until almost exactly at the target
+            {
+                float newPositionX = Mathf.SmoothDamp(transform.position.x, targetX, ref velocity, smoothTime);
+                transform.position = new Vector3(newPositionX, transform.position.y, transform.position.z);
+
+                // Notify parallax layers about the camera movement
+                EventHandler.CallCameraMoveEvent(newPositionX - previousCameraPositionX);
+
+                previousCameraPositionX = newPositionX;
+
+                distanceToTarget = Mathf.Abs(newPositionX - targetX);
+
+                yield return null; // Wait for the next frame
+            }
+
+            // Ensure the final position is exactly the target
+            transform.position = new Vector3(targetX, transform.position.y, transform.position.z);
+            EventHandler.CallCameraMoveEvent(targetX - previousCameraPositionX);
+
+            Init();
+
+            isAnim = false;
+
+            moveAnimCoroutine = null;
+        }
+
         public void SetToTarget(float targetX)
         {
-            // Set camera's position to the given target X value
-            // Vector3 initialPosition = transform.position;
-            // initialPosition.x = targetX;
-            // transform.position = initialPosition;
+            isAnim = true;
 
             // Smoothly move the camera to the target position
             Init();
 
-            // Smoothly move the camera to the target position
-            float newPositionX = Mathf.SmoothDamp(transform.position.x, targetX, ref velocity, currentSmoothTime);
-            transform.position = new Vector3(newPositionX, transform.position.y, transform.position.z);
-
-            // Notify parallax layers about the camera movement
-            EventHandler.CallCameraMoveEvent(newPositionX - previousCameraPositionX);
-
-            // Update previous camera position
-            previousCameraPositionX = newPositionX;
-
-            Debug.Log("Set Camera To Target " + targetX);
+            moveAnimCoroutine = StartCoroutine(SetAfterDelay(targetX));
         }
     }
 }

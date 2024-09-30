@@ -34,10 +34,10 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.DeleteKey("UnlockedLevel");
 
         isGameActive = false;
-        // PlayerPrefs.SetInt("UnlockedLevel", 4);
+        // PlayerPrefs.SetInt("UnlockedLevel", 6);
 
         foreach (var level in levelDataLists)
-        {            
+        {
             for (int i = 0; i < level.mainGameLevelData.sO_RecipeList.Length; i++)
             {
                 level.mainGameLevelData.sO_RecipeList[i].Set();
@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.T))
         {
-            UnlockLevel();
+            // EventHandler.CallSetParallaxToInitEvent();
         }
     }
 

@@ -67,8 +67,6 @@ public class MenuManager : MonoBehaviour
 
         GameManager.Instance.gameStates = GameStates.MainMenu;
 
-        SetCameraToZero();
-
         SetActiveMenu(mainMenu: true, collection: false, levelSelection: false);
 
         // stop anim
@@ -96,8 +94,6 @@ public class MenuManager : MonoBehaviour
 
         GameManager.Instance.gameStates = GameStates.Collection;
 
-        SetCameraToZero();
-
         SetActiveMenu(mainMenu: false, collection: true, levelSelection: false);
     }
 
@@ -111,7 +107,6 @@ public class MenuManager : MonoBehaviour
         }
         else if (GameManager.Instance.gameStates != GameStates.MainMenu)
         {
-            SetCameraToZero();
             LoadToMainMenu();
         }
         else
