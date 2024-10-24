@@ -1,0 +1,174 @@
+
+Spine_Pariz.png
+size: 2048,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+F_correct_armFar
+  rotate: true
+  xy: 1386, 169
+  size: 169, 120
+  orig: 171, 121
+  offset: 1, 1
+  index: -1
+F_correct_armNear
+  rotate: true
+  xy: 2, 2
+  size: 214, 159
+  orig: 214, 159
+  offset: 0, 0
+  index: -1
+F_correct_body
+  rotate: false
+  xy: 651, 4
+  size: 241, 220
+  orig: 241, 220
+  offset: 0, 0
+  index: -1
+F_correct_hairFar
+  rotate: true
+  xy: 1356, 340
+  size: 169, 148
+  orig: 171, 149
+  offset: 0, 0
+  index: -1
+F_correct_hairNear
+  rotate: true
+  xy: 894, 37
+  size: 233, 146
+  orig: 233, 147
+  offset: 0, 1
+  index: -1
+F_correct_head
+  rotate: true
+  xy: 244, 218
+  size: 291, 239
+  orig: 291, 240
+  offset: 0, 1
+  index: -1
+F_correct_legFar
+  rotate: false
+  xy: 1092, 307
+  size: 130, 202
+  orig: 130, 202
+  offset: 0, 0
+  index: -1
+F_correct_legNear
+  rotate: false
+  xy: 1205, 4
+  size: 108, 100
+  orig: 109, 100
+  offset: 1, 0
+  index: -1
+F_normal_armFar
+  rotate: false
+  xy: 1315, 6
+  size: 96, 98
+  orig: 96, 98
+  offset: 0, 0
+  index: -1
+F_normal_armNear
+  rotate: false
+  xy: 1533, 114
+  size: 97, 108
+  orig: 97, 109
+  offset: 0, 1
+  index: -1
+F_normal_badan
+  rotate: true
+  xy: 163, 4
+  size: 212, 254
+  orig: 212, 254
+  offset: 0, 0
+  index: -1
+F_normal_hairFar
+  rotate: true
+  xy: 1224, 318
+  size: 191, 130
+  orig: 192, 131
+  offset: 1, 1
+  index: -1
+F_normal_hairNear
+  rotate: true
+  xy: 1042, 57
+  size: 220, 161
+  orig: 220, 161
+  offset: 0, 0
+  index: -1
+F_normal_head
+  rotate: true
+  xy: 485, 226
+  size: 283, 247
+  orig: 283, 247
+  offset: 0, 0
+  index: -1
+F_normal_legFar
+  rotate: false
+  xy: 1413, 24
+  size: 118, 143
+  orig: 118, 143
+  offset: 0, 0
+  index: -1
+F_normal_legNear
+  rotate: false
+  xy: 1585, 374
+  size: 123, 135
+  orig: 123, 135
+  offset: 0, 0
+  index: -1
+F_wrong_armFar
+  rotate: false
+  xy: 1506, 366
+  size: 77, 143
+  orig: 77, 143
+  offset: 0, 0
+  index: -1
+F_wrong_armNear
+  rotate: false
+  xy: 1508, 224
+  size: 96, 140
+  orig: 97, 140
+  offset: 1, 0
+  index: -1
+F_wrong_body
+  rotate: true
+  xy: 419, 8
+  size: 208, 230
+  orig: 209, 232
+  offset: 0, 1
+  index: -1
+F_wrong_fx
+  rotate: false
+  xy: 734, 240
+  size: 47, 30
+  orig: 48, 31
+  offset: 0, 0
+  index: -1
+F_wrong_hairFar
+  rotate: true
+  xy: 1205, 106
+  size: 199, 179
+  orig: 200, 180
+  offset: 1, 1
+  index: -1
+F_wrong_hairNear
+  rotate: true
+  xy: 934, 279
+  size: 230, 156
+  orig: 230, 156
+  offset: 0, 0
+  index: -1
+F_wrong_head
+  rotate: true
+  xy: 2, 218
+  size: 291, 240
+  orig: 292, 241
+  offset: 1, 0
+  index: -1
+F_wrong_leg
+  rotate: true
+  xy: 734, 272
+  size: 237, 198
+  orig: 239, 200
+  offset: 1, 1
+  index: -1

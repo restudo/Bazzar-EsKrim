@@ -1,0 +1,90 @@
+
+Spine_Coboz.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+M_correct_armFar
+  rotate: false
+  xy: 370, 122
+  size: 166, 196
+  orig: 167, 196
+  offset: 0, 0
+  index: -1
+M_correct_armNear
+  rotate: false
+  xy: 237, 49
+  size: 108, 121
+  orig: 108, 121
+  offset: 0, 0
+  index: -1
+M_correct_body
+  rotate: false
+  xy: 565, 256
+  size: 269, 418
+  orig: 270, 418
+  offset: 1, 0
+  index: -1
+M_correct_head
+  rotate: true
+  xy: 313, 676
+  size: 277, 293
+  orig: 278, 293
+  offset: 1, 0
+  index: -1
+M_correct_legFar
+  rotate: false
+  xy: 370, 320
+  size: 174, 225
+  orig: 174, 225
+  offset: 0, 0
+  index: -1
+M_normal_body
+  rotate: false
+  xy: 2, 531
+  size: 309, 422
+  orig: 309, 422
+  offset: 0, 0
+  index: -1
+M_normal_head
+  rotate: false
+  xy: 608, 690
+  size: 310, 263
+  orig: 310, 272
+  offset: 0, 0
+  index: -1
+M_wrong_armFar
+  rotate: true
+  xy: 2, 19
+  size: 151, 233
+  orig: 151, 233
+  offset: 0, 0
+  index: -1
+M_wrong_armNear
+  rotate: true
+  xy: 313, 547
+  size: 127, 250
+  orig: 127, 250
+  offset: 0, 0
+  index: -1
+M_wrong_body
+  rotate: false
+  xy: 2, 172
+  size: 366, 357
+  orig: 366, 357
+  offset: 0, 0
+  index: -1
+M_wrong_fx
+  rotate: false
+  xy: 347, 65
+  size: 73, 55
+  orig: 73, 57
+  offset: 0, 1
+  index: -1
+M_wrong_head
+  rotate: false
+  xy: 538, 2
+  size: 297, 252
+  orig: 297, 261
+  offset: 0, 0
+  index: -1

@@ -5,6 +5,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using Spine;
+using Spine.Unity;
 
 public class MainGameController : MonoBehaviour
 {
@@ -58,7 +60,13 @@ public class MainGameController : MonoBehaviour
     private float doubleCustomerProbability;
     private bool canCreateNewCustomer;
     private CustomerPool customerPool; // Reference to the CustomerPool
+    private GameObject character;
+    private SkeletonAnimation skeleton;
+
     private const float animationTime = .15f;
+    private const string NORMAL_CHAR_ANIM = "normal";
+    private const string CORRECT_CHAR_ANIM = "correct";
+    private const string WRONG_CHAR_ANIM = "wrong";
 
     // Cache WaitForSeconds to avoid memory allocation spikes
     private WaitForSeconds customerDelayWait;
@@ -83,7 +91,8 @@ public class MainGameController : MonoBehaviour
         specialRecipePoint = levelData.specialRecipePoint;
         maxPoint = levelData.maxPoint;
         timer = levelData.timer;
-        characters[(int)levelData.character].SetActive(true);
+        character = characters[(int)levelData.character];
+        skeleton = character.GetComponent<SkeletonAnimation>();
 
         customerCounter = 0;
         deliveryQueueIngredient = 0;
@@ -155,6 +164,10 @@ public class MainGameController : MonoBehaviour
         timerText.text = string.Format("{0:00}:{1:00}", time.Minutes, time.Seconds);
 
         canCreateNewCustomer = true; // Start customer creation
+
+        character.SetActive(true);
+
+        SetCharacterAnim(NORMAL_CHAR_ANIM, true);
     }
 
     private void Update()
@@ -173,6 +186,16 @@ public class MainGameController : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void SetCharacterAnim(string charAnim, bool isLooping)
+    {
+        skeleton.AnimationState.SetAnimation(0, charAnim, isLooping);
+    }
+
+    private void AddCharacterAnim(string charAnim, bool isLooping)
+    {
+        skeleton.AnimationState.AddAnimation(0, charAnim, isLooping, 0);
     }
 
     private void ManageTimer()
@@ -318,11 +341,15 @@ public class MainGameController : MonoBehaviour
             SetClosedBgVisibility(bgSpriteAlphas);
             StartCoroutine(WinAnim());
         }
+
+        SetCharacterAnim(CORRECT_CHAR_ANIM, false);
+        AddCharacterAnim(NORMAL_CHAR_ANIM, true);
     }
 
     private void IncorrectOrderEvent()
     {
-        // Handle incorrect order logic here
+        SetCharacterAnim(WRONG_CHAR_ANIM, false);
+        AddCharacterAnim(NORMAL_CHAR_ANIM, true);
     }
 
     private IEnumerator WinAnim()
