@@ -88,11 +88,11 @@ public static class EventHandler
             AddMiniGameScore();
     }
     
-    public static event Action BasketFlashEffect;
-    public static void CallBasketFlashEffectEvent()
+    public static event Action<float> BasketFlashEffect;
+    public static void CallBasketFlashEffectEvent(float xPos)
     {
         if (BasketFlashEffect != null)
-            BasketFlashEffect();
+            BasketFlashEffect(xPos);
     }
     
     public static event Action<Vector3, Vector3> SetPointCounterPos;

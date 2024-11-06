@@ -11,6 +11,7 @@ namespace BazarEsKrim
         [SerializeField] private float flashDuration = 0.1f; // Duration of each flash
         [SerializeField] private int flashCount = 1; // Number of flashes
         [SerializeField] private GameObject[] basketContentVisuals;
+        [SerializeField] private ParticleSystem splashVfx;
 
         private Material originalMaterial;
 
@@ -51,10 +52,13 @@ namespace BazarEsKrim
             }
         }
 
-        private void FlashEffect()
+        private void FlashEffect(float xPos)
         {
             if (visual != null)
             {
+                splashVfx.transform.position = new Vector2(xPos, splashVfx.transform.position.y);
+                splashVfx.Play();
+
                 visual.material = originalMaterial;
 
                 StartCoroutine(StartFlashEffect());

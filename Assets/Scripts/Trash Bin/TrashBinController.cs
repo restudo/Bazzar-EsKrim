@@ -34,8 +34,6 @@ public class TrashBinController : MonoBehaviour
         trashBinCol = GetComponent<Collider2D>();
         topSprite = gameObject.transform.GetChild(0).transform;
 
-        Debug.Log(topSprite);
-
         deliveryPlate = FindObjectOfType<IngredientHolder>().gameObject;
         if (deliveryPlate != null)
         {
@@ -61,13 +59,13 @@ public class TrashBinController : MonoBehaviour
     private void OnEnable()
     {
         EventHandler.CloseTrashBin += CloseTrashBin;
-        EventHandler.SquishTrashBin += Squish;
+        // EventHandler.SquishTrashBin += Squish;
     }
 
     private void OnDisable()
     {
         EventHandler.CloseTrashBin -= CloseTrashBin;
-        EventHandler.SquishTrashBin -= Squish;
+        // EventHandler.SquishTrashBin -= Squish;
     }
 
     void LateUpdate()
@@ -146,7 +144,7 @@ public class TrashBinController : MonoBehaviour
 
                     CloseTrashBin();
 
-                    Squish();
+                    // Squish();
 
                     currentClick = 0;
                 });
@@ -156,16 +154,16 @@ public class TrashBinController : MonoBehaviour
 
     }
 
-    private void Squish()
-    {
-        // // squish
-        // transform.DOScaleY(0.6f, 0.1f).SetEase(Ease.OutExpo);
-        // transform.DOLocalMoveY(-3.5616f, 0.1f).SetEase(Ease.OutExpo).OnComplete(() =>
-        // {
-        //     transform.DOScaleY(bodyScale.y, 0.1f).SetEase(Ease.OutExpo);
-        //     transform.DOLocalMoveY(bodyPosition.y, 0.1f).SetEase(Ease.OutExpo);
-        // });
-    }
+    // private void Squish()
+    // {
+    //     // // squish
+    //     // transform.DOScaleY(0.6f, 0.1f).SetEase(Ease.OutExpo);
+    //     // transform.DOLocalMoveY(-3.5616f, 0.1f).SetEase(Ease.OutExpo).OnComplete(() =>
+    //     // {
+    //     //     transform.DOScaleY(bodyScale.y, 0.1f).SetEase(Ease.OutExpo);
+    //     //     transform.DOLocalMoveY(bodyPosition.y, 0.1f).SetEase(Ease.OutExpo);
+    //     // });
+    // }
 
     public void CloseTrashBin()
     {

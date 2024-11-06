@@ -10,7 +10,7 @@ public class IngredientHolder : MonoBehaviour
 
     [SerializeField] MainGameController mainGameController;
     [SerializeField] TrashBinController trashBin;
-    [SerializeField] GameObject trashBinHighlight;
+    [SerializeField] ParticleSystem trashBinHighlightVfx;
 
     private Vector3 initialPosition;
     private Collider2D plateCollider;
@@ -75,12 +75,22 @@ public class IngredientHolder : MonoBehaviour
                 if (customer.IsOnSeat())
                 {
                     int lastChildIndex = customer.transform.childCount - 1;
-                    customer.transform.GetChild(lastChildIndex).gameObject.SetActive(true);
+                    ParticleSystem customerVfx = customer.transform.GetChild(lastChildIndex).GetComponent<ParticleSystem>();
+
+                    if (!customerVfx.gameObject.activeSelf)
+                    {
+                        customerVfx.gameObject.SetActive(true);
+                        customerVfx.Play();
+                    }
                 }
             }
 
-            trashBinHighlight.SetActive(true);
-            trashBin.OpenTrashBin();
+            if (!trashBinHighlightVfx.gameObject.activeSelf)
+            {
+                trashBinHighlightVfx.gameObject.SetActive(true);
+                trashBinHighlightVfx.Play();
+                trashBin.OpenTrashBin();
+            }
 
             if (Input.touches.Length < 1 && !Input.GetMouseButton(0))
             {
@@ -130,7 +140,7 @@ public class IngredientHolder : MonoBehaviour
 
         ResetPosition();
         DeactivateCustomers(availableCustomers);
-        trashBinHighlight.SetActive(false);
+        trashBinHighlightVfx.gameObject.SetActive(false);
         trashBin.CloseTrashBin();
     }
 
@@ -178,7 +188,7 @@ public class IngredientHolder : MonoBehaviour
         if (trashBin.isCloseEnoughToTrashbin)
         {
             EventHandler.CallCloseTrashBinEvent();
-            EventHandler.CallSquishTrashBinEvent();
+            // EventHandler.CallSquishTrashBinEvent();
             ResetMainQueue();
         }
 

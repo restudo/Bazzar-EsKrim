@@ -122,7 +122,7 @@ public class FallingObject : MonoBehaviour
                 DOTween.Kill(transform);
 
                 EventHandler.CallAddMiniGameScoreEvent();
-                EventHandler.CallBasketFlashEffectEvent();
+                EventHandler.CallBasketFlashEffectEvent(transform.position.x);
                 EventHandler.CallSetPointCounterPosEvent(transform.position, basket.transform.position);
 
                 // StartCoroutine(ReleasePoolWithDelay());
