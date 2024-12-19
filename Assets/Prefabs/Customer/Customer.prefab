@@ -1729,13 +1729,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5067815236961176811, guid: 12204613feb969c47a6b4342c7a2ce23, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5067815236961176811, guid: 12204613feb969c47a6b4342c7a2ce23, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5067815236961176811, guid: 12204613feb969c47a6b4342c7a2ce23, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5067815236961176811, guid: 12204613feb969c47a6b4342c7a2ce23, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5457812267190632503, guid: 12204613feb969c47a6b4342c7a2ce23, type: 3}
       propertyPath: m_Name
       value: vfx_select_char
       objectReference: {fileID: 0}
     - target: {fileID: 5457812267190632503, guid: 12204613feb969c47a6b4342c7a2ce23, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

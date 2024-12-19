@@ -38,6 +38,7 @@ public class CustomerController : MonoBehaviour
     private bool isLeaving;
     private bool isFacingRight;
     private bool isRecipeOrder;
+    private bool isOrderCompleted;
     private bool isDeliveryPlateColliding;
     private bool isMousePositionColliding;
 
@@ -106,6 +107,7 @@ public class CustomerController : MonoBehaviour
     private void InitializeCustomerDetails()
     {
         isFacingRight = true;
+        isOrderCompleted = false;
         skeletonAnimation = null;
         meshRenderer = null;
 
@@ -401,34 +403,42 @@ public class CustomerController : MonoBehaviour
 
     private void OrderIsCorrect()
     {
-        moodIndex = 2;
-
-        if (!isLeaving)
+        if (!isOrderCompleted)
         {
-            HudPos.SetActive(false);
-            skeletonAnimation.AnimationState.SetAnimation(0, positiveAnimationName, false);
-        }
+            moodIndex = 2;
 
-        patienceBarController.StopDecreasingPatience();
-        StartLeaving();
-        EventHandler.CallCorrectOrderEvent(isRecipeOrder);
-        EventHandler.CallSetMoneyPosToCustomerPosEvent(transform.position, isRecipeOrder);
-        moneySpawner.moneyPool.Get();
+            if (!isLeaving)
+            {
+                HudPos.SetActive(false);
+                skeletonAnimation.AnimationState.SetAnimation(0, positiveAnimationName, false);
+            }
+
+            patienceBarController.StopDecreasingPatience();
+            StartLeaving();
+            EventHandler.CallCorrectOrderEvent(isRecipeOrder);
+            EventHandler.CallSetMoneyPosToCustomerPosEvent(transform.position, isRecipeOrder);
+            moneySpawner.moneyPool.Get();
+
+            isOrderCompleted = true;
+        }
     }
 
     private void OrderIsIncorrect()
     {
-        moodIndex = 3;
-
-        if (!isLeaving)
+        if (!isOrderCompleted)
         {
-            skeletonAnimation.AnimationState.SetAnimation(0, negativeAnimationName, false);
-            skeletonAnimation.AnimationState.AddAnimation(0, idleAnimationName, true, 0);
-        }
+            moodIndex = 3;
 
-        float decreaseValue = customerPatience * decreasePatiencePercentage;
-        patienceBarController.DecreaseWithValue(decreaseValue);
-        EventHandler.CallIncorrectOrderEvent();
+            if (!isLeaving)
+            {
+                skeletonAnimation.AnimationState.SetAnimation(0, negativeAnimationName, false);
+                skeletonAnimation.AnimationState.AddAnimation(0, idleAnimationName, true, 0);
+            }
+
+            float decreaseValue = customerPatience * decreasePatiencePercentage;
+            patienceBarController.DecreaseWithValue(decreaseValue);
+            EventHandler.CallIncorrectOrderEvent();
+        }
     }
 
     private void TogglePauseAnim()

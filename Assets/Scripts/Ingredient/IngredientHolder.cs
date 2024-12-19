@@ -144,13 +144,13 @@ public class IngredientHolder : MonoBehaviour
         trashBin.CloseTrashBin();
     }
 
-    private void DebugDelivery()
-    {
-        for (int i = 0; i < mainGameController.deliveryQueueIngredientsContent.Count; i++)
-        {
-            print($"Delivery Items ID {i} = {mainGameController.deliveryQueueIngredientsContent[i]}");
-        }
-    }
+    // private void DebugDelivery()
+    // {
+    //     for (int i = 0; i < mainGameController.deliveryQueueIngredientsContent.Count; i++)
+    //     {
+    //         print($"Delivery Items ID {i} = {mainGameController.deliveryQueueIngredientsContent[i]}");
+    //     }
+    // }
 
     private void DeactivateCustomers(List<CustomerController> availableCustomers)
     {
