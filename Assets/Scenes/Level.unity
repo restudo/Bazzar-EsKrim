@@ -10535,6 +10535,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canDeliverOrder: 0
   availableCustomers: []
+  availableIngredients: []
   mainGameController: {fileID: 909970260}
   trashBin: {fileID: 1058764449}
   trashBinHighlightVfx: {fileID: 2127041561}
@@ -10551,7 +10552,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ingredientPrefab: {fileID: 2346520244104545202, guid: 5f5f95725a85c524897ab9a5b282140c, type: 3}
-  mainGameController: {fileID: 909970260}
 --- !u!1 &1690802900
 GameObject:
   m_ObjectHideFlags: 0
