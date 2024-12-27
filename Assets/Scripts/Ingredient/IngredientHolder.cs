@@ -7,6 +7,7 @@ public class IngredientHolder : MonoBehaviour
 {
     [HideInInspector] public bool canDeliverOrder;
     [HideInInspector] public List<CustomerController> availableCustomers;
+    [HideInInspector] public List<Ingredient> availableIngredients;
 
     [SerializeField] MainGameController mainGameController;
     [SerializeField] TrashBinController trashBin;
@@ -18,6 +19,8 @@ public class IngredientHolder : MonoBehaviour
     void Awake()
     {
         availableCustomers = new List<CustomerController>();
+        availableIngredients = new List<Ingredient>();
+
         plateCollider = GetComponent<Collider2D>();
         canDeliverOrder = false;
     }
@@ -144,14 +147,6 @@ public class IngredientHolder : MonoBehaviour
         trashBin.CloseTrashBin();
     }
 
-    // private void DebugDelivery()
-    // {
-    //     for (int i = 0; i < mainGameController.deliveryQueueIngredientsContent.Count; i++)
-    //     {
-    //         print($"Delivery Items ID {i} = {mainGameController.deliveryQueueIngredientsContent[i]}");
-    //     }
-    // }
-
     private void DeactivateCustomers(List<CustomerController> availableCustomers)
     {
         foreach (CustomerController customer in availableCustomers)
@@ -162,21 +157,20 @@ public class IngredientHolder : MonoBehaviour
 
     private void ResetMainQueue()
     {
+        // release ingredient pool
+        foreach (Ingredient ingredient in availableIngredients)
+        {
+            if (!ingredient.GetReleaseFlag())
+            {
+                ingredient.GetIngredientPool().Release(ingredient);
+                ingredient.SetReleaseFlag(true);
+            }
+        }
+
         mainGameController.deliveryQueueIngredient = 0;
         mainGameController.deliveryQueueIngredientsContent.Clear();
 
-        // release ingredient pool
-        foreach (Transform child in transform)
-        {
-            if (child.TryGetComponent<Ingredient>(out Ingredient ingredient))
-            {
-                if (!ingredient.GetReleaseFlag())
-                {
-                    ingredient.GetIngredientPool().Release(ingredient);
-                    ingredient.SetReleaseFlag(true);
-                }
-            }
-        }
+        availableIngredients.Clear();
 
         EventHandler.CallEnableTabButtonEvent((int)IngredientType.Base);
         EventHandler.CallDisableTabButtonEvent((int)IngredientType.Flavor);

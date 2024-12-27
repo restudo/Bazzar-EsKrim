@@ -15,38 +15,25 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     [SerializeField] private IngredientPool ingredientPool;
     [SerializeField] private IngredientHolder ingredientHolder;
     [SerializeField] private MainGameController mainGameController;
-    // [SerializeField] private GameObject ingredientPrefab = null;
-    // [SerializeField] private ScrollRect scrollRect;
-    // [SerializeField] private ScrollController scrollController;
 
     private Camera mainCamera;
-    private Transform parentIngredient;
+    // private Transform parentIngredient;
+    private RectTransform draggedIngredientRect;
     private Vector3 worldPosition;
+
     private const float flewDuration = 0.3f;
-    // private GameObject draggedIngredient;
-    // private bool isPointerOverUI;
-    // private bool isDragging;
-    // private bool isScrolling;
-    // private float pointerDownTime;
-    // private const float dragThreshold = 0.2f; // Adjust this value as needed
-    // private Vector2 dragStartPosition;
-    // private Vector2 contentStartPosition;
+    private const string INGREDIENT_HOLDER = "Ingredient Holder";
+    private const string RENDER_ON_TOP = "Render On Top";
 
     private void Start()
     {
-        // isDragging = false;
-        // isPointerOverUI = false;
-        // isScrolling = false;
-
-        // parentIngredient = GameObject.FindGameObjectWithTag("Ingredient Holder").transform;
-        // ingredientHolder = parentIngredient.gameObject.GetComponent<IngredientHolder>();
-        // mainGameController = FindObjectOfType<MainGameController>();
-
         mainCamera = Camera.main;
-        parentIngredient = ingredientHolder.transform;
+        // parentIngredient = ingredientHolder.transform;
 
         glowingPlate.SetActive(false);
         draggedIngredient.SetActive(false);
+
+        draggedIngredientRect = draggedIngredient.GetComponent<RectTransform>();
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -55,8 +42,6 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         {
             return;
         }
-
-        // isDragging = true; // Mark that a drag has started
 
         ingredientHolder.canDeliverOrder = false;
 
@@ -70,15 +55,13 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
         if (isSingleFingerTouch || isLeftMouseClick)
         {
-            // Instantiate the ingredient object
-            // draggedIngredient = Instantiate(InventoryManager.Instance.inventoryDraggedIngredient, eventData.position, Quaternion.identity, transform.parent);
             draggedIngredient.SetActive(true);
 
             Canvas draggedCanvas = draggedIngredient.GetComponent<Canvas>();
             if (draggedCanvas.renderMode == RenderMode.ScreenSpaceCamera)
             {
                 draggedCanvas.worldCamera = mainCamera;
-                draggedCanvas.sortingLayerName = "Render On Top";
+                draggedCanvas.sortingLayerName = RENDER_ON_TOP;
             }
 
             // Get the ingredient image
@@ -93,106 +76,24 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         if (draggedIngredient != null)
         {
             // Convert screen position to world position in the context of the RectTransform's parent
-            if (RectTransformUtility.ScreenPointToWorldPointInRectangle(draggedIngredient.GetComponent<RectTransform>(), eventData.position, eventData.pressEventCamera, out worldPosition))
+            if (RectTransformUtility.ScreenPointToWorldPointInRectangle(draggedIngredientRect, eventData.position, eventData.pressEventCamera, out worldPosition))
             {
-                draggedIngredient.GetComponent<RectTransform>().position = worldPosition;
+                draggedIngredientRect.position = worldPosition;
             }
         }
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        // GameObject ingredientHolderObj = GameObject.FindGameObjectWithTag("Ingredient Holder");
-        // IngredientHolder ingredientHolder = parentIngredient.gameObject.GetComponent<IngredientHolder>();
-
         if (draggedIngredient != null)
         {
-            // Destroy(draggedIngredient);
-            // draggedIngredient.SetActive(false);
-
-            // levelManager.deliveryQueueIsFull = true;
-            HandleIngredientDrop(parentIngredient.gameObject, mainGameController);
+            HandleIngredientDrop(ingredientHolder.gameObject, mainGameController);
 
             glowingPlate.SetActive(false);
 
             ingredientHolder.canDeliverOrder = true;
-
-            // else
-            // {
-            //     levelManager.deliveryQueueIsFull = false;
-            // }
         }
-
-        // isDragging = false; // Reset the drag flag
     }
-
-    // public void OnPointerDown(PointerEventData eventData)
-    // {
-    //     isPointerOverUI = EventSystem.current.IsPointerOverGameObject(eventData.pointerId);
-    //     isDragging = false;
-    //     isScrolling = false;
-    //     pointerDownTime = Time.time;
-    //     dragStartPosition = eventData.position;
-    //     if (scrollRect != null && scrollRect.enabled)
-    //     {
-    //         contentStartPosition = scrollRect.content.anchoredPosition;
-    //     }
-    // }
-
-    // public void OnPointerUp(PointerEventData eventData)
-    // {
-    //     if (!isPointerOverUI || ingredientDetails == null || !GameManager.Instance.isGameActive || isDragging || isScrolling)
-    //     {
-    //         isPointerOverUI = false;
-    //         return;
-    //     }
-
-    //     bool isSingleFingerTouch = Input.touchCount == 1 && eventData.pointerId >= 0;
-    //     bool isLeftMouseClick = eventData.pointerId == -1;
-
-    //     if (isSingleFingerTouch || isLeftMouseClick)
-    //     {
-    //         if (Time.time - pointerDownTime <= dragThreshold)
-    //         {
-    //             if (levelManager.deliveryQueueIngredient < levelManager.maxOrderHeight)
-    //             {
-    //                 AddIngredientDirectlyToHolder(parentIngredient.gameObject, levelManager);
-    //             }
-
-    //             ingredientHolder.canDeliverOrder = true;
-    //         }
-    //     }
-
-    //     isPointerOverUI = false;
-    // }
-
-    // public void OnPointerExit(PointerEventData eventData)
-    // {
-    //     isPointerOverUI = false;
-    // }
-
-    // public void OnBeginDrag(PointerEventData eventData)
-    // {
-    //     isDragging = true;
-    //     isScrolling = false;
-    // }
-
-    // public void OnDrag(PointerEventData eventData)
-    // {
-    //     if (isDragging && scrollRect != null && scrollRect.enabled)
-    //     {
-    //         Vector2 dragDelta = eventData.position - dragStartPosition;
-    //         dragDelta.y = 0; // Lock vertical movement
-    //         scrollRect.content.anchoredPosition = contentStartPosition + dragDelta;
-    //         isScrolling = true;
-    //     }
-    // }
-
-    // public void OnEndDrag(PointerEventData eventData)
-    // {
-    //     isDragging = false;
-    //     isScrolling = false;
-    // }
 
     private void HandleIngredientDrop(GameObject ingredientHolderObj, MainGameController mainGameController)
     {
@@ -220,21 +121,14 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         return collider.bounds.Contains(mousePos);
     }
 
-    // private void AddIngredientDirectlyToHolder(GameObject ingredientHolderObj, MainGameController mainGameController)
-    // {
-    //     if (ingredientHolderObj != null && mainGameController != null)
-    //     {
-    //         TryAddIngredientToPlate(ingredientHolderObj, mainGameController);
-    //     }
-    // }
-
     private void TryAddIngredientToPlate(GameObject ingredientHolderObj, MainGameController mainGameController)
     {
         if (ingredientDetails != null)
         {
             // Transform lastIngredient = GetLastIngredient(ingredientHolderObj);
             Transform lastIngredient = ingredientPool.GetLastIngredient();
-            if (IsInvalidIngredientPlacement(ingredientHolderObj, lastIngredient))
+            Ingredient ingredient = lastIngredient.GetComponent<Ingredient>();
+            if (IsInvalidIngredientPlacement(ingredientHolderObj, lastIngredient, ingredient))
             {
                 DraggedIngredientFlewAnim();
 
@@ -242,7 +136,7 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             }
 
             float nextPositionY = CalculateNextPositionY(ingredientHolderObj, lastIngredient);
-            CreateAndPlaceIngredient(ingredientHolderObj, nextPositionY, mainGameController, lastIngredient);
+            CreateAndPlaceIngredient(ingredientHolderObj, nextPositionY, mainGameController, lastIngredient, ingredient);
         }
     }
 
@@ -251,12 +145,7 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         draggedIngredient.transform.DOMove(transform.position, flewDuration).SetEase(Ease.OutExpo).OnComplete(() => draggedIngredient.SetActive(false));
     }
 
-    // private Transform GetLastIngredient(GameObject ingredientHolderObj)
-    // {
-    //     return ingredientHolderObj.transform.childCount > 0 ? ingredientHolderObj.transform.GetChild(ingredientHolderObj.transform.childCount - 1) : null;
-    // }
-
-    private bool IsInvalidIngredientPlacement(GameObject ingredientHolderObj, Transform lastIngredient)
+    private bool IsInvalidIngredientPlacement(GameObject ingredientHolderObj, Transform lastIngredient, Ingredient ingredient)
     {
         if (lastIngredient == null && ingredientDetails.ingredientType != IngredientType.Base)
         {
@@ -271,12 +160,12 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                     return true;
                 }
 
-                if (lastIngredient.GetComponent<Ingredient>().IngredientType == IngredientType.Base && ingredientDetails.ingredientType == IngredientType.Topping)
+                if (ingredient.IngredientType == IngredientType.Base && ingredientDetails.ingredientType == IngredientType.Topping)
                 {
                     return true;
                 }
 
-                if (lastIngredient.GetComponent<Ingredient>().IngredientType == IngredientType.Topping)
+                if (ingredient.IngredientType == IngredientType.Topping)
                 {
                     return true;
                 }
@@ -312,40 +201,26 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         return nextPositionY;
     }
 
-    private void CreateAndPlaceIngredient(GameObject ingredientHolderObj, float nextPositionY, MainGameController mainGameController, Transform lastIngredient)
+    private void CreateAndPlaceIngredient(GameObject ingredientHolderObj, float nextPositionY, MainGameController mainGameController, Transform lastIngredient, Ingredient ingredient)
     {
-        // Vector3 platePosition = ingredientHolderObj.transform.position;
-        // GameObject ingredientGameobject = Instantiate(ingredientPrefab, platePosition, Quaternion.identity, parentIngredient);
-
         ingredientPool.SetParent(ingredientHolderObj.transform);
 
         Ingredient ingredientGameobject = ingredientPool.ingredientPool.Get();
 
-        // if(lastIngredient != null && lastIngredient.gameObject.activeSelf)
-        // {
-        //     lastIngredient.SetSiblingIndex(0);
-        // }
-
+        // set the nextpostransform from the last child transform from ingredient gameobject
         Transform nextPosTransform = ingredientGameobject.transform.GetChild(ingredientGameobject.transform.childCount - 1);
         nextPosTransform.localPosition = new Vector3(nextPosTransform.localPosition.x, ingredientDetails.nextIngredientPosY, nextPosTransform.localPosition.z);
 
-        // Ingredient ingredient = ingredientGameobject.GetComponent<Ingredient>();
         ingredientGameobject.IngredientCode = (int)ingredientDetails.ingredientCode;
         ingredientGameobject.IngredientType = ingredientDetails.ingredientType;
 
         SpriteRenderer spriteRenderer = ingredientGameobject.GetComponentInChildren<SpriteRenderer>();
         spriteRenderer.sprite = ingredientDetails.dressIngredientSprite;
-        // if (ingredientDetails.ingredientType == IngredientType.Topping)
-        // {
-        //     spriteRenderer.sprite = ingredientDetails.plateIngredientSprite;
-        // }
-        // else
-        // {
-        // }
 
-        spriteRenderer.sortingLayerName = "Ingredient Holder";
+        spriteRenderer.sortingLayerName = INGREDIENT_HOLDER;
         spriteRenderer.sortingOrder = 1;
 
+        // if this ingredient gameobject is the first one
         if (lastIngredient != null)
         {
             SpriteRenderer lastIngredientSprite = lastIngredient.GetComponentInChildren<SpriteRenderer>();
@@ -357,10 +232,13 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             }
         }
 
+        // set the transform of the ingredient gameobject to the next position of the previous ingredient gameobject
         ingredientGameobject.transform.position = new Vector3(ingredientHolderObj.transform.position.x, nextPositionY, ingredientHolderObj.transform.position.z);
 
         mainGameController.deliveryQueueIngredient++;
         mainGameController.deliveryQueueIngredientsContent.Add(ingredientGameobject.IngredientCode);
+
+        ingredientHolder.availableIngredients.Add(ingredient);
 
         SetButtonLogic(ingredientGameobject.IngredientType);
 
