@@ -61,6 +61,7 @@ public class CustomerController : MonoBehaviour
         customerCol = GetComponent<Collider2D>();
 
         // Find and cache references to other objects in the scene
+        // TODO: set the references from starting pooling
         mainGameController = FindObjectOfType<MainGameController>();
         customerPool = mainGameController.GetComponent<CustomerPool>();
         orderManager = GetComponent<OrderManager>();
