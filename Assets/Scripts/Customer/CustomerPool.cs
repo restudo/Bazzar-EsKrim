@@ -5,6 +5,9 @@ public class CustomerPool : MonoBehaviour
 {
     public ObjectPool<CustomerController> customerPool;
     [SerializeField] private CustomerController customerPrefabs;
+    [SerializeField] private MainGameController mainGameController;
+    [SerializeField] private IngredientHolder ingredientHolder;
+    [SerializeField] private MoneySpawner moneySpawner;
     [SerializeField] private Transform parent;
     // private LevelManager levelManager;
 
@@ -16,6 +19,8 @@ public class CustomerPool : MonoBehaviour
     private CustomerController CreateCustomer()
     {
         CustomerController customer = Instantiate(customerPrefabs, parent);
+
+        customer.SetReferences(mainGameController, ingredientHolder, moneySpawner);
 
         return customer;
     }

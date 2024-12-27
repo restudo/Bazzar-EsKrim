@@ -55,27 +55,6 @@ public class CustomerController : MonoBehaviour
     private MeshRenderer meshRenderer;
     private Collider2D customerCol;
 
-    private void Awake()
-    {
-        // Cache component references
-        customerCol = GetComponent<Collider2D>();
-
-        // Find and cache references to other objects in the scene
-        // TODO: set the references from starting pooling
-        mainGameController = FindObjectOfType<MainGameController>();
-        customerPool = mainGameController.GetComponent<CustomerPool>();
-        orderManager = GetComponent<OrderManager>();
-        ingredientHolder = FindObjectOfType<IngredientHolder>();
-        deliveryPlateCol = ingredientHolder.GetComponent<Collider2D>();
-        patienceBarController = GetComponent<PatienceBarController>();
-        moneySpawner = FindObjectOfType<MoneySpawner>();
-
-        // Ensure all customer objects are initially disabled
-        ladyCustomer.gameObject.SetActive(false);
-        teenCustomer.gameObject.SetActive(false);
-        manCustomer.gameObject.SetActive(false);
-    }
-
     private void OnEnable()
     {
         EventHandler.ChaseCustomer += StartLeaving;
@@ -86,6 +65,14 @@ public class CustomerController : MonoBehaviour
     {
         EventHandler.ChaseCustomer -= StartLeaving;
         EventHandler.TogglePause -= TogglePauseAnim;
+    }
+
+    private void Start()
+    {
+        // Ensure all customer objects are initially disabled
+        ladyCustomer.gameObject.SetActive(false);
+        teenCustomer.gameObject.SetActive(false);
+        manCustomer.gameObject.SetActive(false);
     }
 
     private void LateUpdate()
@@ -171,7 +158,7 @@ public class CustomerController : MonoBehaviour
         if (unusedSkins.Count == 0)
         {
             Debug.LogWarning("No unused skins available. Resetting the skin pool.");
-            return; // Optionally handle this case as per your game's needs
+            return;
         }
 
         // Select a random skin from the unused ones
@@ -455,5 +442,19 @@ public class CustomerController : MonoBehaviour
     public void BaseOnlyServed()
     {
         OrderIsIncorrect();
+    }
+
+    public void SetReferences(MainGameController mainGameController, IngredientHolder ingredientHolder, MoneySpawner moneySpawner)
+    {
+        // Cache component references
+        this.mainGameController = mainGameController;
+        this.ingredientHolder = ingredientHolder;
+        this.moneySpawner = moneySpawner;
+
+        customerCol = GetComponent<Collider2D>();
+        customerPool = this.mainGameController.GetComponent<CustomerPool>();
+        orderManager = GetComponent<OrderManager>();
+        deliveryPlateCol = this.ingredientHolder.GetComponent<Collider2D>();
+        patienceBarController = GetComponent<PatienceBarController>();
     }
 }

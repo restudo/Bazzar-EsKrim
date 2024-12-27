@@ -5094,6 +5094,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   customerPrefabs: {fileID: 7299200579780514882, guid: 6e30af9c75eb11b40ba50863e2a1e1ad, type: 3}
+  mainGameController: {fileID: 909970260}
+  ingredientHolder: {fileID: 1667028373}
+  moneySpawner: {fileID: 909970263}
   parent: {fileID: 699582088}
 --- !u!114 &909970263
 MonoBehaviour:
