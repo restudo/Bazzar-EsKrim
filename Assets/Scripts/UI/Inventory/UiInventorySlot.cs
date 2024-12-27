@@ -11,16 +11,16 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     [HideInInspector] public IngredientDetails ingredientDetails;
 
     [SerializeField] private GameObject draggedIngredient;
-    // [SerializeField] private GameObject ingredientPrefab = null;
-    [SerializeField] private IngredientPool ingredientPool;
     [SerializeField] private GameObject glowingPlate;
+    [SerializeField] private IngredientPool ingredientPool;
+    [SerializeField] private IngredientHolder ingredientHolder;
+    [SerializeField] private MainGameController mainGameController;
+    // [SerializeField] private GameObject ingredientPrefab = null;
     // [SerializeField] private ScrollRect scrollRect;
     // [SerializeField] private ScrollController scrollController;
 
     private Camera mainCamera;
     private Transform parentIngredient;
-    private IngredientHolder ingredientHolder;
-    private MainGameController mainGameController;
     private Vector3 worldPosition;
     private const float flewDuration = 0.3f;
     // private GameObject draggedIngredient;
@@ -38,12 +38,12 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         // isPointerOverUI = false;
         // isScrolling = false;
 
+        // parentIngredient = GameObject.FindGameObjectWithTag("Ingredient Holder").transform;
+        // ingredientHolder = parentIngredient.gameObject.GetComponent<IngredientHolder>();
+        // mainGameController = FindObjectOfType<MainGameController>();
+
         mainCamera = Camera.main;
-        parentIngredient = GameObject.FindGameObjectWithTag("Ingredient Holder").transform;
-
-        ingredientHolder = parentIngredient.gameObject.GetComponent<IngredientHolder>();
-
-        mainGameController = FindObjectOfType<MainGameController>();
+        parentIngredient = ingredientHolder.transform;
 
         glowingPlate.SetActive(false);
         draggedIngredient.SetActive(false);

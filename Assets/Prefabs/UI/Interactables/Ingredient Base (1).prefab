@@ -243,5 +243,7 @@ MonoBehaviour:
     collectionIngredientSprite: {fileID: 0}
     nextIngredientPosY: 0.8162498
   draggedIngredient: {fileID: 0}
-  ingredientPool: {fileID: 0}
   glowingPlate: {fileID: 0}
+  ingredientPool: {fileID: 0}
+  ingredientHolder: {fileID: 0}
+  mainGameController: {fileID: 0}

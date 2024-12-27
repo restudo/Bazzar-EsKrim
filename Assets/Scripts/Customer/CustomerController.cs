@@ -43,7 +43,6 @@ public class CustomerController : MonoBehaviour
     private bool isMousePositionColliding;
 
     private Vector2 mousePosition;
-    private GameObject deliveryPlate;
     private MainGameController mainGameController;
     private Collider2D deliveryPlateCol;
     private OrderManager orderManager;
@@ -55,6 +54,14 @@ public class CustomerController : MonoBehaviour
     private MeshRenderer meshRenderer;
     private Collider2D customerCol;
 
+    private void Awake()
+    {
+        // Ensure all customer objects are initially disabled
+        ladyCustomer.gameObject.SetActive(false);
+        teenCustomer.gameObject.SetActive(false);
+        manCustomer.gameObject.SetActive(false);
+    }
+    
     private void OnEnable()
     {
         EventHandler.ChaseCustomer += StartLeaving;
@@ -65,14 +72,6 @@ public class CustomerController : MonoBehaviour
     {
         EventHandler.ChaseCustomer -= StartLeaving;
         EventHandler.TogglePause -= TogglePauseAnim;
-    }
-
-    private void Start()
-    {
-        // Ensure all customer objects are initially disabled
-        ladyCustomer.gameObject.SetActive(false);
-        teenCustomer.gameObject.SetActive(false);
-        manCustomer.gameObject.SetActive(false);
     }
 
     private void LateUpdate()
