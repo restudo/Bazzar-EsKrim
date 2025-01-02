@@ -54,12 +54,6 @@ public class PatienceBarController : MonoBehaviour
                 // Decrease patience over time
                 currentPatience -= Time.deltaTime;
 
-                // If customer has waited for half of their patience, make them bored
-                if (currentPatience <= patienceDuration / 2)
-                {
-                    customerController.UpdateCustomerMood(1); // 1 is bored index
-                }
-
                 // Update the patience slider if it exists
                 if (patienceSlider != null)
                 {
@@ -96,10 +90,6 @@ public class PatienceBarController : MonoBehaviour
 
         if (fillImage == null) return;
 
-        // Store the original color
-        // Color originalColor = fillImage.color;
-        // Color blinkColor = _blinkColor;
-
         // Blink animation: Change color to red and back to the original color
         Sequence blinkSequence = DOTween.Sequence();
         // Use a loop to blink
@@ -115,12 +105,6 @@ public class PatienceBarController : MonoBehaviour
         // Check and update customer mood after the slider value update
         blinkSequence.OnComplete(() =>
         {
-            // If customer has waited for half of his/her patience, make him/her bored.
-            if (newPatience <= patienceDuration / 2 && currentPatience > patienceDuration / 2)
-            {
-                customerController.UpdateCustomerMood(1); // 1 is bored index
-            }
-
             // Handle when patience runs out
             if (newPatience == 0)
             {

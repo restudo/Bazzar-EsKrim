@@ -4092,9 +4092,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 45, y: -45}
+  m_AnchoredPosition: {x: 99.02954, y: -99.27301}
   m_SizeDelta: {x: 127.575, y: 128.15}
-  m_Pivot: {x: 0, y: 1}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &667007375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5105,6 +5105,11 @@ MonoBehaviour:
   pauseMenuUI: {fileID: 355775984}
   ingredientToday: {fileID: 1706972863}
   confettiVFX: {fileID: 319288250}
+  correctOrderSfx: {fileID: 8300000, guid: 02216197e253fa9429c1d8b80582cae1, type: 3}
+  incorrectOrderSfx: {fileID: 8300000, guid: c4da14955512fec40a974714488b1ecf, type: 3}
+  coneDropSfx: {fileID: 8300000, guid: ae26f2e198abc594181b1dc2839ef8dd, type: 3}
+  flavorDropSfx: {fileID: 8300000, guid: 81f8fab297c7d614eb528fd53a6cacb1, type: 3}
+  toppingDropSfx: {fileID: 8300000, guid: 792c8bd68c0e4484888c77a4d426999e, type: 3}
 --- !u!4 &909970261
 Transform:
   m_ObjectHideFlags: 0
@@ -5614,6 +5619,7 @@ MonoBehaviour:
   miniGame: {fileID: 1487024800}
   mainGameController: {fileID: 909970260}
   miniGameController: {fileID: 317721177}
+  buttonScaleAnimDuration: 0.1
   mainGameNextButton: {fileID: 1794409321}
   mainGameRestartButton: {fileID: 1855876534}
   mainGamePauseButton: {fileID: 667007375}
@@ -5627,6 +5633,7 @@ MonoBehaviour:
   miniGameResumeButton: {fileID: 0}
   miniGameOverNextButton: {fileID: 1657619131}
   miniGameHomeButton: {fileID: 1714283171}
+  buttonSfx: {fileID: 8300000, guid: 346404dded4f9884c882bbbaf270ef09, type: 3}
 --- !u!4 &1046060847
 Transform:
   m_ObjectHideFlags: 0
@@ -5677,6 +5684,7 @@ MonoBehaviour:
   state:
   - {fileID: 21300000, guid: 5fa404909aeec5349b7f627558813637, type: 3}
   - {fileID: 21300000, guid: ffc0fd99c28777448a0059ff0e835b93, type: 3}
+  trashBinSfx: {fileID: 8300000, guid: b19a72f2ae3fa1b44b07ad34ddc60ae0, type: 3}
 --- !u!4 &1058764452
 Transform:
   m_ObjectHideFlags: 0

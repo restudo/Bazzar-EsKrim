@@ -1,3 +1,4 @@
+using BazarEsKrim;
 using DG.Tweening;
 using UnityEngine;
 
@@ -6,6 +7,8 @@ public class TrashBinController : MonoBehaviour
     public bool isCloseEnoughToTrashbin = true; //Do not modify this.
     //Textures for open/closed states
     public Sprite[] state;
+
+    public AudioClip trashBinSfx;
 
     private Transform topSprite;
     private Vector3 topPosition;
@@ -59,12 +62,14 @@ public class TrashBinController : MonoBehaviour
     private void OnEnable()
     {
         EventHandler.CloseTrashBin += CloseTrashBin;
+        EventHandler.PlaySfxTrashBin += PlaySfxTrashBin;
         // EventHandler.SquishTrashBin += Squish;
     }
 
     private void OnDisable()
     {
         EventHandler.CloseTrashBin -= CloseTrashBin;
+        EventHandler.PlaySfxTrashBin -= PlaySfxTrashBin;
         // EventHandler.SquishTrashBin -= Squish;
     }
 
@@ -179,5 +184,10 @@ public class TrashBinController : MonoBehaviour
 
         // topSprite.DOLocalRotate(new Vector3(0, 0, -29), 0.3f).SetEase(Ease.OutExpo);
         // topSprite.DOLocalMove(new Vector3(0.242f, 1.776f, 0), 0.3f).SetEase(Ease.OutExpo);
+    }
+
+    private void PlaySfxTrashBin()
+    {
+        AudioManager.Instance.PlaySFX(trashBinSfx);
     }
 }

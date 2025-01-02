@@ -3,6 +3,7 @@ using BazarEsKrim;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -18,6 +19,8 @@ public class LevelManager : MonoBehaviour
 
     [Space(10)]
     [Header("Buttons")]
+    // Duration for scaling down and up
+    [SerializeField] private float buttonScaleAnimDuration = 0.1f;
     [SerializeField] private Button mainGameNextButton;
     [SerializeField] private Button mainGameRestartButton;
     [SerializeField] private Button mainGamePauseButton;
@@ -29,6 +32,8 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private Button miniGameOverNextButton;
     [SerializeField] private Button miniGameHomeButton;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip buttonSfx;
 
     private void Awake()
     {
@@ -86,6 +91,8 @@ public class LevelManager : MonoBehaviour
     {
         GameManager.Instance.isGamePaused = true;
 
+        AnimateButton(0.1f);
+
         // TODO: open pause menu
         mainGameController.OpenPauseMenu();
 
@@ -95,6 +102,8 @@ public class LevelManager : MonoBehaviour
     private void Resume()
     {
         GameManager.Instance.isGamePaused = false;
+
+        AnimateButton(0.1f);
 
         // TODO: close pause menu
         mainGameController.ClosePauseMenu();
@@ -106,6 +115,8 @@ public class LevelManager : MonoBehaviour
     {
         DOTween.KillAll();
 
+        AnimateButton(0.1f);
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
@@ -113,7 +124,7 @@ public class LevelManager : MonoBehaviour
     {
         DOTween.KillAll();
 
-        Debug.Log("LOAD TO LEVEL SELECT");
+        AnimateButton(0.1f);
 
         GameManager.Instance.gameStates = GameStates.LevelSelection;
 
@@ -124,6 +135,8 @@ public class LevelManager : MonoBehaviour
     {
         DOTween.KillAll();
 
+        AnimateButton(0.1f);
+
         GameManager.Instance.gameStates = GameStates.MainMenu;
 
         SceneController.Instance.FadeAndLoadScene(Scenes.Menu);
@@ -131,6 +144,8 @@ public class LevelManager : MonoBehaviour
 
     private void LoadToMiniGame()
     {
+        AnimateButton(0.1f);
+
         GameManager.Instance.gameStates = GameStates.MiniGame;
 
         SceneController.Instance.FadeAndSetActiveGameobject(mainGame, miniGame);
@@ -145,5 +160,27 @@ public class LevelManager : MonoBehaviour
     {
         miniGameOverNextButton.onClick.AddListener(LoadToLevelSelection);
         miniGameHomeButton.onClick.AddListener(LoadToMainMenu);
+    }
+
+    // Animate button with a dynamic scale change
+    public void AnimateButton(float scaleDecrement)
+    {
+        // Get the currently clicked button
+        GameObject clickedButton = EventSystem.current.currentSelectedGameObject;
+
+        AudioManager.Instance.PlaySFX(buttonSfx);
+
+        if (clickedButton != null)
+        {
+            // Calculate the target scale
+            Vector3 targetScale = clickedButton.transform.localScale - new Vector3(scaleDecrement, scaleDecrement, 0);
+
+            // Scale down and then back up
+            clickedButton.transform.DOScale(targetScale, buttonScaleAnimDuration)
+                .OnComplete(() =>
+                {
+                    clickedButton.transform.DOScale(clickedButton.transform.localScale + new Vector3(scaleDecrement, scaleDecrement, 0), buttonScaleAnimDuration);
+                });
+        }
     }
 }

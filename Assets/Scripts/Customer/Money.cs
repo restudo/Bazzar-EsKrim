@@ -1,9 +1,12 @@
 using UnityEngine;
 using UnityEngine.Pool;
 using DG.Tweening;
+using BazarEsKrim;
 
 public class Money : MonoBehaviour
 {
+    [SerializeField] private AudioClip moneySfx;
+
     private ObjectPool<Money> _moneyPool;
     private RectTransform _rectTransform;
     private RectTransform moneySlider;
@@ -17,6 +20,8 @@ public class Money : MonoBehaviour
 
     private void BackToThePool()
     {
+        AudioManager.Instance.PlaySFX(moneySfx);
+
         // Return the UI element to the pool
         _moneyPool.Release(this);
     }

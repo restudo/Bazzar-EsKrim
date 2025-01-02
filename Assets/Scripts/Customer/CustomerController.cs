@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Spine.Unity;
 using System.Linq;
+using BazarEsKrim;
 
 public class CustomerController : MonoBehaviour
 {
@@ -30,6 +31,9 @@ public class CustomerController : MonoBehaviour
     [SerializeField] private SkeletonAnimation teenCustomer;
     [SerializeField] private SkeletonAnimation manCustomer;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip bubbleOrderPopUpSfx;
+
     // Private variables
     private float positiveAnimationDuration;
     private int maxOrderSize = 6;
@@ -54,6 +58,8 @@ public class CustomerController : MonoBehaviour
     private MeshRenderer meshRenderer;
     private Collider2D customerCol;
 
+    private const int minOrderSize = 2;
+
     private void Awake()
     {
         // Ensure all customer objects are initially disabled
@@ -61,7 +67,7 @@ public class CustomerController : MonoBehaviour
         teenCustomer.gameObject.SetActive(false);
         manCustomer.gameObject.SetActive(false);
     }
-    
+
     private void OnEnable()
     {
         EventHandler.ChaseCustomer += StartLeaving;
@@ -224,7 +230,7 @@ public class CustomerController : MonoBehaviour
             }
             else
             {
-                orderManager.OrderRandomProduct(Random.Range(2, maxOrderSize + 1));
+                orderManager.OrderRandomProduct(Random.Range(minOrderSize, maxOrderSize + 1));
                 isRecipeOrder = false;
                 mainGameController.wasLastOrderByRecipe = false;
             }
@@ -265,6 +271,9 @@ public class CustomerController : MonoBehaviour
             HudPos.SetActive(true);
             skeletonAnimation.AnimationState.SetAnimation(0, idleAnimationName, true);
             patienceBarController.StartDecreasingPatience();
+
+            // play sfx pop up bubble
+            AudioManager.Instance.PlaySFX(bubbleOrderPopUpSfx);
         }
     }
 
@@ -280,6 +289,9 @@ public class CustomerController : MonoBehaviour
     {
         isFacingRight = !isFacingRight;
         meshRenderer.transform.Rotate(0, 180, 0);
+
+        // skeleton flip
+        // skeletonAnimation.skeleton.ScaleX *= -1; 
     }
 
     private void CheckDistanceToDelivery()
@@ -288,11 +300,6 @@ public class CustomerController : MonoBehaviour
         isDeliveryPlateColliding = customerCol.bounds.Intersects(deliveryPlateCol.bounds);
         isMousePositionColliding = customerCol.bounds.Contains(mousePosition);
         isCloseEnoughToDelivery = isDeliveryPlateColliding && isMousePositionColliding;
-    }
-
-    public void UpdateCustomerMood(int moodIndex)
-    {
-        // spriteRenderer.sprite = customerMoods[moodIndex]; // Not used currently, implement if needed
     }
 
     public void StartLeaving()
@@ -352,17 +359,13 @@ public class CustomerController : MonoBehaviour
                 {
                     yield return null;
                 }
-                skeletonAnimation.AnimationState.SetAnimation(0, walkAnimationName, true);
             }
             else if (currentTrackEntry.Animation.Name == negativeAnimationName)
             {
                 yield return new WaitForSpineAnimationComplete(currentTrackEntry);
-                skeletonAnimation.AnimationState.SetAnimation(0, walkAnimationName, true);
             }
-            else
-            {
-                skeletonAnimation.AnimationState.SetAnimation(0, walkAnimationName, true);
-            }
+            
+            skeletonAnimation.AnimationState.SetAnimation(0, walkAnimationName, true);
         }
     }
 
@@ -392,8 +395,6 @@ public class CustomerController : MonoBehaviour
     {
         if (!isOrderCompleted)
         {
-            moodIndex = 2;
-
             if (!isLeaving)
             {
                 HudPos.SetActive(false);
@@ -414,8 +415,6 @@ public class CustomerController : MonoBehaviour
     {
         if (!isOrderCompleted)
         {
-            moodIndex = 3;
-
             if (!isLeaving)
             {
                 skeletonAnimation.AnimationState.SetAnimation(0, negativeAnimationName, false);

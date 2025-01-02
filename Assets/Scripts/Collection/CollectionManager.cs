@@ -6,6 +6,7 @@ namespace BazarEsKrim
 {
     public class CollectionManager : MonoBehaviour
     {
+        public MenuManager menuManager;
         public SO_RecipeList[] recipeLists;
         public SO_IngredientHolderPos holderPanelYPos;
         public SO_IngredientHolderPos holderFrameYPos;
@@ -66,6 +67,8 @@ namespace BazarEsKrim
         {
             if (GameManager.Instance.gameStates == GameStates.Collection)
             {
+                menuManager.AnimateButton(0.1f);
+
                 if (isUnlocked)
                 {
                     GameManager.Instance.gameStates = GameStates.CollectionPanel;

@@ -126,9 +126,8 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         if (ingredientDetails != null)
         {
             // Transform lastIngredient = GetLastIngredient(ingredientHolderObj);
-            Transform lastIngredient = ingredientPool.GetLastIngredient();
-            Ingredient ingredient = lastIngredient.GetComponent<Ingredient>();
-            if (IsInvalidIngredientPlacement(ingredientHolderObj, lastIngredient, ingredient))
+            Ingredient lastIngredient = ingredientPool.GetLastIngredient(); // TODO: change return type into ingredient
+            if (IsInvalidIngredientPlacement(ingredientHolderObj, lastIngredient))
             {
                 DraggedIngredientFlewAnim();
 
@@ -136,7 +135,7 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             }
 
             float nextPositionY = CalculateNextPositionY(ingredientHolderObj, lastIngredient);
-            CreateAndPlaceIngredient(ingredientHolderObj, nextPositionY, mainGameController, lastIngredient, ingredient);
+            CreateAndPlaceIngredient(ingredientHolderObj, nextPositionY, mainGameController, lastIngredient);
         }
     }
 
@@ -145,7 +144,7 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         draggedIngredient.transform.DOMove(transform.position, flewDuration).SetEase(Ease.OutExpo).OnComplete(() => draggedIngredient.SetActive(false));
     }
 
-    private bool IsInvalidIngredientPlacement(GameObject ingredientHolderObj, Transform lastIngredient, Ingredient ingredient)
+    private bool IsInvalidIngredientPlacement(GameObject ingredientHolderObj, Ingredient lastIngredient)
     {
         if (lastIngredient == null && ingredientDetails.ingredientType != IngredientType.Base)
         {
@@ -153,26 +152,27 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         }
         else if (lastIngredient != null && lastIngredient.gameObject.activeSelf)
         {
-            if (lastIngredient != null && lastIngredient.childCount > 0)
+            if (lastIngredient != null && lastIngredient.transform.childCount > 0)
             {
                 if (mainGameController.deliveryQueueIngredient >= mainGameController.maxOrderHeight)
                 {
                     return true;
                 }
 
-                if (ingredient.IngredientType == IngredientType.Base && ingredientDetails.ingredientType == IngredientType.Topping)
+                if (lastIngredient.IngredientType == IngredientType.Base && ingredientDetails.ingredientType == IngredientType.Topping)
                 {
                     return true;
                 }
 
-                if (ingredient.IngredientType == IngredientType.Topping)
+                if (lastIngredient.IngredientType == IngredientType.Topping)
                 {
                     return true;
                 }
 
-                foreach (Transform child in ingredientHolderObj.transform)
+                // TODO: change loop ingredientholder transform into list from ingredient holder
+                foreach (Ingredient ingredient in ingredientHolder.availableIngredients)
                 {
-                    if (child.GetComponent<Ingredient>().IngredientType == IngredientType.Base && ingredientDetails.ingredientType == IngredientType.Base)
+                    if (ingredient != null && ingredient.IngredientType == IngredientType.Base && ingredientDetails.ingredientType == IngredientType.Base)
                     {
                         return true;
                     }
@@ -183,25 +183,25 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         return false;
     }
 
-    private float CalculateNextPositionY(GameObject ingredientHolderObj, Transform lastIngredient)
+    private float CalculateNextPositionY(GameObject ingredientHolderObj, Ingredient lastIngredient)
     {
         float nextPositionY = ingredientHolderObj.transform.position.y;
         if (lastIngredient != null)
         {
             if (ingredientDetails.ingredientType != IngredientType.Topping)
             {
-                nextPositionY = lastIngredient.GetChild(lastIngredient.childCount - 1).position.y;
+                nextPositionY = lastIngredient.transform.GetChild(lastIngredient.transform.childCount - 1).position.y;
             }
             else
             {
-                nextPositionY = lastIngredient.position.y;
+                nextPositionY = lastIngredient.transform.position.y;
             }
         }
 
         return nextPositionY;
     }
 
-    private void CreateAndPlaceIngredient(GameObject ingredientHolderObj, float nextPositionY, MainGameController mainGameController, Transform lastIngredient, Ingredient ingredient)
+    private void CreateAndPlaceIngredient(GameObject ingredientHolderObj, float nextPositionY, MainGameController mainGameController, Ingredient lastIngredient)
     {
         ingredientPool.SetParent(ingredientHolderObj.transform);
 
@@ -237,8 +237,9 @@ public class UiInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
         mainGameController.deliveryQueueIngredient++;
         mainGameController.deliveryQueueIngredientsContent.Add(ingredientGameobject.IngredientCode);
+        mainGameController.PlaySfxByIngredientType(ingredientGameobject.IngredientType); // play sfx by ingredient type
 
-        ingredientHolder.availableIngredients.Add(ingredient);
+        ingredientHolder.availableIngredients.Add(ingredientGameobject);
 
         SetButtonLogic(ingredientGameobject.IngredientType);
 

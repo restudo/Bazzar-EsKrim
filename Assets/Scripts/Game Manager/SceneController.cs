@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using DG.Tweening;
+using BazarEsKrim;
 
 public class SceneController : MonoBehaviour
 {
@@ -15,6 +16,11 @@ public class SceneController : MonoBehaviour
 
     [Space(20)]
     [SerializeField] private RectTransform rollingDoor;
+
+    [Space(20)]
+    [Header("Audio")]
+    [SerializeField] private AudioClip rollingDownSfx;
+    [SerializeField] private AudioClip rollingUpSfx;
 
     private bool isFading;
     private Vector3 initialRollingDoorPos;
@@ -44,43 +50,43 @@ public class SceneController : MonoBehaviour
         faderImage.transform.localScale = new Vector3(faderImageMaxScale, faderImageMaxScale, faderImageMaxScale);
     }
 
-    private IEnumerator FadeAndSwitchScenes(string sceneName)
-    {
-        RandomFader();
+    // private IEnumerator FadeAndSwitchScenes(string sceneName)
+    // {
+    //     RandomFader();
 
-        isFading = true;
+    //     isFading = true;
 
-        faderCanvas.gameObject.SetActive(true);
+    //     faderCanvas.gameObject.SetActive(true);
 
-        Sequence faderSequence = DOTween.Sequence();
+    //     Sequence faderSequence = DOTween.Sequence();
 
-        faderSequence.Append(faderImage.transform.DOScale(0, fadeDuration).SetEase(Ease.InOutExpo)).OnComplete(() =>
-        {
-            Debug.Log("FADE IN");
-        });
+    //     faderSequence.Append(faderImage.transform.DOScale(0, fadeDuration).SetEase(Ease.InOutExpo)).OnComplete(() =>
+    //     {
+    //         Debug.Log("FADE IN");
+    //     });
 
-        yield return faderSequence.WaitForCompletion();
+    //     yield return faderSequence.WaitForCompletion();
 
-        // Start loading the scene asynchronously
-        yield return StartCoroutine(LoadSceneAndSetActive(sceneName));
+    //     // Start loading the scene asynchronously
+    //     yield return StartCoroutine(LoadSceneAndSetActive(sceneName));
 
-        yield return new WaitForSeconds(fadeDuration / 2);
+    //     yield return new WaitForSeconds(fadeDuration / 2);
 
-        RandomFader();
+    //     RandomFader();
 
-        // Second scaling animation
-        faderSequence = DOTween.Sequence();
+    //     // Second scaling animation
+    //     faderSequence = DOTween.Sequence();
 
-        faderSequence.Append(faderImage.transform.DOScale(faderImageMaxScale, fadeDuration).SetEase(Ease.InOutExpo)).OnComplete(() =>
-        {
-            FadeComplete();
-            Debug.Log("FADE OUT");
-        });
+    //     faderSequence.Append(faderImage.transform.DOScale(faderImageMaxScale, fadeDuration).SetEase(Ease.InOutExpo)).OnComplete(() =>
+    //     {
+    //         FadeComplete();
+    //         Debug.Log("FADE OUT");
+    //     });
 
-        yield return faderSequence.WaitForCompletion();
+    //     yield return faderSequence.WaitForCompletion();
 
-        isFading = false;
-    }
+    //     isFading = false;
+    // }
 
     private IEnumerator TransitionAndSwitchScenes(string sceneName)
     {
@@ -90,9 +96,11 @@ public class SceneController : MonoBehaviour
 
         Sequence faderSequence = DOTween.Sequence();
 
+        AudioManager.Instance.PlaySFX(rollingDownSfx);
+
         // acnhor on bottom, y=0
-        faderSequence.Append(rollingDoor.DOAnchorPosY(initialRollingDoorPos.y / 2, fadeDuration / 2).SetEase(Ease.OutBack));
-        faderSequence.Append(rollingDoor.DOAnchorPosY(0, fadeDuration / 2).SetEase(Ease.InOutSine)).OnComplete(() =>
+        // faderSequence.Append(rollingDoor.DOAnchorPosY(initialRollingDoorPos.y / 2, fadeDuration / 2).SetEase(Ease.OutBack));
+        faderSequence.Append(rollingDoor.DOAnchorPosY(0, fadeDuration).SetEase(Ease.InOutSine)).OnComplete(() =>
         {
 
         });
@@ -108,6 +116,8 @@ public class SceneController : MonoBehaviour
 
         // Second scaling animation
         faderSequence = DOTween.Sequence();
+
+        AudioManager.Instance.PlaySFX(rollingUpSfx);
 
         faderSequence.Append(rollingDoor.DOAnchorPosY(initialRollingDoorPos.y, fadeDuration).SetEase(Ease.InBack)).OnComplete(() =>
         {

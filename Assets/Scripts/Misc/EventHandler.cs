@@ -32,6 +32,13 @@ public static class EventHandler
             CloseTrashBin();
     }
     
+    public static event Action PlaySfxTrashBin;
+    public static void CallPlaySfxTrashBinEvent()
+    {
+        if (PlaySfxTrashBin != null)
+            PlaySfxTrashBin();
+    }
+    
     public static event Action SquishTrashBin;
     public static void CallSquishTrashBinEvent()
     {

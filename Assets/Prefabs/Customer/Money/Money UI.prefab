@@ -88,3 +88,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1a4ce91a5b15c44cb11ea3092057556, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moneySfx: {fileID: 8300000, guid: 3fc49025adcc1d949af7e30a14c977f9, type: 3}

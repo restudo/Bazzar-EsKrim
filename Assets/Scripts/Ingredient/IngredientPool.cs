@@ -9,7 +9,7 @@ public class IngredientPool : MonoBehaviour
     // [SerializeField] private GameObject gameControlObj;
 
     private MainGameController mainGameController;
-    private Transform lastIngredient;
+    private Ingredient lastIngredient;
     private Transform parent;
 
     // private void Awake()
@@ -38,7 +38,7 @@ public class IngredientPool : MonoBehaviour
 
     private void OnTakeIngredientFromPool(Ingredient ingredient)
     {
-        lastIngredient = ingredient.transform;
+        lastIngredient = ingredient;
 
         ingredient.SetReleaseFlag(false);
 
@@ -64,7 +64,7 @@ public class IngredientPool : MonoBehaviour
         Destroy(ingredient.gameObject);
     }
 
-    public Transform GetLastIngredient()
+    public Ingredient GetLastIngredient()
     {
         return lastIngredient;
     }

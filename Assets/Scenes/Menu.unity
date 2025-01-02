@@ -1349,6 +1349,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bfc41bac38d40e4080ab12318b0a9aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buttonScaleAnimDuration: 0.1
   mainMenuObj: {fileID: 1958835034}
   skeletonGraphicUI: {fileID: 1955174930}
   collectionObj: {fileID: 1542614422}
@@ -1362,6 +1363,7 @@ MonoBehaviour:
   - {fileID: 767019664}
   - {fileID: 331383102}
   - {fileID: 387836391}
+  buttonSfx: {fileID: 8300000, guid: 346404dded4f9884c882bbbaf270ef09, type: 3}
 --- !u!4 &255043618
 Transform:
   m_ObjectHideFlags: 0
@@ -1494,9 +1496,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 45, y: -45}
+  m_AnchoredPosition: {x: 99.02954, y: -99.27301}
   m_SizeDelta: {x: 108.059, y: 108.546}
-  m_Pivot: {x: 0, y: 1}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &281031110
 GameObject:
   m_ObjectHideFlags: 0
@@ -1743,7 +1745,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2876284333109411048, guid: 479d553687f368b40836837dc346f0ea, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -141.64401
+      value: -141.40337
       objectReference: {fileID: 0}
     - target: {fileID: 2876284333109411048, guid: 479d553687f368b40836837dc346f0ea, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2536,7 +2538,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 338639789}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 255043617}
+        m_TargetAssemblyTypeName: MenuManager, Assembly-CSharp
+        m_MethodName: AnimateButton
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0.1
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &338639789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3737,7 +3751,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2876284333109411048, guid: 479d553687f368b40836837dc346f0ea, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -141.64401
+      value: -141.40337
       objectReference: {fileID: 0}
     - target: {fileID: 2876284333109411048, guid: 479d553687f368b40836837dc346f0ea, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -5632,9 +5646,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 45, y: -45}
+  m_AnchoredPosition: {x: 99.02954, y: -99.27301}
   m_SizeDelta: {x: 108.059, y: 108.546}
-  m_Pivot: {x: 0, y: 1}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &906473168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6613,7 +6627,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1140199364}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 255043617}
+        m_TargetAssemblyTypeName: MenuManager, Assembly-CSharp
+        m_MethodName: AnimateButton
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0.1
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1140199364
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6734,7 +6760,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2876284333109411048, guid: 479d553687f368b40836837dc346f0ea, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -176.64401
+      value: -176.40337
       objectReference: {fileID: 0}
     - target: {fileID: 2876284333109411048, guid: 479d553687f368b40836837dc346f0ea, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -7004,8 +7030,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 960.00006, y: -484.63205}
-  m_SizeDelta: {x: 1920.0001, y: 353.28802}
+  m_AnchoredPosition: {x: 960.00006, y: -483.9101}
+  m_SizeDelta: {x: 1920.0001, y: 352.80673}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1172957607
 MonoBehaviour:
@@ -7069,8 +7095,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 960.00006, y: -159.14401}
-  m_SizeDelta: {x: 1920.0001, y: 318.28802}
+  m_AnchoredPosition: {x: 960.00006, y: -158.90337}
+  m_SizeDelta: {x: 1920.0001, y: 317.80673}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1200841953
 MonoBehaviour:
@@ -7302,6 +7328,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5636d0d5ae4f54e4db90cfd61bb82154, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  menuManager: {fileID: 255043617}
   levelButtonContainer: {fileID: 1660109857}
   camControl: {fileID: 575112930}
 --- !u!1 &1256910316
@@ -8542,9 +8569,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 45, y: -45}
+  m_AnchoredPosition: {x: 99.02954, y: -99.27301}
   m_SizeDelta: {x: 108.059, y: 108.546}
-  m_Pivot: {x: 0, y: 1}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1355154327
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9011,6 +9038,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48f4ea5e926424844b59ca0a215388b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  menuManager: {fileID: 255043617}
   recipeLists:
   - {fileID: 11400000, guid: 5682ddc06d0b8de47b4c572e77a17306, type: 2}
   - {fileID: 11400000, guid: 6ac739c495321514cad3f9d82b8377fc, type: 2}
@@ -11311,9 +11339,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 45, y: -45}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 108.059, y: 108.546}
-  m_Pivot: {x: 0, y: 1}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2049608011
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11658,7 +11686,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2876284333109411048, guid: 479d553687f368b40836837dc346f0ea, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -176.64401
+      value: -176.40337
       objectReference: {fileID: 0}
     - target: {fileID: 2876284333109411048, guid: 479d553687f368b40836837dc346f0ea, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -12834,7 +12862,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2876284333109411048, guid: 479d553687f368b40836837dc346f0ea, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -141.64401
+      value: -141.40337
       objectReference: {fileID: 0}
     - target: {fileID: 2876284333109411048, guid: 479d553687f368b40836837dc346f0ea, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

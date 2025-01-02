@@ -17,17 +17,19 @@ namespace BazarEsKrim
         private int lvIndex;
         private bool isUnlocked;
 
-        private void LoadToLevel()
+        private void LoadToLevel(MenuManager menuManager)
         {
+            menuManager.AnimateButton(0.1f);
+
             EventHandler.CallLoadToLevelEvent(lvIndex);
         }
 
-        public void Init(int index, bool unlock)
+        public void Init(int index, bool unlock, MenuManager menuManager)
         {
             isUnlocked = unlock;
             lvIndex = index;
 
-            startButton.onClick.AddListener(LoadToLevel);
+            startButton.onClick.AddListener(() => LoadToLevel(menuManager));
 
             glowSprite.SetActive(false);
             glowSprite.SetActive(false);

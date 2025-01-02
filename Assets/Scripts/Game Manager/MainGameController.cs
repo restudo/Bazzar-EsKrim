@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using Spine;
 using Spine.Unity;
+using BazarEsKrim;
 
 public class MainGameController : MonoBehaviour
 {
@@ -51,6 +52,13 @@ public class MainGameController : MonoBehaviour
     [SerializeField] private GameObject pauseMenuUI;
     [SerializeField] private GameObject ingredientToday;
     [SerializeField] private GameObject confettiVFX;
+
+    [Header("Audios")]
+    [SerializeField] private AudioClip correctOrderSfx;
+    [SerializeField] private AudioClip incorrectOrderSfx;
+    [SerializeField] private AudioClip coneDropSfx;
+    [SerializeField] private AudioClip flavorDropSfx;
+    [SerializeField] private AudioClip toppingDropSfx;
 
     private int progressCount;
     private int customerDelay;
@@ -330,6 +338,9 @@ public class MainGameController : MonoBehaviour
 
     private void CorrectOrderEvent(bool isRecipeOrder)
     {
+        // play sfx correct order
+        AudioManager.Instance.PlaySFX(correctOrderSfx);
+
         progressCount += isRecipeOrder ? specialRecipePoint : pointPerCustomer;
         pointText.text = progressCount.ToString();
         IncreaseSliderValue(progressCount);
@@ -348,6 +359,9 @@ public class MainGameController : MonoBehaviour
 
     private void IncorrectOrderEvent()
     {
+        // play sfx correct order
+        AudioManager.Instance.PlaySFX(incorrectOrderSfx);
+
         SetCharacterAnim(WRONG_CHAR_ANIM, false);
         AddCharacterAnim(NORMAL_CHAR_ANIM, true);
     }
@@ -444,6 +458,24 @@ public class MainGameController : MonoBehaviour
         else
         {
             pauseMenuUI.SetActive(false);
+        }
+    }
+
+    public void PlaySfxByIngredientType(IngredientType ingredientType)
+    {
+        switch (ingredientType)
+        {
+            case IngredientType.Base:
+                AudioManager.Instance.PlaySFX(coneDropSfx);
+                break;
+            case IngredientType.Flavor:
+                AudioManager.Instance.PlaySFX(flavorDropSfx);
+                break;
+            case IngredientType.Topping:
+                AudioManager.Instance.PlaySFX(toppingDropSfx);
+                break;
+            default:
+                break;
         }
     }
 }

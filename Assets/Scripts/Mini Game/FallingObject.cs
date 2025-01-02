@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Pool;
 using DG.Tweening;
 using System.Collections;
+using BazarEsKrim;
 
 public class FallingObject : MonoBehaviour
 {
@@ -16,6 +17,11 @@ public class FallingObject : MonoBehaviour
     [SerializeField] private Material flashMaterial;
     [SerializeField] private float flashDuration = 0.1f; // Duration of each flash
     [SerializeField] private int flashCount = 1; // Number of flashes
+
+    [Space(20)]
+    [Header("Audio")]
+    [SerializeField] private AudioClip tapSfx;
+    [SerializeField] private AudioClip inSfx;
 
     private ObjectPool<FallingObject> fallingObjectPool;
     private GameObject basket;
@@ -79,6 +85,9 @@ public class FallingObject : MonoBehaviour
             // make it flash
             FlashEffect();
 
+            // play sfx touch
+            AudioManager.Instance.PlaySFX(tapSfx);
+
             spRend.sortingOrder = sortOrder;
 
             float randomOffset = Random.Range(-2, 2);
@@ -118,6 +127,9 @@ public class FallingObject : MonoBehaviour
             if (other.gameObject == basket && spRend.sortingOrder == sortOrder)
             {
                 isCanBeTouch = false;
+
+                // play sfx in
+                AudioManager.Instance.PlaySFX(inSfx);
 
                 DOTween.Kill(transform);
 

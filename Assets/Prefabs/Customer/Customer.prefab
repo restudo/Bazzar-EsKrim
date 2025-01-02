@@ -1442,6 +1442,7 @@ MonoBehaviour:
   ladyCustomer: {fileID: 5144081662554536286}
   teenCustomer: {fileID: 7693765819462830668}
   manCustomer: {fileID: 6817097262489258244}
+  bubbleOrderPopUpSfx: {fileID: 8300000, guid: 858ebfc05e28e374f9d22e221a411553, type: 3}
 --- !u!114 &7808061270464305164
 MonoBehaviour:
   m_ObjectHideFlags: 0

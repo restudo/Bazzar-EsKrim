@@ -99,6 +99,8 @@ MonoBehaviour:
   flashMaterial: {fileID: 2100000, guid: c669800ebffa6804280ef53fb1cbffbd, type: 2}
   flashDuration: 0.1
   flashCount: 1
+  tapSfx: {fileID: 8300000, guid: 65d5916fd7a1ec247a26f7fe5e34b9ee, type: 3}
+  inSfx: {fileID: 8300000, guid: e6c1bd878f005b944abc45acebe5f1ab, type: 3}
 --- !u!50 &478152037904986922
 Rigidbody2D:
   serializedVersion: 4

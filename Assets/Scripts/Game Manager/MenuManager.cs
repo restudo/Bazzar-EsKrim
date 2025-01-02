@@ -1,10 +1,15 @@
 using BazarEsKrim;
+using DG.Tweening;
 using Spine.Unity;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
 {
+    // Duration for scaling down and up
+    [SerializeField] private float buttonScaleAnimDuration = 0.1f;
+
     [Header("Main Menu")]
     [SerializeField] private GameObject mainMenuObj;
     [SerializeField] private SkeletonGraphic skeletonGraphicUI;
@@ -21,8 +26,15 @@ public class MenuManager : MonoBehaviour
     [Header("Back Buttons")]
     [SerializeField] private Button[] backButtons;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip buttonSfx;
+
+    private bool isFirstTimeLoad = false;
+
     private void Awake()
     {
+        isFirstTimeLoad = true;
+
         GameManager.Instance.isGameActive = false;
 
         switch (GameManager.Instance.gameStates)
@@ -65,6 +77,8 @@ public class MenuManager : MonoBehaviour
     {
         GameManager.Instance.isGameActive = false;
 
+        AnimateButton(0.1f);
+
         GameManager.Instance.gameStates = GameStates.MainMenu;
 
         SetActiveMenu(mainMenu: true, collection: false, levelSelection: false);
@@ -81,6 +95,8 @@ public class MenuManager : MonoBehaviour
     {
         GameManager.Instance.isGameActive = false;
 
+        AnimateButton(0.1f);
+
         GameManager.Instance.gameStates = GameStates.LevelSelection;
 
         SetCameraToZero();
@@ -92,6 +108,8 @@ public class MenuManager : MonoBehaviour
     {
         GameManager.Instance.isGameActive = false;
 
+        AnimateButton(0.1f);
+
         GameManager.Instance.gameStates = GameStates.Collection;
 
         SetActiveMenu(mainMenu: false, collection: true, levelSelection: false);
@@ -100,7 +118,9 @@ public class MenuManager : MonoBehaviour
     public void Back()
     {
         GameManager.Instance.isGameActive = false;
-        
+
+        AnimateButton(0.1f);
+
         if (GameManager.Instance.gameStates == GameStates.CollectionPanel)
         {
             collectionManager.CloseCollectionPanel();
@@ -114,6 +134,34 @@ public class MenuManager : MonoBehaviour
             Debug.Log("QUIT");
 
             Application.Quit();
+        }
+    }
+
+    // Animate button with a dynamic scale change
+    public void AnimateButton(float scaleDecrement)
+    {
+        if(isFirstTimeLoad)
+        {
+            isFirstTimeLoad = false;
+            return;
+        }
+
+        // Get the currently clicked button
+        GameObject clickedButton = EventSystem.current.currentSelectedGameObject;
+
+        AudioManager.Instance.PlaySFX(buttonSfx);
+
+        if (clickedButton != null)
+        {
+            // Calculate the target scale
+            Vector3 targetScale = clickedButton.transform.localScale - new Vector3(scaleDecrement, scaleDecrement, 0);
+
+            // Scale down and then back up
+            clickedButton.transform.DOScale(targetScale, buttonScaleAnimDuration)
+                .OnComplete(() =>
+                {
+                    clickedButton.transform.DOScale(clickedButton.transform.localScale + new Vector3(scaleDecrement, scaleDecrement, 0), buttonScaleAnimDuration);
+                });
         }
     }
 

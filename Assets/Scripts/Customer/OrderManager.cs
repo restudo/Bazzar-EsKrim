@@ -21,6 +21,8 @@ public class OrderManager : MonoBehaviour
 
     private List<Ingredient> ingredientsInPool;
 
+    private const string CUSTOMER_HUD = "Customer HUD";
+
     private void Awake()
     {
         levelDataLists = GameManager.Instance.levelDataLists;
@@ -163,7 +165,7 @@ public class OrderManager : MonoBehaviour
 
             SpriteRenderer spriteRenderer = ingredientObject.GetComponentInChildren<SpriteRenderer>();
             spriteRenderer.sprite = ingredientDetail.ingredientDetails.dressIngredientSprite;
-            spriteRenderer.sortingLayerName = "Customer HUD";
+            spriteRenderer.sortingLayerName = CUSTOMER_HUD;
             spriteRenderer.sortingOrder = sortingOrder;
 
             if (ingredientCode == 1023) // Specific case for ingredient code 1023

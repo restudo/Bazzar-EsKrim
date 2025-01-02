@@ -56,6 +56,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 1aebd4e87e9c3e348879b38a944cedea, type: 3}
   - {fileID: 21300000, guid: 995b3dbd38bb04649a99f3f16003edab, type: 3}
   rollingDoor: {fileID: 4796379620028095751}
+  rollingDownSfx: {fileID: 8300000, guid: b7486ee539534cd4cb75851a8709b5fb, type: 3}
+  rollingUpSfx: {fileID: 8300000, guid: 245bcb3480805ce4c958a40bb79ab932, type: 3}
 --- !u!1 &2766037093146652709
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,6 +7,7 @@ namespace BazarEsKrim
 {
     public class LevelSelectManager : MonoBehaviour
     {
+        [SerializeField] private MenuManager menuManager;
         [SerializeField] private GameObject levelButtonContainer;
         [SerializeField] private CameraController camControl;
 
@@ -35,7 +36,7 @@ namespace BazarEsKrim
                 buttons[index].transform.GetChild(buttons[index].transform.childCount - 2).gameObject.SetActive(index + 1 > unlockedLevel);
 
                 buttons[index].onClick.AddListener(() => OnLevelButtonClicked(index, index + 1 <= unlockedLevel));
-                levelbuttons[index].Init(index, index + 1 <= unlockedLevel);
+                levelbuttons[index].Init(index, index + 1 <= unlockedLevel, menuManager);
             }
 
             // init first

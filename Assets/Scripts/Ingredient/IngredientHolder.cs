@@ -6,8 +6,8 @@ using System.Collections.Generic;
 public class IngredientHolder : MonoBehaviour
 {
     [HideInInspector] public bool canDeliverOrder;
-    [HideInInspector] public List<CustomerController> availableCustomers;
-    [HideInInspector] public List<Ingredient> availableIngredients;
+    [HideInInspector] public List<CustomerController> availableCustomers = new();
+    [HideInInspector] public List<Ingredient> availableIngredients = new();
 
     [SerializeField] MainGameController mainGameController;
     [SerializeField] TrashBinController trashBin;
@@ -18,9 +18,6 @@ public class IngredientHolder : MonoBehaviour
 
     void Awake()
     {
-        availableCustomers = new List<CustomerController>();
-        availableIngredients = new List<Ingredient>();
-
         plateCollider = GetComponent<Collider2D>();
         canDeliverOrder = false;
     }
@@ -113,31 +110,26 @@ public class IngredientHolder : MonoBehaviour
             return;
         }
 
-        bool delivered = false;
-        CustomerController theCustomer = null;
-
         foreach (CustomerController customer in availableCustomers)
         {
             if (customer.isCloseEnoughToDelivery)
             {
-                theCustomer = customer;
-                delivered = mainGameController.deliveryQueueIngredient > 1;
-                if (!delivered)
+                if (mainGameController.deliveryQueueIngredient > 1)
+                {
+                    // DebugDelivery();
+                    bool isOrderCorrect = customer.ReceiveOrder(mainGameController.deliveryQueueIngredientsContent);
+
+                    if (isOrderCorrect)
+                    {
+                        ResetMainQueue();
+                    }
+                }
+                else
                 {
                     customer.BaseOnlyServed();
                 }
+
                 break;
-            }
-        }
-
-        if (delivered)
-        {
-            // DebugDelivery();
-            bool isOrderCorrect = theCustomer.ReceiveOrder(mainGameController.deliveryQueueIngredientsContent);
-
-            if (isOrderCorrect)
-            {
-                ResetMainQueue();
             }
         }
 
@@ -160,7 +152,7 @@ public class IngredientHolder : MonoBehaviour
         // release ingredient pool
         foreach (Ingredient ingredient in availableIngredients)
         {
-            if (!ingredient.GetReleaseFlag())
+            if (ingredient != null && !ingredient.GetReleaseFlag())
             {
                 ingredient.GetIngredientPool().Release(ingredient);
                 ingredient.SetReleaseFlag(true);
@@ -174,7 +166,7 @@ public class IngredientHolder : MonoBehaviour
 
         EventHandler.CallEnableTabButtonEvent((int)IngredientType.Base);
         EventHandler.CallDisableTabButtonEvent((int)IngredientType.Flavor);
-        EventHandler.CallDisableTabButtonEvent((int)IngredientType.Topping);
+        EventHandler.CallDisableTabButtonEvent((int)IngredientType.Topping); 
     }
 
     private void ResetPosition()
@@ -182,6 +174,7 @@ public class IngredientHolder : MonoBehaviour
         if (trashBin.isCloseEnoughToTrashbin)
         {
             EventHandler.CallCloseTrashBinEvent();
+            EventHandler.CallPlaySfxTrashBinEvent();
             // EventHandler.CallSquishTrashBinEvent();
             ResetMainQueue();
         }
