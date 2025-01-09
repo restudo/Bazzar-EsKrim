@@ -8,6 +8,7 @@ using DG.Tweening;
 using Spine;
 using Spine.Unity;
 using BazarEsKrim;
+using UnityEngine.AI;
 
 public class MainGameController : MonoBehaviour
 {
@@ -52,6 +53,8 @@ public class MainGameController : MonoBehaviour
     [SerializeField] private GameObject pauseMenuUI;
     [SerializeField] private GameObject ingredientToday;
     [SerializeField] private GameObject confettiVFX;
+    [SerializeField] private GameObject[] winUICharacters;
+    [SerializeField] private GameObject[] loseUICharacters;
 
     [Header("Audios")]
     [SerializeField] private AudioClip correctOrderSfx;
@@ -59,6 +62,8 @@ public class MainGameController : MonoBehaviour
     [SerializeField] private AudioClip coneDropSfx;
     [SerializeField] private AudioClip flavorDropSfx;
     [SerializeField] private AudioClip toppingDropSfx;
+    [SerializeField] private AudioClip winSfx;
+    [SerializeField] private AudioClip loseSfx;
 
     private int progressCount;
     private int customerDelay;
@@ -69,7 +74,11 @@ public class MainGameController : MonoBehaviour
     private bool canCreateNewCustomer;
     private CustomerPool customerPool; // Reference to the CustomerPool
     private GameObject character;
+    private GameObject winUICharacter;
+    private GameObject loseUICharacter;
     private SkeletonAnimation skeleton;
+    // private SkeletonAnimation winUISkeleton;
+    // private SkeletonAnimation loseUISkeleton;
 
     private const float animationTime = .15f;
     private const string NORMAL_CHAR_ANIM = "normal";
@@ -88,6 +97,16 @@ public class MainGameController : MonoBehaviour
             character.SetActive(false);
         }
 
+        foreach (GameObject character in winUICharacters)
+        {
+            character.SetActive(false);
+        }
+        
+        foreach (GameObject character in loseUICharacters)
+        {
+            character.SetActive(false);
+        }
+
         LevelDataMainGame levelData = GameManager.Instance.levelDataLists[GameManager.Instance.currentLevel - 1].mainGameLevelData;
         maxOrderHeight = levelData.maxOrderHeight;
         spawnSpecialRecipeAfterXCustomer = levelData.spawnSpecialRecipeAfterXCustomer;
@@ -101,6 +120,12 @@ public class MainGameController : MonoBehaviour
         timer = levelData.timer;
         character = characters[(int)levelData.character];
         skeleton = character.GetComponent<SkeletonAnimation>();
+
+        winUICharacter = winUICharacters[(int)levelData.character];
+        loseUICharacter = loseUICharacters[(int)levelData.character];
+
+        // winUISkeleton = skeleton;
+        // loseUISkeleton = skeleton;
 
         customerCounter = 0;
         deliveryQueueIngredient = 0;
@@ -368,6 +393,8 @@ public class MainGameController : MonoBehaviour
 
     private IEnumerator WinAnim()
     {
+        winUICharacter.SetActive(true);
+
         yield return new WaitForSeconds(1f);
         gameOverWinUI.transform.parent.GetComponent<Image>().color = new Color(0, 0, 0, 0);
         gameOverWinUI.transform.parent.localScale = Vector3.zero;
@@ -376,14 +403,20 @@ public class MainGameController : MonoBehaviour
         gameOverWinUI.transform.parent.GetComponent<Image>().DOColor(new Color32(0, 0, 0, 150), 1.5f).SetDelay(1f);
         yield return new WaitForSeconds(1f);
         confettiVFX.SetActive(true);
+        AudioManager.Instance.PlaySFX(winSfx);
     }
 
     private IEnumerator LoseAnim()
     {
+        loseUICharacter.SetActive(true);
+
         yield return new WaitForSeconds(1);
+        gameOverLoseUI.transform.parent.GetComponent<Image>().color = new Color(0, 0, 0, 0);
         gameOverLoseUI.transform.parent.localScale = Vector3.zero;
         gameOverLoseUI.transform.parent.gameObject.SetActive(true);
         gameOverLoseUI.transform.parent.DOScale(1, 0.4f).SetEase(Ease.OutBounce).SetDelay(0.6f);
+        gameOverLoseUI.transform.parent.GetComponent<Image>().DOColor(new Color32(0, 0, 0, 150), 1.5f).SetDelay(1f);
+        AudioManager.Instance.PlaySFX(loseSfx);
     }
 
     private void FadeSprites()

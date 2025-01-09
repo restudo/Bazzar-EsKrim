@@ -11,6 +11,9 @@ namespace BazarEsKrim
         [SerializeField] private GameObject levelButtonContainer;
         [SerializeField] private CameraController camControl;
 
+        [Header("Audio")]
+        [SerializeField] private AudioClip buttonSfx;
+
         private Button[] buttons;
         private LevelButton[] levelbuttons;
         private int lastSelectedButtonIndex = -1;
@@ -96,6 +99,8 @@ namespace BazarEsKrim
                     levelbuttons[index].Selected();
 
                     lastSelectedButtonIndex = index;
+
+                    AudioManager.Instance.PlaySFX(buttonSfx);
                 }
                 else
                 {

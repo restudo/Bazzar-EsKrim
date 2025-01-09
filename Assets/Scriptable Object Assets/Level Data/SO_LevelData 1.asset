@@ -22,9 +22,9 @@ MonoBehaviour:
     specialRecipePoint: 200
     timer: 180
     character: 1
-    baseIngredientCode: e9030000eb030000ec030000ed030000ee030000
-    flavorIngredientCode: f8030000f0030000f4030000f6030000f1030000
-    toppingIngredientCode: fd030000fb03000002040000f9030000fa030000
+    baseIngredientCode: e9030000ed030000ea030000eb030000ec030000
+    flavorIngredientCode: f8030000f2030000f0030000f6030000f1030000
+    toppingIngredientCode: fd030000ff03000000040000fa03000001040000
     sO_RecipeList:
     - {fileID: 11400000, guid: 5682ddc06d0b8de47b4c572e77a17306, type: 2}
   miniGameLevelData:

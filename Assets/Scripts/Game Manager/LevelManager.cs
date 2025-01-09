@@ -27,12 +27,11 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private Button[] mainGameResumeButton;
     [SerializeField] private Button[] mainGameHomeButton;
     [Space(5)]
-    [SerializeField] private Button miniGameNextButton;
-    [SerializeField] private Button miniGameResumeButton;
     [SerializeField] private Button miniGameOverNextButton;
     [SerializeField] private Button miniGameHomeButton;
 
     [Header("Audio")]
+    [SerializeField] private AudioClip gameplayBgm;
     [SerializeField] private AudioClip buttonSfx;
 
     private void Awake()
@@ -79,6 +78,8 @@ public class LevelManager : MonoBehaviour
                 Debug.LogWarning("Current Game State has changed to = " + GameManager.Instance.gameStates.ToString());
                 break;
         }
+
+        AudioManager.Instance.PlayMusic(gameplayBgm, 0.4f);
     }
 
     private void ActiveGame(bool main, bool mini)
@@ -151,10 +152,10 @@ public class LevelManager : MonoBehaviour
         SceneController.Instance.FadeAndSetActiveGameobject(mainGame, miniGame);
     }
 
-    private void OpenNewRecipePanel()
-    {
-        miniGameController.OpenNewRecipePanel();
-    }
+    // private void OpenNewRecipePanel()
+    // {
+    //     miniGameController.OpenNewRecipePanel();
+    // }
 
     public void AddMiniGameOverButtonEvent()
     {

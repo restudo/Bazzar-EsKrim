@@ -7,25 +7,24 @@ using BazarEsKrim;
 
 public class SceneController : MonoBehaviour
 {
+    [Header("Fader Settings")]
     [SerializeField] private float fadeDuration = 1f;
     [SerializeField] private float faderImageMaxScale = 12f;
     [SerializeField] private Canvas faderCanvas = null;
     [SerializeField] private Image faderImage = null;
-
     [SerializeField] private Sprite[] faderSprites;
 
-    [Space(20)]
+    [Header("Rolling Door Settings")]
     [SerializeField] private RectTransform rollingDoor;
 
-    [Space(20)]
     [Header("Audio")]
     [SerializeField] private AudioClip rollingDownSfx;
     [SerializeField] private AudioClip rollingUpSfx;
 
-    private bool isFading;
     private Vector3 initialRollingDoorPos;
+    private bool isFading;
 
-    public static SceneController Instance;
+    public static SceneController Instance { get; private set; }
 
     private void Awake()
     {
@@ -45,186 +44,95 @@ public class SceneController : MonoBehaviour
         initialRollingDoorPos = rollingDoor.anchoredPosition;
         rollingDoor.anchoredPosition = initialRollingDoorPos;
         faderCanvas.gameObject.SetActive(false);
-
-        RandomFader();
-        faderImage.transform.localScale = new Vector3(faderImageMaxScale, faderImageMaxScale, faderImageMaxScale);
+        InitializeFader();
     }
 
-    // private IEnumerator FadeAndSwitchScenes(string sceneName)
-    // {
-    //     RandomFader();
-
-    //     isFading = true;
-
-    //     faderCanvas.gameObject.SetActive(true);
-
-    //     Sequence faderSequence = DOTween.Sequence();
-
-    //     faderSequence.Append(faderImage.transform.DOScale(0, fadeDuration).SetEase(Ease.InOutExpo)).OnComplete(() =>
-    //     {
-    //         Debug.Log("FADE IN");
-    //     });
-
-    //     yield return faderSequence.WaitForCompletion();
-
-    //     // Start loading the scene asynchronously
-    //     yield return StartCoroutine(LoadSceneAndSetActive(sceneName));
-
-    //     yield return new WaitForSeconds(fadeDuration / 2);
-
-    //     RandomFader();
-
-    //     // Second scaling animation
-    //     faderSequence = DOTween.Sequence();
-
-    //     faderSequence.Append(faderImage.transform.DOScale(faderImageMaxScale, fadeDuration).SetEase(Ease.InOutExpo)).OnComplete(() =>
-    //     {
-    //         FadeComplete();
-    //         Debug.Log("FADE OUT");
-    //     });
-
-    //     yield return faderSequence.WaitForCompletion();
-
-    //     isFading = false;
-    // }
-
-    private IEnumerator TransitionAndSwitchScenes(string sceneName)
+    private void InitializeFader()
     {
-        isFading = true;
-
-        faderCanvas.gameObject.SetActive(true);
-
-        Sequence faderSequence = DOTween.Sequence();
-
-        AudioManager.Instance.PlaySFX(rollingDownSfx);
-
-        // acnhor on bottom, y=0
-        // faderSequence.Append(rollingDoor.DOAnchorPosY(initialRollingDoorPos.y / 2, fadeDuration / 2).SetEase(Ease.OutBack));
-        faderSequence.Append(rollingDoor.DOAnchorPosY(0, fadeDuration).SetEase(Ease.InOutSine)).OnComplete(() =>
-        {
-
-        });
-
-        yield return faderSequence.WaitForCompletion();
-
-        Debug.Log("FADE IN");
-
-        // Start loading the scene asynchronously
-        yield return StartCoroutine(LoadSceneAndSetActive(sceneName));
-
-        yield return new WaitForSeconds(fadeDuration / 2);
-
-        // Second scaling animation
-        faderSequence = DOTween.Sequence();
-
-        AudioManager.Instance.PlaySFX(rollingUpSfx);
-
-        faderSequence.Append(rollingDoor.DOAnchorPosY(initialRollingDoorPos.y, fadeDuration).SetEase(Ease.InBack)).OnComplete(() =>
-        {
-
-        });
-
-        yield return faderSequence.WaitForCompletion();
-
-        Debug.Log("FADE OUT");
-        FadeComplete();
-
-        isFading = false;
+        RandomizeFaderSprite();
+        faderImage.transform.localScale = Vector3.one * faderImageMaxScale;
     }
 
-    private IEnumerator TransitionAndSwitchGameobject(GameObject deactivate, GameObject activate)
+    private IEnumerator PerformRollingDoorTransition(float targetPositionY, AudioClip audioClip)
     {
-        isFading = true;
-
-        faderCanvas.gameObject.SetActive(true);
-
-        Sequence faderSequence = DOTween.Sequence();
-
-        // acnhor on bottom, y=0
-        faderSequence.Append(rollingDoor.DOAnchorPosY(initialRollingDoorPos.y / 2, fadeDuration / 1.5f).SetEase(Ease.OutBack));
-        faderSequence.Append(rollingDoor.DOAnchorPosY(0, fadeDuration / 2).SetEase(Ease.InOutSine)).OnComplete(() =>
-        {
-
-        });
-
-        yield return faderSequence.WaitForCompletion();
-
-        Debug.Log("FADE IN");
-
-        deactivate.SetActive(false);
-        activate.SetActive(true);
-
-        yield return new WaitForSeconds(fadeDuration / 4f);
-
-        // Second scaling animation
-        faderSequence = DOTween.Sequence();
-
-        faderSequence.Append(rollingDoor.DOAnchorPosY(initialRollingDoorPos.y, fadeDuration).SetEase(Ease.InBack)).OnComplete(() =>
-        {
-
-        });
-
-        yield return faderSequence.WaitForCompletion();
-
-        Debug.Log("FADE OUT");
-        FadeComplete();
-
-        isFading = false;
-
-        GameManager.Instance.isGameActive = true; //only for maingame to minigame
+        AudioManager.Instance?.PlaySFX(audioClip);
+        yield return rollingDoor.DOAnchorPosY(targetPositionY, fadeDuration).SetEase(Ease.InOutSine).WaitForCompletion();
     }
 
-    private IEnumerator LoadSceneAndSetActive(string sceneName)
+    private IEnumerator LoadSceneAsync(string sceneName)
     {
         AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(sceneName);
         while (!asyncOperation.isDone)
         {
             yield return null;
         }
-
         SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
     }
 
-    private void FadeComplete()
+    private IEnumerator HandleTransition(GameObject deactivate, GameObject activate)
     {
-        faderCanvas.gameObject.SetActive(false);
+        isFading = true;
+        faderCanvas.gameObject.SetActive(true);
+
+        yield return PerformRollingDoorTransition(0, rollingDownSfx);
+
+        deactivate?.SetActive(false);
+        activate?.SetActive(true);
+
+        yield return new WaitForSeconds(fadeDuration / 4f);
+
+        yield return PerformRollingDoorTransition(initialRollingDoorPos.y, rollingUpSfx);
+
+        EndTransition();
+
+        GameManager.Instance.isGameActive = true; //only for maingame to minigame
     }
 
-    private void RandomFader()
+    private void EndTransition()
     {
-        faderImage.sprite = faderSprites[Random.Range(0, faderSprites.Length)];
-        faderImage.SetNativeSize();
+        faderCanvas.gameObject.SetActive(false);
+        isFading = false;
+    }
+
+    private void RandomizeFaderSprite()
+    {
+        if (faderSprites.Length > 0)
+        {
+            faderImage.sprite = faderSprites[Random.Range(0, faderSprites.Length)];
+            faderImage.SetNativeSize();
+        }
     }
 
     public void FadeAndLoadScene(Scenes sceneName)
     {
-        if (!isFading)
-        {
-            DOTween.KillAll();
+        if (isFading) return;
+        DOTween.KillAll();
 
-            // StartCoroutine(FadeAndSwitchScenes(sceneName.ToString()));
-
-            StartCoroutine(TransitionAndSwitchScenes(sceneName.ToString()));
-        }
+        StartCoroutine(HandleSceneTransition(sceneName.ToString()));
     }
 
-    public void FadeAndSetActiveGameobject(GameObject deActivate, GameObject activate)
+    private IEnumerator HandleSceneTransition(string sceneName)
     {
-        if (!isFading)
-        {
-            DOTween.KillAll();
+        isFading = true;
+        faderCanvas.gameObject.SetActive(true);
 
-            StartCoroutine(TransitionAndSwitchGameobject(deActivate, activate));
-        }
+        yield return PerformRollingDoorTransition(0, rollingDownSfx);
+        yield return LoadSceneAsync(sceneName);
+        yield return new WaitForSeconds(fadeDuration / 2);
+        yield return PerformRollingDoorTransition(initialRollingDoorPos.y, rollingUpSfx);
+
+        EndTransition();
     }
 
-    public void LoadScene(Scenes sceneName)
+    public void FadeAndSetActiveGameobject(GameObject deactivate, GameObject activate)
     {
-        SceneManager.LoadScene(sceneName.ToString());
+        if (isFading) return;
+        DOTween.KillAll();
+
+        StartCoroutine(HandleTransition(deactivate, activate));
     }
 
-    public void LoadScene(int sceneBuildIndex)
-    {
-        SceneManager.LoadScene(sceneBuildIndex);
-    }
+    public void LoadScene(Scenes sceneName) => SceneManager.LoadScene(sceneName.ToString());
+
+    public void LoadScene(int sceneBuildIndex) => SceneManager.LoadScene(sceneBuildIndex);
 }

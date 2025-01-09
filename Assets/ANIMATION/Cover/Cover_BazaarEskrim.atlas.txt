@@ -1,132 +1,132 @@
 
 Cover_BazaarEskrim.png
-size: 2048,1024
+size: 2048,2048
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 bg2
   rotate: false
-  xy: 2, 72
-  size: 1614, 857
-  orig: 1614, 857
+  xy: 2, 2
+  size: 1937, 1028
+  orig: 1937, 1028
   offset: 0, 0
   index: -1
 ciwi_Kakikanan
-  rotate: true
-  xy: 1618, 17
-  size: 105, 94
-  orig: 106, 94
+  rotate: false
+  xy: 1720, 1359
+  size: 126, 112
+  orig: 127, 112
   offset: 0, 0
   index: -1
 ciwi_Kakikiri
-  rotate: false
-  xy: 1905, 726
-  size: 80, 203
-  orig: 80, 203
+  rotate: true
+  xy: 1042, 1375
+  size: 96, 244
+  orig: 96, 244
   offset: 0, 0
   index: -1
 ciwi_Kepala
-  rotate: true
-  xy: 1618, 469
-  size: 460, 285
-  orig: 461, 285
+  rotate: false
+  xy: 607, 1032
+  size: 552, 341
+  orig: 553, 341
   offset: 0, 0
   index: -1
 ciwi_Set3
-  rotate: true
-  xy: 1968, 525
-  size: 105, 72
-  orig: 106, 72
+  rotate: false
+  xy: 795, 1385
+  size: 126, 86
+  orig: 127, 86
   offset: 0, 0
   index: -1
 ciwi_Set4
-  rotate: false
-  xy: 1618, 432
-  size: 33, 35
-  orig: 33, 35
+  rotate: true
+  xy: 175, 1431
+  size: 40, 42
+  orig: 40, 42
   offset: 0, 0
   index: -1
 ciwi_Set5
-  rotate: true
-  xy: 1894, 2
-  size: 164, 152
-  orig: 164, 153
+  rotate: false
+  xy: 170, 1230
+  size: 197, 183
+  orig: 197, 184
   offset: 0, 1
   index: -1
 ciwi_Tangankanan
-  rotate: true
-  xy: 1817, 334
-  size: 133, 82
-  orig: 133, 83
+  rotate: false
+  xy: 1419, 1372
+  size: 159, 99
+  orig: 159, 100
   offset: 0, 0
   index: -1
 ciwi_bayangan
-  rotate: true
-  xy: 1905, 541
-  size: 183, 61
-  orig: 185, 63
+  rotate: false
+  xy: 574, 1398
+  size: 219, 73
+  orig: 221, 75
   offset: 1, 1
   index: -1
 cowo_Badan
-  rotate: false
-  xy: 1938, 360
-  size: 99, 163
-  orig: 121, 165
-  offset: 16, 1
+  rotate: true
+  xy: 1848, 1352
+  size: 119, 196
+  orig: 145, 198
+  offset: 19, 1
   index: -1
 cowo_Jempol
-  rotate: true
-  xy: 1905, 396
-  size: 143, 31
-  orig: 144, 31
+  rotate: false
+  xy: 2, 1434
+  size: 171, 37
+  orig: 172, 37
   offset: 0, 0
   index: -1
 cowo_Kakikanan
   rotate: true
-  xy: 1899, 168
-  size: 87, 115
-  orig: 89, 115
+  xy: 1580, 1366
+  size: 105, 138
+  orig: 107, 138
   offset: 1, 0
   index: -1
 cowo_Kakikiri
-  rotate: false
-  xy: 1817, 224
-  size: 80, 108
-  orig: 81, 110
+  rotate: true
+  xy: 1288, 1375
+  size: 96, 129
+  orig: 97, 131
   offset: 0, 1
   index: -1
 cowo_Kepala
   rotate: false
-  xy: 1618, 218
-  size: 197, 176
-  orig: 197, 176
+  xy: 369, 1185
+  size: 236, 211
+  orig: 236, 211
   offset: 0, 0
   index: -1
 cowo_Nampaneskrim
   rotate: false
-  xy: 1901, 257
-  size: 139, 101
-  orig: 139, 102
+  xy: 2, 1311
+  size: 166, 121
+  orig: 166, 122
   offset: 0, 1
   index: -1
 cowo_Tangankanan
-  rotate: false
-  xy: 1817, 124
-  size: 75, 98
-  orig: 76, 98
+  rotate: true
+  xy: 923, 1381
+  size: 90, 117
+  orig: 91, 117
   offset: 0, 0
   index: -1
 cowo_Tangankiri
-  rotate: false
-  xy: 1987, 632
-  size: 55, 113
-  orig: 56, 113
+  rotate: true
+  xy: 437, 1405
+  size: 66, 135
+  orig: 67, 135
   offset: 0, 0
   index: -1
 cowo_bayangan
-  rotate: true
-  xy: 1987, 747
-  size: 182, 47
-  orig: 184, 47
-  offset: 1, 0
+  rotate: false
+  xy: 219, 1415
+  size: 216, 56
+  orig: 220, 56
+  offset: 2, 0
   index: -1

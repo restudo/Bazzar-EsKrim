@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using BazarEsKrim;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -8,8 +9,10 @@ using UnityEngine.UI;
 
 public class MiniGameController : MonoBehaviour
 {
-    [Header("Level Manager")]
+    [Header("Manager")]
     [SerializeField] private LevelManager levelManager;
+    [SerializeField] private AudioClip buttonSfx;
+    [SerializeField] private AudioClip winSfx;
 
     [Header("Score")]
     // [SerializeField] private TextMeshProUGUI scoreText;
@@ -28,19 +31,21 @@ public class MiniGameController : MonoBehaviour
     // private TimeSpan time;
 
     [Header("Game Over")]
+    [SerializeField] private Animator scrollUIAnim;
     [SerializeField] private GameObject gameOverWinUI;
     [SerializeField] private GameObject confettiVFX;
     [SerializeField] private CanvasGroup recipeUnlockUI;
     [SerializeField] private Image recipeVisual;
     [SerializeField] private TextMeshProUGUI recipeText;
+
     private const float recipeUnlockShowDuration = 2f;
     private const float recipeMoveDuration = 0.8f;
     private const float recipeFadeDuration = 1.5f;
     private const float delayBeforeMove = 0.8f;
-    // private const float gameOverWinCloseDuration = 1f;
+    private const string RECIPE_CHARGE_ANIM = "New Recipe Charge";
 
-    [Space(5)]
-    // [SerializeField] private RecipeDetails[] recipes;
+    private bool canOpenNewRecipePanel;
+    private bool isSequencePlaying = false;
 
     [Header("Spawner")]
     [SerializeField] private GameObject[] objectSpawners;
@@ -53,9 +58,12 @@ public class MiniGameController : MonoBehaviour
         progressSlider.maxValue = maxScore;
         progressSlider.value = 0;
 
-        gameOverWinUI.gameObject.SetActive(false);
+        gameOverWinUI.SetActive(false);
+        scrollUIAnim.gameObject.SetActive(false);
         recipeUnlockUI.gameObject.SetActive(false);
         confettiVFX.SetActive(false);
+
+        canOpenNewRecipePanel = false;
 
         foreach (GameObject spawner in objectSpawners)
         {
@@ -150,17 +158,46 @@ public class MiniGameController : MonoBehaviour
         gameOverWinUI.GetComponent<Image>().color = new Color(0, 0, 0, 0);
         gameOverWinUI.gameObject.SetActive(true);
         gameOverWinUI.transform.DOScale(1, 0.4f).SetEase(Ease.OutExpo).SetDelay(0.3f);
-        gameOverWinUI.GetComponent<Image>().DOColor(new Color32(0, 0, 0, 150), 1.5f).SetDelay(1f).OnComplete(() => {
+        gameOverWinUI.GetComponent<Image>().DOColor(new Color32(0, 0, 0, 150), 1.5f).SetDelay(1f).OnComplete(() =>
+        {
             DOTween.Kill(gameOverWinUI);
         });
 
         yield return new WaitForSeconds(1f);
-        confettiVFX.SetActive(true);
-        OpenNewRecipePanel();
+        PlayScrollAnim();
+    }
+
+    private void PlayScrollAnim()
+    {
+        scrollUIAnim.gameObject.SetActive(true);
+    }
+
+    public void SetTouchOn()
+    {
+        canOpenNewRecipePanel = true;
+    }
+
+    public void RecipeRechargeAnim()
+    {
+        if (canOpenNewRecipePanel)
+        {
+            AudioManager.Instance.PlaySFX(buttonSfx);
+
+            scrollUIAnim.Play(RECIPE_CHARGE_ANIM);
+        }
     }
 
     public void OpenNewRecipePanel()
     {
+        if (!canOpenNewRecipePanel || isSequencePlaying)
+        {
+            return;
+        }
+
+        isSequencePlaying = true; // Set flag to prevent overlapping sequences
+
+        scrollUIAnim.gameObject.SetActive(false);
+
         int currentLevel = GameManager.Instance.currentLevel;
         int recipeIndex = currentLevel - 1;
         float recipeInitialX = recipeVisual.transform.localPosition.x;
@@ -172,16 +209,21 @@ public class MiniGameController : MonoBehaviour
         recipeUnlockUI.transform.localScale = Vector3.zero;
         recipeUnlockUI.alpha = 0;
 
+        confettiVFX.SetActive(true);
+        AudioManager.Instance.PlaySFX(winSfx);
+
+        // Kill any ongoing animations for recipeVisual
+        recipeVisual.transform.DOKill();
+
         // Create a sequence for chaining animations
         Sequence sequence = DOTween.Sequence();
 
         // First, close the gameOverWinUI panel
         sequence.AppendCallback(() =>
             {
-                // gameOverWinUI.gameObject.SetActive(false);
-
                 // Set recipe visual to center horizontally
                 recipeVisual.transform.localPosition = new Vector3(0, recipeVisual.transform.localPosition.y, recipeVisual.transform.localPosition.z);
+
                 recipeUnlockUI.gameObject.SetActive(true);
             })
 
@@ -197,6 +239,12 @@ public class MiniGameController : MonoBehaviour
             .AppendCallback(() =>
             {
                 levelManager.AddMiniGameOverButtonEvent();
+            })
+
+            // Reset the sequence flag after completion
+            .OnComplete(() =>
+            {
+                isSequencePlaying = false;
             });
 
         // Play the sequence

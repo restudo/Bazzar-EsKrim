@@ -27,6 +27,8 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private Button[] backButtons;
 
     [Header("Audio")]
+    [SerializeField] private AudioClip tittleBgm;
+    [SerializeField] private AudioClip levelSelectBgm;
     [SerializeField] private AudioClip buttonSfx;
 
     private bool isFirstTimeLoad = false;
@@ -40,7 +42,7 @@ public class MenuManager : MonoBehaviour
         switch (GameManager.Instance.gameStates)
         {
             case GameStates.MainMenu:
-                LoadToMainMenu();
+                LoadToMainMenu(isFirstTimeLoad);
                 break;
             case GameStates.Collection:
                 LoadToCollection();
@@ -61,6 +63,11 @@ public class MenuManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        AudioManager.Instance.PlayMusic(tittleBgm);
+    }
+
     private void SetActiveMenu(bool mainMenu, bool collection, bool levelSelection)
     {
         mainMenuObj.SetActive(mainMenu);
@@ -73,7 +80,7 @@ public class MenuManager : MonoBehaviour
         Camera.main.transform.position = new Vector3(0, Camera.main.transform.position.y, Camera.main.transform.position.z);
     }
 
-    public void LoadToMainMenu()
+    public void LoadToMainMenu(bool isFirstTimeLoad)
     {
         GameManager.Instance.isGameActive = false;
 
@@ -83,12 +90,20 @@ public class MenuManager : MonoBehaviour
 
         SetActiveMenu(mainMenu: true, collection: false, levelSelection: false);
 
-        // stop anim
-        skeletonGraphicUI.AnimationState.SetEmptyAnimation(0, 0);
+        if (isFirstTimeLoad)
+        {
+            // stop anim
+            skeletonGraphicUI.AnimationState.SetEmptyAnimation(0, 0);
 
-        // play anim
-        skeletonGraphicUI.AnimationState.SetAnimation(0, coverIn, false);
-        skeletonGraphicUI.AnimationState.AddAnimation(0, coverIdle, true, 0);
+            // play anim
+            skeletonGraphicUI.AnimationState.SetAnimation(0, coverIn, false);
+            skeletonGraphicUI.AnimationState.AddAnimation(0, coverIdle, true, 0);
+        }
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayMusic(tittleBgm);
+        }
     }
 
     public void LoadToLevelSelection()
@@ -102,6 +117,8 @@ public class MenuManager : MonoBehaviour
         SetCameraToZero();
 
         SetActiveMenu(mainMenu: false, collection: false, levelSelection: true);
+
+        AudioManager.Instance.PlayMusic(levelSelectBgm, 0.4f);
     }
 
     public void LoadToCollection()
@@ -127,7 +144,7 @@ public class MenuManager : MonoBehaviour
         }
         else if (GameManager.Instance.gameStates != GameStates.MainMenu)
         {
-            LoadToMainMenu();
+            LoadToMainMenu(false);
         }
         else
         {
@@ -140,7 +157,7 @@ public class MenuManager : MonoBehaviour
     // Animate button with a dynamic scale change
     public void AnimateButton(float scaleDecrement)
     {
-        if(isFirstTimeLoad)
+        if (isFirstTimeLoad)
         {
             isFirstTimeLoad = false;
             return;

@@ -52,11 +52,12 @@ namespace BazarEsKrim
             sfxSource.Stop();
         }
 
-        public void PlayMusic(AudioClip clip)
+        public void PlayMusic(AudioClip clip, float volume = 0.6f) // default volume
         {
             if (musicSource.clip != clip)
             {
                 musicSource.clip = clip;
+                musicSource.volume = volume;
                 musicSource.Play();
             }
         }
