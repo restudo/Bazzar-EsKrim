@@ -21,6 +21,10 @@ namespace BazarEsKrim
         [Space(20)]
         [SerializeField] private GameObject collectionPanelContainer;
 
+        [Space(20)]
+        [Header("Audio")]
+        [SerializeField] private AudioClip[] voCollectionClips;
+
         private CollectionPanel[] collectionPanels;
         private CollectionFrame[] collectionFrames;
         private int unlockedLevel;
@@ -91,6 +95,14 @@ namespace BazarEsKrim
             simpleScrollSnap.gameObject.SetActive(false);
             scrollScapBlocker.SetActive(false);
             GameManager.Instance.gameStates = GameStates.Collection;
+        }
+
+        public void PlayCollectionVO()
+        {
+            if (unlockedLevel - 1 > simpleScrollSnap.TargetPanel)
+            {
+                AudioManager.Instance.PlayVO(voCollectionClips[simpleScrollSnap.TargetPanel]);
+            }
         }
     }
 }

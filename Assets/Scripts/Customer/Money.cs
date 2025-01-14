@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Pool;
 using DG.Tweening;
 using BazarEsKrim;
+using System;
 
 public class Money : MonoBehaviour
 {
@@ -18,9 +19,14 @@ public class Money : MonoBehaviour
         _rectTransform = GetComponent<RectTransform>();
     }
 
-    private void BackToThePool()
+    private void BackToThePool(ParticleSystem sparkVfx)
     {
         AudioManager.Instance.PlaySFX(moneySfx);
+
+        sparkVfx.transform.position = _rectTransform.position;
+        sparkVfx.gameObject.SetActive(true);
+        sparkVfx.Clear();
+        sparkVfx.Play();
 
         // Return the UI element to the pool
         _moneyPool.Release(this);
@@ -37,7 +43,7 @@ public class Money : MonoBehaviour
         moneySlider = moneySliderUI;
     }
 
-    public void Animate()
+    public void Animate(ParticleSystem sparkVfx)
     {
         // Get screen position of the target UI element
         Vector3 screenPos = RectTransformUtility.WorldToScreenPoint(Camera.main, moneySlider.position);
@@ -59,7 +65,7 @@ public class Money : MonoBehaviour
         sequence.Append(_rectTransform.DOLocalMove(new Vector2(localPoint.x + 55f, localPoint.y), 1f)
             .SetEase(Ease.OutExpo));
 
-        sequence.AppendCallback(BackToThePool);
+        sequence.AppendCallback(() => BackToThePool(sparkVfx));
 
         // Third step: Apply a "boing" effect using DOScale on the moneySlider element
         sequence.Append(moneySlider.DOScale(Vector3.one * 1.2f, 0.3f)  // Scale up slightly

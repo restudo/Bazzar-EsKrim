@@ -30,6 +30,7 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private AudioClip tittleBgm;
     [SerializeField] private AudioClip levelSelectBgm;
     [SerializeField] private AudioClip buttonSfx;
+    [SerializeField] private AudioClip startVo;
 
     private bool isFirstTimeLoad = false;
 
@@ -66,6 +67,7 @@ public class MenuManager : MonoBehaviour
     private void Start()
     {
         AudioManager.Instance.PlayMusic(tittleBgm);
+        AudioManager.Instance.PlayVO(startVo);
     }
 
     private void SetActiveMenu(bool mainMenu, bool collection, bool levelSelection)

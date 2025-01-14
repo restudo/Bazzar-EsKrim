@@ -50,6 +50,9 @@ public class MiniGameController : MonoBehaviour
     [Header("Spawner")]
     [SerializeField] private GameObject[] objectSpawners;
 
+    [Header("Audios")]
+    [SerializeField] private AudioClip newRecipeVO;
+
     private void Awake()
     {
         int currentLevel = GameManager.Instance.currentLevel;
@@ -170,6 +173,8 @@ public class MiniGameController : MonoBehaviour
     private void PlayScrollAnim()
     {
         scrollUIAnim.gameObject.SetActive(true);
+
+        AudioManager.Instance.PlayVO(newRecipeVO);
     }
 
     public void SetTouchOn()

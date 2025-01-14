@@ -11,11 +11,11 @@ public static class EventHandler
             InventoryUpdatedEvent(inventoryLocation, inventoryList, ingredientUnlockedInLocation);
     }
 
-    public static event Action<bool> CorrectOrder;
-    public static void CallCorrectOrderEvent(bool isRecipeOrder)
+    public static event Action<Vector3, bool> CorrectOrder;
+    public static void CallCorrectOrderEvent(Vector3 customerPos, bool isRecipeOrder)
     {
         if (CorrectOrder != null)
-            CorrectOrder(isRecipeOrder);
+            CorrectOrder(customerPos, isRecipeOrder);
     }
     
     public static event Action IncorrectOrder;

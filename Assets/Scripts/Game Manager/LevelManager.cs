@@ -118,7 +118,8 @@ public class LevelManager : MonoBehaviour
 
         AnimateButton(0.1f);
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        // SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        SceneController.Instance.FadeAndLoadScene(Scenes.Level); // add scene transition rolling door
     }
 
     private void LoadToLevelSelection()

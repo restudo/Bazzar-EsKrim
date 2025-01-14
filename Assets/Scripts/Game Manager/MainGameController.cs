@@ -56,6 +56,12 @@ public class MainGameController : MonoBehaviour
     [SerializeField] private GameObject[] winUICharacters;
     [SerializeField] private GameObject[] loseUICharacters;
 
+    [Header("Buttons")]
+    [SerializeField] private Button startGameButton;
+    
+    [Header("VFXs")]
+    [SerializeField] private ParticleSystem sparkVfx;
+
     [Header("Audios")]
     [SerializeField] private AudioClip correctOrderSfx;
     [SerializeField] private AudioClip incorrectOrderSfx;
@@ -64,6 +70,9 @@ public class MainGameController : MonoBehaviour
     [SerializeField] private AudioClip toppingDropSfx;
     [SerializeField] private AudioClip winSfx;
     [SerializeField] private AudioClip loseSfx;
+    [SerializeField] private AudioClip startVO;
+    [SerializeField] private AudioClip winVO;
+    [SerializeField] private AudioClip loseVO;
 
     private int progressCount;
     private int customerDelay;
@@ -91,6 +100,8 @@ public class MainGameController : MonoBehaviour
     private void Awake()
     {
         customerPool = GetComponent<CustomerPool>();
+
+        startGameButton.onClick.AddListener(StartGame);
 
         foreach (GameObject character in characters)
         {
@@ -141,11 +152,17 @@ public class MainGameController : MonoBehaviour
         gameOverLoseUI.transform.parent.gameObject.SetActive(false);
         pauseMenuUI.SetActive(false);
         confettiVFX.SetActive(false);
+        sparkVfx.gameObject.SetActive(false);
 
         availableSeatForCustomers = new Dictionary<int, (CustomerController, bool)>();
         InitializeAvailableSeats();
 
         SetInitialBgVisibility();
+    }
+
+    private void StartGame()
+    {
+        AudioManager.Instance.PlayVO(startVO);
     }
 
     private void InitializeAvailableSeats()
@@ -361,8 +378,14 @@ public class MainGameController : MonoBehaviour
         yield return null;
     }
 
-    private void CorrectOrderEvent(bool isRecipeOrder)
+    private void CorrectOrderEvent(Vector3 customerPos, bool isRecipeOrder)
     {
+        // play vfx
+        sparkVfx.transform.position = customerPos;
+        sparkVfx.gameObject.SetActive(true);
+        sparkVfx.Clear();
+        sparkVfx.Play();
+
         // play sfx correct order
         AudioManager.Instance.PlaySFX(correctOrderSfx);
 
@@ -404,19 +427,22 @@ public class MainGameController : MonoBehaviour
         yield return new WaitForSeconds(1f);
         confettiVFX.SetActive(true);
         AudioManager.Instance.PlaySFX(winSfx);
+        AudioManager.Instance.PlayVO(winVO);
     }
 
     private IEnumerator LoseAnim()
     {
         loseUICharacter.SetActive(true);
 
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.5f);
         gameOverLoseUI.transform.parent.GetComponent<Image>().color = new Color(0, 0, 0, 0);
         gameOverLoseUI.transform.parent.localScale = Vector3.zero;
         gameOverLoseUI.transform.parent.gameObject.SetActive(true);
         gameOverLoseUI.transform.parent.DOScale(1, 0.4f).SetEase(Ease.OutBounce).SetDelay(0.6f);
         gameOverLoseUI.transform.parent.GetComponent<Image>().DOColor(new Color32(0, 0, 0, 150), 1.5f).SetDelay(1f);
+        yield return new WaitForSeconds(1);
         AudioManager.Instance.PlaySFX(loseSfx);
+        AudioManager.Instance.PlayVO(loseVO);
     }
 
     private void FadeSprites()

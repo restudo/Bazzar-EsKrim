@@ -9,6 +9,7 @@ namespace BazarEsKrim
     {
         [SerializeField] private AudioSource musicSource;
         [SerializeField] private AudioSource sfxSource;
+        [SerializeField] private AudioSource voSource;
         // [SerializeField] private AudioSource sfxSourceObject;
 
         public static AudioManager Instance;
@@ -31,6 +32,13 @@ namespace BazarEsKrim
 
             sfxSource.volume = volume;
             sfxSource.PlayOneShot(clip);
+        }
+
+        public void PlayVO(AudioClip clip)
+        {
+            // StopSFX();
+
+            voSource.PlayOneShot(clip);
         }
 
         public void PlaySFX(AudioClip clip)

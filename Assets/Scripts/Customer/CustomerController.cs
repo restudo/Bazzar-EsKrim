@@ -403,8 +403,8 @@ public class CustomerController : MonoBehaviour
 
             patienceBarController.StopDecreasingPatience();
             StartLeaving();
-            EventHandler.CallCorrectOrderEvent(isRecipeOrder);
-            EventHandler.CallSetMoneyPosToCustomerPosEvent(transform.position, isRecipeOrder);
+            EventHandler.CallCorrectOrderEvent(transform.position, isRecipeOrder);
+            // EventHandler.CallSetMoneyPosToCustomerPosEvent(transform.position, isRecipeOrder);
             moneySpawner.moneyPool.Get();
 
             isOrderCompleted = true;

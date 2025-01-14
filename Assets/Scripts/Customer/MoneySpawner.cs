@@ -8,6 +8,7 @@ public class MoneySpawner : MonoBehaviour
     [SerializeField] private Sprite normalCust;
     [SerializeField] private Sprite specialCust;
     [SerializeField] private Money moneyObj;
+    [SerializeField] private ParticleSystem sparkVfx;
 
     [Space(20)]
     [SerializeField] private RectTransform moneySliderUI;
@@ -18,12 +19,12 @@ public class MoneySpawner : MonoBehaviour
 
     private void OnEnable()
     {
-        EventHandler.SetMoneyPosToCustomerPos += SetToCustomerPosition;
+        EventHandler.CorrectOrder += SetToCustomerPosition;
     }
 
     private void OnDisable()
     {
-        EventHandler.SetMoneyPosToCustomerPos -= SetToCustomerPosition;
+        EventHandler.CorrectOrder -= SetToCustomerPosition;
     }
 
     private void Awake()
@@ -57,7 +58,7 @@ public class MoneySpawner : MonoBehaviour
         money.gameObject.SetActive(true);
 
         money.SetRectTransform(moneySliderUI);
-        money.Animate();
+        money.Animate(sparkVfx);
     }
 
     private void OnReturnMoneyToPool(Money money)

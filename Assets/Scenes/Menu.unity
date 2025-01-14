@@ -517,7 +517,19 @@ MonoBehaviour:
       m_Calls: []
   onPanelSelected:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1542614424}
+        m_TargetAssemblyTypeName: BazarEsKrim.CollectionManager, Assembly-CSharp
+        m_MethodName: PlayCollectionVO
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onPanelChanging:
     m_PersistentCalls:
       m_Calls: []
@@ -1366,6 +1378,7 @@ MonoBehaviour:
   tittleBgm: {fileID: 8300000, guid: 5f0e527cdf5138347ab4464bf1b2eed1, type: 3}
   levelSelectBgm: {fileID: 8300000, guid: fb1aa332c3a66f242b3058dfdb5e106f, type: 3}
   buttonSfx: {fileID: 8300000, guid: 346404dded4f9884c882bbbaf270ef09, type: 3}
+  startVo: {fileID: 8300000, guid: 70c09e2b8481bae4cbf13c8ba1fcb98a, type: 3}
 --- !u!4 &255043618
 Transform:
   m_ObjectHideFlags: 0
@@ -1743,7 +1756,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2876284333109411048, guid: 479d553687f368b40836837dc346f0ea, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 960.0001
+      value: 960
       objectReference: {fileID: 0}
     - target: {fileID: 2876284333109411048, guid: 479d553687f368b40836837dc346f0ea, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -7032,8 +7045,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 960.00006, y: -484.39508}
-  m_SizeDelta: {x: 1920.0001, y: 353.13004}
+  m_AnchoredPosition: {x: 960, y: -484.39508}
+  m_SizeDelta: {x: 1920, y: 353.13004}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1172957607
 MonoBehaviour:
@@ -7097,8 +7110,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 960.00006, y: -159.06502}
-  m_SizeDelta: {x: 1920.0001, y: 318.13004}
+  m_AnchoredPosition: {x: 960, y: -159.06502}
+  m_SizeDelta: {x: 1920, y: 318.13004}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1200841953
 MonoBehaviour:
@@ -9060,6 +9073,12 @@ MonoBehaviour:
   - {fileID: 2083283697}
   - {fileID: 1145208543}
   collectionPanelContainer: {fileID: 2090433733}
+  voCollectionClips:
+  - {fileID: 8300000, guid: bf037774bf1a8b94fbba38899ab7c38b, type: 3}
+  - {fileID: 8300000, guid: 154114590e5d0954a9674409601184c2, type: 3}
+  - {fileID: 8300000, guid: 18ca11f09d70dc646ba71105aecd7641, type: 3}
+  - {fileID: 8300000, guid: 2f1b3ba7b11b3764ea3dbcc4799909f2, type: 3}
+  - {fileID: 8300000, guid: d55bf16eba101824db8491384953fadb, type: 3}
 --- !u!1001 &1578698400
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11685,7 +11704,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2876284333109411048, guid: 479d553687f368b40836837dc346f0ea, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 698.9701
+      value: 698.97
       objectReference: {fileID: 0}
     - target: {fileID: 2876284333109411048, guid: 479d553687f368b40836837dc346f0ea, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -12861,7 +12880,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2876284333109411048, guid: 479d553687f368b40836837dc346f0ea, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 454.9401
+      value: 454.94003
       objectReference: {fileID: 0}
     - target: {fileID: 2876284333109411048, guid: 479d553687f368b40836837dc346f0ea, type: 3}
       propertyPath: m_AnchoredPosition.y
