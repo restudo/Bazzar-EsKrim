@@ -1,5 +1,15 @@
 {
   "dependencies": {
+    "com.coffee.ui-particle": {
+      "version": "https://github.com/mob-sakai/ParticleEffectForUGUI.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0",
+        "com.unity.modules.particlesystem": "1.0.0"
+      },
+      "hash": "201bd9180eaa9d581eeaa048a164a5abd09001c9"
+    },
     "com.unity.adaptiveperformance": {
       "version": "5.0.0",
       "depth": 1,
@@ -102,7 +112,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.textmeshpro": {
-      "version": "3.0.6",
+      "version": "3.0.9",
       "depth": 0,
       "source": "registry",
       "dependencies": {
